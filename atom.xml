@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://chogath.github.io</id>
+    <title>Gridea</title>
+    <updated>2020-03-18T12:41:11.161Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://chogath.github.io"/>
+    <link rel="self" href="https://chogath.github.io/atom.xml"/>
+    <subtitle>温故而知新</subtitle>
+    <logo>https://chogath.github.io/images/avatar.png</logo>
+    <icon>https://chogath.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2020, Gridea</rights>
+    <entry>
+        <title type="html"><![CDATA[构建全栈上报监控体系]]></title>
+        <id>https://chogath.github.io/post/1/</id>
+        <link href="https://chogath.github.io/post/1/">
+        </link>
+        <updated>2020-03-18T11:14:49.000Z</updated>
+        <content type="html"><![CDATA[<hr>
+<h2 id="title-构建全栈上报监控体系author-chogathdate-2017-03-21template-articlepug">title: 构建全栈上报监控体系<br>
+author: chogath<br>
+date: 2017-03-21<br>
+template: article.pug</h2>
+<p>在开始之前，我们需要明确一个观点：<code>监控只是手段,容灾才是核心</code>。</p>
+<p><span class="more"></span></p>
+<figure data-type="image" tabindex="1"><img src="https://img-1300294205.cos.ap-chengdu.myqcloud.com/thomas-du-crest-science1.jpg" alt="Taketori Monogatari" loading="lazy"></figure>
+<h3 id="调研">调研</h3>
+<pre><code>1、需要找到自己内部或行业比较好用的上报系统;
+
+2、明确我们需要监控的基础方法,使用这些上报系统完成测试demo,熟悉整体流程;
+
+3、找到业界公认的行业标准,进行差异化补充;
+
+4、将团队和业务的定制功能,合并整合进来;
+
+5、需要满足:业务的灵活上报、支持上报类型(如:合并上报、自动上报)、上报的灵活配置;
+
+6、单元测试:选取一个测试框架,进行用例的编写,提高代码质量.
+</code></pre>
+<h3 id="制定通用指标">制定通用指标</h3>
+<pre><code>1、首屏上报：是作为一种长期持续优化的专题性方式,需要持续关注,定期迭代优化
+
+2、页面测速和返回码上报：是对接口级别的监控,这样可以发现单个接口的问题,失败率,速度,分析是网络原因,还是服务稳定性,核心价值:是批量统计,可以看不同地区服务的稳定性.
+
+3、js error上报：快速发现和定位js问题,核心价值是快速实现;
+
+4、用户行为数据上报：对用户操作的数据,进行统计,分析,指引产品优化方向;
+
+5、实时监控上报：实时监控失败率,进行报警,包括邮件、短信提醒;
+</code></pre>
+<h3 id="一-首页上报-页面初始化性能体验">一、首页上报 页面初始化性能体验</h3>
+<p>目前的测速上报体系，主要依赖于浏览器的<code>performance</code>属性;</p>
+<p>1、几个比较重要的统计阶段</p>
+<p><code>页面加载完成的时间,这几乎代表了用户等待页面可用的时间</code></p>
+<pre><code class="language-Javascript">loadPage = loadEventEnd - navigationStart;
+</code></pre>
+<p><code>解析DOM树结构的时间</code></p>
+<pre><code class="language-Javascript">domReady = domComplete - responseEnd;
+</code></pre>
+<p><code>重定向的时间,拒绝重定向! 比如http://m.baidu.com/不能写成http://m.baidu.com</code></p>
+<pre><code class="language-Javascript">redirect = redirectEnd - redirectStart;
+</code></pre>
+<p><code>DNS查询时间,页面内是不是使用了太多不同的域名导致域名查询的时间太长</code></p>
+<pre><code class="language-Javascript">lookupDomain = domainLoopupEnd - domainLookupStart;
+</code></pre>
+<p><code>读取页面第一个字节的时间,可以理解为用户拿到你的资源占用的时间</code></p>
+<pre><code class="language-Javascript">request = responseEnd - requestStart;
+</code></pre>
+<p><code>执行onload回调函数的时间</code></p>
+<pre><code class="language-Javascript">// 是否太多不必要的操作都放到onload回调函数里执行了,考虑过延迟加载、按需加载的策略么?
+loadEvent = loadEventEnd - loadEventStart;
+</code></pre>
+<p><code>DNS缓存时间</code></p>
+<pre><code class="language-Javascript">appcache = domainLookupStart - fetchStart;
+</code></pre>
+<p><code>卸载页面的时间</code></p>
+<pre><code class="language-Javascript">unloadEvent = unloadEventEnd - unloadEventStart;
+</code></pre>
+<p><code>TCP建立连接完成握手时间</code></p>
+<pre><code class="language-Javascript">connect = connectEnd - connectStart;
+</code></pre>
+<p>2、业务埋点 放在模版中或通过构建工具植入到代码</p>
+<p><code>script不受css阻塞,记录开始时间</code></p>
+<pre><code class="language-html">&lt;head&gt;
+    ...
+    &lt;!-- 开始计时 --&gt;
+    &lt;script&gt;var T = {start: Date.now()};&lt;/script&gt;
+    ...
+&lt;/head&gt;
+</code></pre>
+<p><code>头部结束的时候,常规此时除了内联样式之外的CSS应该已经加载完成</code></p>
+<pre><code class="language-html">&lt;head&gt;
+...
+&lt;!-- header css加载结束--&gt;
+&lt;script&gt;T.header=Date.now();&lt;/script&gt;
+&lt;/head&gt;
+</code></pre>
+<p><code>body dom加载完成</code></p>
+<pre><code class="language-html">&lt;body&gt;
+...
+&lt;!--dom body加载完成--&gt;
+&lt;script&gt;T.body=Date.now();&lt;/script&gt;
+&lt;/body&gt;
+</code></pre>
+<p><code>JS主逻辑开启</code></p>
+<pre><code class="language-html">&lt;script src=&quot;main.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;T.mainStart=Date.now();&lt;/script&gt;
+</code></pre>
+<p><code>JS渲染结束</code></p>
+<pre><code class="language-html">&lt;!--
+注意：这里面需要区分直出和非直出
+
+原则上,有一些CGI接口是异步获取的,因此mainEnd可能无法作为页面全部都渲染完成的结束时间。
+
+但是,如果是react,vue等框架开发,在非web work场景下,首先JS是按顺序加载执行的。
+
+webkit内JS代码本身是单线程执行,这样至少已经render一次, 此时用户也基本看到页面样式。
+
+当然,不同的团队可能制定的标准语义值有差异 
+--&gt;
+&lt;script&gt;xxxxx&lt;/script&gt;
+&lt;script&gt;xxxxx&lt;/script&gt;
+&lt;script&gt;xxxxx&lt;/script&gt;
+&lt;script&gt;T.mainEnd=Date.now();&lt;/script&gt;
+
+domEnd: 20,
+cssEnd: 21,
+jsEnd: 22,
+firstScreen: 23,
+dataEnd: 24,
+allEnd: 25
+</code></pre>
+<p>3、非同步执行的页面渲染,需要注意如下:</p>
+<pre><code>1、页面存在iframe的情况下也需要判断加载时间;
+
+2、异步渲染的情况下应在异步获取数据插入之后再计算首屏;
+
+3、css重要背景图片可以通过JS请求图片url来统计(浏览器不会重复加载)
+
+4、没有图片则以统计JS执行时间为首屏,即认为文字出现时间
+
+5、浏览器白屏时间: 可以理解为dom加载完成记作白屏结束.
+
+6、总下载时间: 默认可以统计onload时间,这样可以统计同步加载的资源全部加载完的耗时.
+</code></pre>
+<h3 id="二-测试-返回码上报">二. 测试, 返回码上报</h3>
+<p>1、关注接口上报的统计维度</p>
+<p>如: <code>appid, platform, domain, cgi, type, code, time, apn等</code>;</p>
+<p>为了不浪费code和type, 请务必规范业务的返回码.协议规范是统计数据有意义的基础.</p>
+<p>2、组织上报的数据</p>
+<p>更好的规范,才能发挥数据上报,更有价值的反馈和统计.</p>
+<pre><code class="language-Javascript">let CONFIG = {
+    appid: getAppId(),
+    platform: getPlatform(),
+    domain: &quot;xxx.com&quot;,
+    apn: &quot;4G&quot;
+    //...
+}
+</code></pre>
+<p>3、上报的频率控制</p>
+<p>默认delay一个合理值,如果希望立即上报,那么delay设为0.</p>
+<pre><code class="language-Javascript">setTimeout(doReport, delay);
+</code></pre>
+<h3 id="三-错误上报">三. 错误上报</h3>
+<p>需要跟踪页面实时上报的错误,涉及JS错误以及主动上报</p>
+<p>核心就是包装了<code>window.onerror</code>这个事件,进行上报,因此使用的时候,自己就不要重写<code>window.onerror</code>可以使用<code>try catch</code>进行异常捕获</p>
+<p>可以封装一个API便于统一上报</p>
+<pre><code class="language-Javascript">REPORT.init({
+    id: xxx, // 可以是业务线id
+    combo: 0, // 是否合并上报, 0:关闭, 1 启动(默认)
+    delay: 0, // 当combo=1可用,延迟多少毫秒,合并缓冲区中的上报
+    url: &quot;xxx.com&quot;, // 指定上报地址
+    ignore: [], // 忽略某个错误
+    level: 1 // 设置默认级别,如:1-debug 2-info 4-error 8-fail
+})
+</code></pre>
+<h3 id="四-用户行为数据">四、用户行为数据</h3>
+<p>产品同学更加关注这一项。</p>
+<p>包括<code>页面点击和用户操作</code>等，这一块应该多思考如何能够统计的更合理, 比如<code>热力图, 用户操作流程和步骤, 用户使用习惯的统计</code>等等 ...</p>
+<h3 id="五-监控">五、监控</h3>
+<p>监控更偏向后端的上报, <code>monitor</code> 对于开发的报警、邮件提醒,短信告知,是一个比较符合行业标准的方式.</p>
+<pre><code>1、需要有更合理的报警维度,每天很多条短信,麻木了;
+
+2、立体化等前端监控,多整合,避免重复造轮子,保证监控稳定全面即可;
+
+3、寻找到合理化的web性能标准,不断完善性能指标;
+
+4、完善所有基础库的单元测试和代码稳定; ...
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Hello Gridea]]></title>
+        <id>https://chogath.github.io/post/hello-gridea/</id>
+        <link href="https://chogath.github.io/post/hello-gridea/">
+        </link>
+        <updated>2018-12-11T16:00:00.000Z</updated>
+        <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
+✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
+✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
+<!-- more -->
+<p><a href="https://github.com/getgridea/gridea">Github</a><br>
+<a href="https://gridea.dev/">Gridea 主页</a><br>
+<a href="http://fehey.com/">示例网站</a></p>
+<h2 id="特性">特性👇</h2>
+<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
+<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
+<p>🏷️  你可以对文章进行标签分组</p>
+<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
+<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
+<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
+<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
+<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
+<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
+<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
+<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
+<p>未来，它一定会成为你离不开的伙伴</p>
+<p>尽情发挥你的才华吧！</p>
+<p>😘 Enjoy~</p>
+]]></content>
+    </entry>
+</feed>
