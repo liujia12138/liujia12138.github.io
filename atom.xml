@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ChoGathK.github.io</id>
     <title>Gridea</title>
-    <updated>2020-03-18T13:46:10.960Z</updated>
+    <updated>2020-03-18T13:48:54.503Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ChoGathK.github.io"/>
     <link rel="self" href="https://ChoGathK.github.io/atom.xml"/>
@@ -16,12 +16,7 @@
         <link href="https://ChoGathK.github.io/post/1/">
         </link>
         <updated>2020-03-18T11:14:49.000Z</updated>
-        <content type="html"><![CDATA[<hr>
-<h2 id="title-构建全栈上报监控体系author-chogathdate-2017-03-21template-articlepug">title: 构建全栈上报监控体系<br>
-author: chogath<br>
-date: 2017-03-21<br>
-template: article.pug</h2>
-<p>在开始之前，我们需要明确一个观点：<code>监控只是手段,容灾才是核心</code>。</p>
+        <content type="html"><![CDATA[<p>在开始之前，我们需要明确一个观点：<code>监控只是手段,容灾才是核心</code>。</p>
 <p><span class="more"></span></p>
 <figure data-type="image" tabindex="1"><img src="https://img-1300294205.cos.ap-chengdu.myqcloud.com/thomas-du-crest-science1.jpg" alt="Taketori Monogatari" loading="lazy"></figure>
 <h3 id="调研">调研</h3>
