@@ -1,0 +1,242 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>js面试题总结 | AzhA</title>
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588768940389">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="js面试题总结 | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="1.事件冒泡和事件捕获
+事件捕获：事件从最不确定的元素向最准确的元素开始触发，即由外向内
+事件冒泡：事件从最准确的元素开始向最不准确的元素触发，即由内向外
+addEventListener()有三个参数，第一个参数是绑定的事件类型；第二个是..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://liujia12138.github.io">
+  <img class="avatar" src="https://liujia12138.github.io/images/avatar.png?v=1588768940389" alt="">
+  </a>
+  <h1 class="site-title">
+    AzhA
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://liujia12138.github.io" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/archives" class="menu">
+          Archives
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/post/about" class="menu">
+          About
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              js面试题总结
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-05-06
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>1.事件冒泡和事件捕获<br>
+事件捕获：事件从最不确定的元素向最准确的元素开始触发，即由外向内<br>
+事件冒泡：事件从最准确的元素开始向最不准确的元素触发，即由内向外</p>
+<p>addEventListener()有三个参数，第一个参数是绑定的事件类型；第二个是触发事件时执行的函数；第三个是 是否在捕获阶段触发事件，默认是false。</p>
+<p>怎么阻止事件冒泡？event.stopPropagation()，vue项目中用stop修饰符</p>
+<p>为什么要阻止事件冒泡？<br>
+我们再多数情况下只使用冒泡监听。在一个列表页中，每一条信息中右下角会有一个删除按钮，同时点击这一条消息又会进入到详情页。当我们点击了删除按钮事件执行完毕之后，由于事件冒泡，会触发外层进入详情页的事件，这时就需要给删除按钮一个阻止事件传递的功能，点击删除按钮之后事件就会结束。</p>
+<p>2.js获取url中的参数<br>
+function getQueryString(name) {<br>
+var reg = new RegExp(&quot;(^|&amp;)&quot; + name + &quot;=([^&amp;]*)(&amp;|$)&quot;, &quot;i&quot;);<br>
+var r = window.location.search.substr(1).match(reg);<br>
+if (r != null) return decodeURI(r[2]);<br>
+return &quot;&quot;;<br>
+}<br>
+3.post请求能否跨域？<br>
+post跨域问题本身是因为请求的域名和用于请求的机器域名不一致造成的，例如本地是127.0.0.1域名，请求的是192.168.50.11，在Network里面可以看到会接受到返回值，但是控制台会报请求头不一致的跨域问题，是因为浏览器对后台返给我结果进行了检测，发现两个环境域名不一致，所以解决的办法就是后台在接受到请求的时候，在返回头信息里面加入指定域名可访问或者所有域名都可以访问就可以，这样后台接收到请求之后的返回头里面就指定了对比的请求头，所以前端就能收到返回值了。</p>
+<p>Access-Control-Allow-Headers: DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,userid,sign<br>
+Access-Control-Allow-Methods: GET, POST, OPTIONS<br>
+Access-Control-Allow-Origin: *<br>
+//加上过滤方法之后的返回头信息，*代表允许所有的域名访问<br>
+4.页面性能优化<br>
+减少http请求，减少http请求次数是缩短响应时间的关键，捆绑文件，将多个脚本文件捆绑成一个，以此来减少http请求次数<br>
+使用css精灵图<br>
+减少事件绑定，使用事件委托<br>
+引用外部的css和js，而不是写在html文件内，有利于浏览器对文件进行缓存<br>
+合理设置 HTTP缓存　　缓存的力量是强大的，恰当的缓存设置可以大大的减少 HTTP请求。以有啊首页为例，当浏览器没有缓存的时候访问一共会发出 78个请求，共 600多 K数据 (如图 1.1)，而当第二次访问即浏览器已缓存之后访问则仅有 10个请求，共 20多 K数据 (如图 1.2)。 (这里需要说明的是，如果直接 F5刷新页面的话效果是不一样的，这种情况下请求数还是一样，不过被缓存资源的请求服务器是 304响应，只有 Header没有Body ，可以节省带宽 )　　怎样才算合理设置 ?原则很简单，能缓存越多越好，能缓存越久越好。例如，很少变化的图片资源可以直接通过 HTTP Header中的Expires设置一个很长的过期头 ;变化不频繁而又可能会变的资源可以使用 Last-Modifed来做请求验证。尽可能的让资源能够在缓存中待得更久。<br>
+减少dom操作<br>
+5.原生ajax<br>
+var xhr = new XMLHttpRequest();<br>
+xhr.onreadystatechange= function(){<br>
+if(xhr.readyState == 4 &amp;&amp; xhr.status == 200){<br>
+console.log(xhr.responseText)<br>
+}<br>
+}<br>
+//发送get请求时，参数直接拼接在url上<br>
+xhr.open(&quot;get&quot;, &quot;url?param1=val1&amp;param2=val2&quot;);<br>
+//发送post请求时，参数用send函数发送，并且需要设置请求头<br>
+xhr.open(&quot;post&quot;, &quot;url&quot;);<br>
+xhr.setRequestHeader('Content-Type', &quot;application/x-www-form-urlencoded&quot;)<br>
+xhr.send(&quot;name=value&amp;age=12&quot;)<br>
+6.js判断数据类型的方法<br>
+typeof 只能对基本数据类型做出准确的判断，引用数据类型都会返回object，typeof的返回结果有：number、string、undefined、boolean、object、function六种，都是小写<br>
+instanceof：判断对象和构造函数在原型链上是否有关联，有返回true，无返回false，基本数据类型无效<br>
+constructor：查看对象对应的构造函数，当我们写一个构造函数的时候程序会自动添加；构造函数名.prototype.constructor=构造函数名；<br>
+str.constructor == String;//true<br>
+object.prototype.toString.call: 不管是什么类型都能检测出来<br>
+7. call和apply,bind的区别？<br>
+call、apply、bind的作用是改变函数运行时this的指向</p>
+<p>2.js垃圾回收与内存泄漏？<br>
+浏览器的JavaScript具有自动垃圾回收机制（GC），即执行环境会负责管理代码执行过程中的内存。原理是：垃圾收集器会定期找出那些不在继续使用的变量，然后将其内存进行释放。</p>
+<p>垃圾回收机制标记无用变量的策略有两种：标记清除和引用计数。标记清除较为常用。</p>
+<p>不在使用的变量就是生命周期结束的变量，只能是局部变量，因为全局变量的生命周期直到浏览器卸载页面是才会结束。局部变量只在函数的执行过程中存在，在这个过程中会在栈或者堆上为这个局部变量分配相应的空间用来存储他们的值，直到函数结束。但是闭包中由于你不函数的原因，外部函数不能算是结束。</p>
+<p>function fn1(){<br>
+var obj = {name: &quot;tom&quot;}<br>
+}<br>
+function fn2(){<br>
+var obj = {name:&quot;tom&quot;};<br>
+return obj;<br>
+}<br>
+var a = fn1();<br>
+var b = fn2();<br>
+上面的例子中，只有fn1中的obj会在调用结束后被垃圾回收机制回收，fn2中的obj不会，因为在fn2的调用过程中，返回的变量被变量b引用，所以不会改块内存不会被释放。</p>
+<p>1.标记清除：当变量进入环境时，就将这个变量标记为“进入环境”，当变量离开环境时，将它标记为“离开环境”</p>
+<p>function test(){<br>
+var a = 10 ;       // 被标记 ，进入环境<br>
+var b = 20 ;       // 被标记 ，进入环境<br>
+}<br>
+test();            // 执行完毕 之后 a、b又被标离开环境，被回收。<br>
+2.引用计数：跟踪每个值被引用的次数，引用一次就将次数加1，如果包含这个值的变量又被赋了另外一个值，引用次数就减1，当引用次数为0时，垃圾回收机制就会释放该值所占用的内存。</p>
+<p>function test() {<br>
+var a = {};    // a指向对象的引用次数为1<br>
+var b = a;     // a指向对象的引用次数加1，为2<br>
+var c = a;     // a指向对象的引用次数再加1，为3<br>
+var b = {};    // a指向对象的引用次数减1，为2<br>
+}</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://liujia12138.github.io/post/ru-he-pan-duan-shu-zu-he-lei-shu-zu-ru-he-jiang-lei-shu-zu-zhuan-cheng-shu-zu/">
+              <h3 class="post-title">
+                如何判断数组和类数组？如何将类数组转成数组？
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  AzhA
+  <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -2,23 +2,17 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>关于 | AzhA</title>
+<title>css实现宽高比 | AzhA</title>
 <link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588768940389">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="关于 | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="css实现宽高比 | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="
-欢迎来到我的小站呀，很高兴遇见你！🤝
-
-🏠 关于本站
-👨‍💻 博主是谁
-⛹ 兴趣爱好
-📬 联系我呀
-..." />
+    <meta name="description" content="垂直方向的padding+calc
+借助padding-top或者padding-bottom的百分比值来实现容器的宽高比，padding的百分比值是根据外层容器的宽度计算的，我们只需要设置好外层容器的宽度，并将容器的高度设置为0，容器所有..." />
     <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -81,11 +75,11 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              关于
+              css实现宽高比
             </h2>
             <div class="post-info">
               <span>
-                2019-01-25
+                2020-05-06
               </span>
               <span>
                 1 min read
@@ -95,32 +89,49 @@
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <blockquote>
-<p>欢迎来到我的小站呀，很高兴遇见你！🤝</p>
-</blockquote>
-<h2 id="关于本站">🏠 关于本站</h2>
-<h2 id="博主是谁">👨‍💻 博主是谁</h2>
-<h2 id="兴趣爱好">⛹ 兴趣爱好</h2>
-<h2 id="联系我呀">📬 联系我呀</h2>
-
+                <p>垂直方向的padding+calc<br>
+借助padding-top或者padding-bottom的百分比值来实现容器的宽高比，padding的百分比值是根据外层容器的宽度计算的，我们只需要设置好外层容器的宽度，并将容器的高度设置为0，容器所有子元素都设置绝对定位。</p>
+<!-- html如下 -->
+<div class='container'>
+    <div class='aspectration' data-ratio='4:3'>
+        <div class='content'></div>
+    </div>
+</div>
+.container{
+    width: 300px;
+}
+.aspectration{
+    width: 100%;
+    position: relative;
+    height: 0;
+}
+.aspectration[data-ratio='4:3']{
+    padding-top: calc(100% / 4 * 3);
+}
+.aspectration>*{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
               </div>
               <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E5%85%B3%E4%BA%8E%E6%9C%AC%E7%AB%99">🏠 关于本站</a></li>
-<li><a href="#%E5%8D%9A%E4%B8%BB%E6%98%AF%E8%B0%81">👨‍💻 博主是谁</a></li>
-<li><a href="#%E5%85%B4%E8%B6%A3%E7%88%B1%E5%A5%BD">⛹ 兴趣爱好</a></li>
-<li><a href="#%E8%81%94%E7%B3%BB%E6%88%91%E5%91%80">📬 联系我呀</a></li>
-</ul>
-</li>
-</ul>
-
+                
               </div>
             </div>
           </article>
         </div>
 
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://liujia12138.github.io/post/he-mo-xing-kuan-gao-zhi-de-ji-suan-fang-shi-bian-jie-ta-xian-fu-zhi-zuo-yong-box-sizing-gai-nian/">
+              <h3 class="post-title">
+                盒模型宽高值的计算方式，边界塌陷，负值作用，box-sizing概念
+              </h3>
+            </a>
+          </div>
         
 
         

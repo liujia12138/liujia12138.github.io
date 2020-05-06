@@ -1,0 +1,301 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>浏览器兼容问题 | AzhA</title>
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588768940389">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="浏览器兼容问题 | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="1.ie8不支持background-size设置背景图大小
+用filter：
+filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled='true', src='..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://liujia12138.github.io">
+  <img class="avatar" src="https://liujia12138.github.io/images/avatar.png?v=1588768940389" alt="">
+  </a>
+  <h1 class="site-title">
+    AzhA
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://liujia12138.github.io" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/archives" class="menu">
+          Archives
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/post/about" class="menu">
+          About
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              浏览器兼容问题
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-05-06
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>1.ie8不支持background-size设置背景图大小<br>
+用filter：</p>
+<p>filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled='true', src='背景图url', sizingMethod='scale');<br>
+参数:<br>
+1.enabled：设置或检索滤镜是否激活，true/false，默认为true<br>
+2.src：图片地址<br>
+3.sizingMethod：设置或检索滤镜作用的对象的图片在容器边界内的显示方式，crop剪切/image默认值/scale缩放图片</p>
+<p>2.ie8支持的伪类选择器只有:hover,:focus,:first-child<br>
+想实现li:nth-of-type(2)只能用li:first-child+li</p>
+<p>3.sfaire浏览器中input如果设置了高度，输入的时候光标就会跑到上面去了，所以要用padding撑开<br>
+4.ie8不支持placeholder属性，用js实现<br>
+1.先判断浏览器是否支持placeholder属性，如果不支持就模拟placeholder<br>
+2.创建一个label标签：<label>密码：<label/>标签里的内容为placeholder属性值，再讲标签覆盖到对应的input上</p>
+<p>; (function (win) {</p>
+<pre><code>win.isPlaceholer = function () {
+    var input = document.createElement(&quot;input&quot;);
+    return &quot;placeholder&quot; in input;
+};
+
+win.placeholder = function () {
+
+    if (!isPlaceholer()) {
+        var Placeholder =function (obj) {
+            this.input = obj;
+            var te = obj.getAttribute('placeholder');
+            this.label = document.createElement('label');
+            this.label.innerHTML = te;
+            this.label.id = obj.id + 'Label';
+            this.label.style.cssText = 'position:absolute; text-indent:4px;color:#999999; font-size:14px;';
+            if (obj.value !== '') {
+                this.label.style.display = 'none';
+            }
+            this.init();
+        };
+        Placeholder.prototype = {
+
+            getxy: function (obj) {
+                var left, top;
+                if (document.documentElement.getBoundingClientRect) {
+                    var html = document.documentElement,
+                    body = document.body,
+                    pos = obj.getBoundingClientRect(),
+                    st = html.scrollTop || body.scrollTop,
+                    sl = html.scrollLeft || body.scrollLeft,
+                    ct = html.clientTop || body.clientTop,
+                    cl = html.clientLeft || body.clientLeft;
+                    left = pos.left + sl - cl;
+                    top = pos.top + st - ct;
+                } else {
+                    while (obj) {
+                        left += obj.offsetLeft;
+                        top += obj.offsetTop;
+                        obj = obj.offsetParent;
+                    }
+                }
+                return {
+                    left: left,
+                    top: top
+                };
+            },
+
+            getwh: function (obj) {
+                return {
+                    w: obj.offsetWidth,
+                    h: obj.offsetHeight
+                };
+            },
+
+            setStyles: function (obj, styles) {
+                for (var p in styles) {
+                    obj.style[p] = styles[p] + 'px';
+                }
+            },
+            init: function () {
+                var label = this.label,
+                input = this.input,
+                getXY = this.getxy,
+                xy = this.getxy(input),
+                wh = this.getwh(input);
+                this.setStyles(label, { 'width': wh.w, 'height': wh.h, 'lineHeight': 40, 'left': xy.left + 8, 'top': xy.top });
+                document.body.appendChild(label);
+                label.onclick = function () {
+                    this.style.display = &quot;none&quot;;
+                    input.focus();
+                };
+                input.onfocus = function () {
+                    label.style.display = &quot;none&quot;;
+                };
+                input.onblur = function () {
+                    if (this.value === &quot;&quot;) {
+                        label.style.display = &quot;block&quot;;
+                    }
+                };
+                if (window.attachEvent) {
+                    window.attachEvent(&quot;onresize&quot;, function () {
+                        var xy = getXY(input);
+                        Placeholder.prototype.setStyles(label, { 'left': xy.left + 8, 'top': xy.top });
+                    });
+                } else {
+                    window.addEventListener(&quot;resize&quot;, function () {
+                        var xy = getXY(input);
+                        Placeholder.prototype.setStyles(label, { 'left': xy.left + 8, 'top': xy.top });
+                    }, false);
+                }
+            }
+        };
+
+        var inpColl = $(&quot;#Box input:visible&quot;);//这里是页面上要添加placeholder支持的input
+        //var inpColl = document.getElementsByTagName('input'),          
+        var textColl = document.getElementsByTagName('textarea');//这里是页面上要添加placeholder支持的textarea
+        //var lableArr = $(&quot;#Box lable&quot;);
+        var toArray = function (coll) {
+            for (var i = 0, a = [], len = coll.length; i &lt; len; i++) {
+                a[i] = coll[i];
+            }
+            return a;
+        };
+        var inpArr = toArray(inpColl),
+        textArr = toArray(textColl),
+
+        placeholderArr = inpArr.concat(textArr);
+        for (var i = 0; i &lt; placeholderArr.length; i++) {
+            if (placeholderArr[i].getAttribute('placeholder') !== null) {
+
+                new Placeholder(placeholderArr[i]);
+            }
+        }
+    }
+
+};
+</code></pre>
+<p>}(window));<br>
+5.ie8不支持css3动画<br>
+6.element-ui在火狐浏览器下的滚动问题<br>
+用<el-scrollbar></el-scrollbar>组件</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://liujia12138.github.io/post/css-yu-chu-li-qi-sasslessstylus/">
+              <h3 class="post-title">
+                CSS预处理器，sass、less、stylus
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  AzhA
+  <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

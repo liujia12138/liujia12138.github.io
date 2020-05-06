@@ -1,0 +1,351 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>vue面试题总结 | AzhA</title>
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588768940389">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="vue面试题总结 | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="1.vue和react、angular的区别？
+vue的优点：
+1.低耦合：视图可以独立于model变化和修改，一个viewModel可绑定到不同的view上
+2.可复用：可以把一些视图逻辑放在一个viewModel里，让很多view重用这..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://liujia12138.github.io">
+  <img class="avatar" src="https://liujia12138.github.io/images/avatar.png?v=1588768940389" alt="">
+  </a>
+  <h1 class="site-title">
+    AzhA
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://liujia12138.github.io" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/archives" class="menu">
+          Archives
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/post/about" class="menu">
+          About
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              vue面试题总结
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-05-06
+              </span>
+              <span>
+                10 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>1.vue和react、angular的区别？<br>
+vue的优点：<br>
+1.低耦合：视图可以独立于model变化和修改，一个viewModel可绑定到不同的view上<br>
+2.可复用：可以把一些视图逻辑放在一个viewModel里，让很多view重用这段视图逻辑<br>
+3.独立开发</p>
+<p>vue的缺点：不支持IE8、生态环境不如angular和react、首屏渲染慢、SEO较差</p>
+<p>vue和react对比如何选型？从性能、生态圈、数据量、数据的传递上作比较？<br>
+1.vue和react都提供了虚拟dom、提供了响应式和组件化的视图开发、有配套的路由和状态管理工具<br>
+2.性能上：vue优于react<br>
+3.生态圈：vue：es6+webpack+vue-cli+vue-router+vuex+vue组件；react：es6+webpack+react+redux+react-router</p>
+<p>vue和angular：<br>
+相同点：都支持指令（内置指令和自定义指令）、都支持过滤器、都支持数据双向绑定、都不支持低端浏览器<br>
+不同点：<br>
+1.angular学习成本高，而vue本身提供的api比较简单直观<br>
+2.性能上，angular依赖对数据做脏检查，所以watcher越多越慢，vue使用依赖追踪的观察并且使用异步队列更新，所有数据都是独立触发的。</p>
+<p>vue和react：<br>
+相同点：<br>
+1.react采用JSX语法，vue的组件开发中也推崇用.vue文件格式，对文件内容都有一些约定，都需要编译<br>
+2.中心思想相同，都是组件化，组件之间可以嵌套<br>
+3.都提供合理的钩子函数<br>
+4.都不内置ajax、router等功能到核心包，而是以插件方式加载<br>
+不同点：<br>
+1.react依赖Virtual dom, vue使用虚拟dom<br>
+2.vue在模板中提供了指令，过滤器等，可以方便的操作dom</p>
+<p>2.什么是mvvm？mvc框架和mvvm框架的区别？<br>
+mvvm是model-view-viewModel的缩写，model代表数据模型，也可以在model中定义数据修改和操作的逻辑、view代表ui组件，它负责将数据模型转化成ui展示出来、viewModel是一个同步view和model的对象。<br>
+在mvvm框架下，view和model没有直接的联系，是通过viewModel进行交互的，viewModel通过双向数据绑定把view层和model层联系起来，view数据的变化会同步到model中，model数据的变化也会立即反应到view上。</p>
+<p>mvvm和mvc的区别？<br>
+mvc是model-view-controller的缩写，controller就是mvvm中的viewModel，mvvm主要解决了mvc中大量的dom操作导致的页面性能降低，加载速度变慢的问题。<br>
+区别：mvvm通过数据来显示改变视图层，而不是直接操作dom</p>
+<p>3.vue生命周期？<br>
+1.beforeCreate：刚刚创建组件，dom 和data还没有初始化<br>
+2.ceated：data初始化完成，方法可以调用，数据加载最好放在created里<br>
+3.beforeMounted：dom挂载完成前，数据初始化已完成，但是还是显示{{}},因为vue使用虚拟dom占位<br>
+4.mounted：数据和dom挂载完成，可以执行dom操作<br>
+5.beforeUpdate：只要是页面数据变化就会触发，页面数据还是原来的数据，还没有完成更新<br>
+6.updated：数据更新完毕，页面数据是更新之后的<br>
+7.beforeDestroy：组件销毁前，类似路由钩子beforeRouterLeave，都是在路由跳转之前，但是无法阻止路由跳转<br>
+8.destroyed：组件销毁完成</p>
+<p>4.vue-router实现原理？<br>
+js根据url的变化，清除当前页面的内容，将要展示的内容组件挂载到当前页面上，更新视图但不重新请求页面，实现了单页面路由跳转</p>
+<p>路由模式：hash模式、history模式、abstract模式<br>
+1.hash模式：浏览器url#后面的部分，包括#，hash是url中的锚点通过锚点值的改变来渲染指定dom位置的不同组件<br>
+2.history模式：可以去掉hash模式下的#，只需要在router配置里加上mode: 'history', 但是history模式会出现404问题，需要后端配合<br>
+3.abstract模式：使用一个不依赖于浏览器的浏览历史虚拟管理后台</p>
+<p>路由间的跳转？<br>
+1.声明式跳转（标签）：router-link to<br>
+2.编程式跳转（js）：函数内使用this.$router.push()</p>
+<p>路由钩子？<br>
+1.全局钩子：beforeEach，afterEach<br>
+2.单个路由独享的钩子：beforeEnter<br>
+3.组件内的钩子：beforeRouterEnter、beforeRouterLeave</p>
+<p>5.vuex是什么？应用场景？<br>
+vuex是vue的状态管理工具，可以帮助我们管理共享状态。使用场景：单页面应用中组件间的状态管理，播放器，购物车等<br>
+使用：安装vuexnpm install vuex --save --&gt; 初始化store index.js --&gt; 在main.js中挂载store<br>
+vuex的几个属性：</p>
+<p>state：全局要访问的state对象，相当于vue对象中的data属性<br>
+getter：实时监听state的变化，store的计算属性<br>
+mutation：同步操作，修改状态，在组件中使用this.<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>t</mi><mi>o</mi><mi>r</mi><mi>e</mi><mi mathvariant="normal">.</mi><mi>c</mi><mi>o</mi><mi>m</mi><mi>m</mi><mi>i</mi><mi>t</mi><msup><mo>(</mo><mo mathvariant="normal">′</mo></msup><mi mathvariant="normal">方</mi><mi mathvariant="normal">法</mi><msup><mi mathvariant="normal">名</mi><mo mathvariant="normal">′</mo></msup><mo>)</mo><mi mathvariant="normal">触</mi><mi mathvariant="normal">发</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi mathvariant="normal">：</mi><mi mathvariant="normal">异</mi><mi mathvariant="normal">步</mi><mi mathvariant="normal">操</mi><mi mathvariant="normal">作</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">修</mi><mi mathvariant="normal">改</mi><mi mathvariant="normal">状</mi><mi mathvariant="normal">态</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">在</mi><mi mathvariant="normal">组</mi><mi mathvariant="normal">件</mi><mi mathvariant="normal">中</mi><mi mathvariant="normal">使</mi><mi mathvariant="normal">用</mi><mi>t</mi><mi>h</mi><mi>i</mi><mi>s</mi><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">store.commit(&#x27;方法名&#x27;)触发
+action：异步操作，修改状态，在组件中使用this.</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.001892em;vertical-align:-0.25em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault">t</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">e</span><span class="mord">.</span><span class="mord mathdefault">c</span><span class="mord mathdefault">o</span><span class="mord mathdefault">m</span><span class="mord mathdefault">m</span><span class="mord mathdefault">i</span><span class="mord mathdefault">t</span><span class="mopen"><span class="mopen">(</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mord cjk_fallback">方</span><span class="mord cjk_fallback">法</span><span class="mord"><span class="mord cjk_fallback">名</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord cjk_fallback">触</span><span class="mord cjk_fallback">发</span><span class="mord mathdefault">a</span><span class="mord mathdefault">c</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord cjk_fallback">：</span><span class="mord cjk_fallback">异</span><span class="mord cjk_fallback">步</span><span class="mord cjk_fallback">操</span><span class="mord cjk_fallback">作</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">修</span><span class="mord cjk_fallback">改</span><span class="mord cjk_fallback">状</span><span class="mord cjk_fallback">态</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">在</span><span class="mord cjk_fallback">组</span><span class="mord cjk_fallback">件</span><span class="mord cjk_fallback">中</span><span class="mord cjk_fallback">使</span><span class="mord cjk_fallback">用</span><span class="mord mathdefault">t</span><span class="mord mathdefault">h</span><span class="mord mathdefault">i</span><span class="mord mathdefault">s</span><span class="mord">.</span></span></span></span>store.dispatch('方法名')触发<br>
+不使用vuex会带来什么问题?<br>
+可维护性下降、可读性下降、会增加耦合性<br>
+6.vue怎么实现数据双向绑定的？<br>
+数据劫持+发布订阅模式：当监控的数据对象改变之后，这个变更会被广播给所有的订阅该数据的watcher，然后由watcher实现对页面的重新渲染<br>
+vue是如何进行数据劫持的？通过打印data中的属性我们可以看到每个data中的属性都有一个对应的set和get方法，这是因为vue是通过Object.defineProperty来实现数据劫持的，Object.defineProperty可以通过set和get监听对象的属性值<br>
+例子：</p>
+<h2 id="title"></h2>
+<input id="input" type="text" onkeyup="keyup(event)" oninput="value=value.replace(/[^\d]/g, '')"/>
+<button onclick="add()">add</button>
+title和input都可以显示value值，点击button和输入input都会实时更新value值。
+<p>//1.初始化数据源<br>
+let vm = {<br>
+value: 0<br>
+}</p>
+<p>//2.定义Dep,用来存放watcher和发布<br>
+var Dep = function(){<br>
+this.list = [];<br>
+this.add = function(fn){<br>
+this.list.push(fn)<br>
+}<br>
+this.notify = function(newValue){<br>
+this.list.forEach(function(fn){<br>
+fn(newValue)<br>
+})<br>
+}<br>
+}</p>
+<p>//3.定义更新html的方法--watcher<br>
+function renderTitle(newValue){<br>
+$('#title').text(newValue)<br>
+}<br>
+function renderInput(newValue){<br>
+$('#input').val(newValue)<br>
+}</p>
+<p>//4.初始化Dep，添加watcher<br>
+var dep = new Dep();<br>
+dep.add(renderTitle);<br>
+dep.add(renderInput);</p>
+<p>//5.创建观察者，实时更新vaule<br>
+function observer(obj, key, value){<br>
+Object.defineProperty(obj, key, {<br>
+enumerable: true,<br>
+configurable: true,<br>
+set: function(newValue){<br>
+if(value != newValue){<br>
+value = newValue;<br>
+dep.notify(newValue)<br>
+}<br>
+},<br>
+get: function(){<br>
+return value<br>
+}<br>
+})<br>
+}</p>
+<p>//6.页面用到的两个方法<br>
+function keyup(e){<br>
+let value = Number.parseInt(e.target.value);<br>
+vm.value = Number.isNaN(value) ? 0 : value;<br>
+}<br>
+function add(){<br>
+vm.value += 1;<br>
+}</p>
+<p>//7.初始化observer<br>
+observer(vm, 'value', vm.value);</p>
+<p>//8.初始化页面，将数据渲染到页面<br>
+dep.notify(vm.value);<br>
+7.vue3是怎么实现数据双向绑定的？和vue2有什么区别？<br>
+vue3是通过es6的proxy实现数据双向绑定的，比vue2的优势就是可以检测到数组内部数据的变化</p>
+<p>8.v-on可以绑定多个事件吗？<br>
+可以，v-on=&quot;{click: a, mouseLeave: b}&quot;<br>
+绑定多个事件可以分为一个元素绑定多种事件，一个事件绑定多个函数</p>
+<!-- 一个元素绑定多种事件 -->
+<p><button v-on="{click: a, mouseLeave: b}">click</button><br>
+&lt;button @click=&quot;a&quot; @mouseLeave=&quot;b&quot;&gt;click</button></p>
+<!-- 一个事件绑定多个函数 : 按顺序执行-->
+<p>&lt;button @click=&quot;a(), b()&quot;&gt;a,b</button><br>
+&lt;button @click=&quot;c()&quot;&gt;c</button><!-- 这里的c函数内可以调用a和b，打到绑定多个函数的效果--><br>
+9.vue的filter是做什么用的？<br>
+过滤器，对数据进行过滤，比如得到字符串中的某几个字符，或者进行字符串拼接等<br>
+过滤器分为全局过滤器和组件过滤器；<br>
+全局：</p>
+<p>Vue.filter(&quot;globalFilter&quot;, function(value){<br>
+//do something<br>
+return value+ '.....'<br>
+})<br>
+局部（组件内）：</p>
+<p>filters:{<br>
+filter1: function(value){<br>
+return value+'...'<br>
+}<br>
+}<br>
+10.vue组件之间传值是怎么实现的？<br>
+1.父组件传给子组件：props<br>
+2.子组件传父组件：子组件内用$emit触发父组件传的方法</p>
+<p>11.vue-cli中怎么自定义组件？<br>
+1.新建组件文件，并在文件内用export default{}导出<br>
+2.在需要的页面import组件，并且在components中注册组件<br>
+3.在template中使用并传值</p>
+<p>12.scss是什么？怎么使用？有什么特性？<br>
+scss是css的预编译。<br>
+使用步骤：<br>
+1.安装css-loader、sass-loader、node-loader<br>
+2.在build目录找到webpack.base.config.js，在extends属性中加入一个扩展.scss<br>
+3.在webpack.base.config.js文件内配置module属性<br>
+4.在组件内的style标签上加入 lang='scss'</p>
+<p>特性：1.可以使用变量；2.可以用混合器；3.可以嵌套</p>
+<p>13.有什么作用？<br>
+用<keep-alive></keep-alive>包裹动态组件时，会缓存不活动的组件实例，用于保留组件状态，避免组件重现渲染。</p>
+<p>14.vue中如何自定义指令？<br>
+使用Vue.directive(id, [definition])<br>
+第一个参数：指令的名称，定义的时候不需要加v-前缀，调用的时候必须加v-；<br>
+第二个参数：是一个对象，这个对象上会有一些指令相关的函数，这些函数可以在特定的阶段执行相关的操作<br>
+1.定义全局指令</p>
+<p>Vue.directive(&quot;focus&quot;, {<br>
+// 每个函数第一个参数都是el，表示绑定了指令的元素<br>
+bind: function(el){//指令被绑到元素上的时候回立即执行，只执行一次</p>
+<pre><code>},
+inserted: function(el){//元素插入到dom中的时候回执行inserted，只触发一次
+    el.focus()
+},
+updated: function(el){//元素更新的时候会触发
+
+}
+</code></pre>
+<p>})<br>
+2.定义局部指令</p>
+<p>directives:{<br>
+focus: {<br>
+inserted: function(el){//元素插入到dom中的时候回执行inserted，只触发一次<br>
+el.focus()<br>
+},<br>
+}<br>
+}<br>
+使用指令<input v-focus/></p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+
+        
+
+        <div class="site-footer">
+  AzhA
+  <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,237 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>前端六大排序算法 | AzhA</title>
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588768940389">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="前端六大排序算法 | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="1.冒泡排序
+原理：比较相邻两个数的大小，将较大（或小）的数换到右边（或左边），这样就能将最大（或最小）的数一个一个的比较出来，放到一端。循环这个过程，将所有的数字的顺序排列出来。
+数组长度为n，总共要进行n-1趟，每第i趟的排序次数为n-..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://liujia12138.github.io">
+  <img class="avatar" src="https://liujia12138.github.io/images/avatar.png?v=1588768940389" alt="">
+  </a>
+  <h1 class="site-title">
+    AzhA
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://liujia12138.github.io" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/archives" class="menu">
+          Archives
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/post/about" class="menu">
+          About
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              前端六大排序算法
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-05-06
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>1.冒泡排序<br>
+原理：比较相邻两个数的大小，将较大（或小）的数换到右边（或左边），这样就能将最大（或最小）的数一个一个的比较出来，放到一端。循环这个过程，将所有的数字的顺序排列出来。<br>
+数组长度为n，总共要进行n-1趟，每第i趟的排序次数为n-i-1次<br>
+时间复杂度：O(n^2)；空间复杂度O(1)</p>
+<p>function bubbleSort(arr){<br>
+for(var i = 0; i&lt;arr.length-1; i++){//冒泡次数<br>
+for(var j = 0; j &lt; arr.length - i -1; j++){<br>
+if(arr[j] &gt; arr[j+1]){<br>
+let temp = arr[j];<br>
+arr[j] = arr[j+1];<br>
+arr[j+1] = temp;<br>
+}<br>
+}<br>
+}<br>
+return arr<br>
+}<br>
+2.选择排序<br>
+原理：先找出数组中最大（或最小）的值，放到一头，然后重复这个过程<br>
+时间复杂度：O(n^2)</p>
+<p>function selectSort(arr){<br>
+for(var i = 0; i&lt; arr.length-1; i++){//循环次数<br>
+for(var j = i+1; j &lt; arr.length; j++){<br>
+if(arr[i] &gt; arr[j]){<br>
+var tmp = arr[i];<br>
+arr[i] = arr[j];<br>
+arr[j] = tmp<br>
+}<br>
+}<br>
+}<br>
+return arr<br>
+}<br>
+3.插入排序<br>
+原理：构建有序序列，对于未排序数据，在已排序的序列中从后向前扫描，找到相应的位置并插入。<br>
+默认该有序数列的第一个值是数组的第一个元素，i从1开始取，arr[i]和 arr[0]到arr[i] 之间的数进行比较，找到自己的位置</p>
+<p>function insertSort(arr){<br>
+for(var i = 1; i&lt; arr.length; i++){<br>
+let j = i;<br>
+while(j &gt;=0 ){<br>
+if(arr[j] &lt; arr[j-1]){<br>
+var temp = arr[j];<br>
+arr[j] = arr[j-1];<br>
+arr[j-1] = temp;<br>
+}<br>
+j--;<br>
+}<br>
+}<br>
+return arr<br>
+}<br>
+4.希尔排序<br>
+原理：简单插入排序的改进版。与插入排序的不同之处在于，它会优先比较距离较远的元素。希尔排序又叫缩小增量排序。</p>
+<p>5.归并排序<br>
+原理：归并排序是采用分治法的一个非常典型的应用。将已有序的子序列合并，得到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表，成为2-路归并。</p>
+<p>6.快速排序<br>
+原理：设置一个基准数，将基准数交换到数组的末尾，遍历数组，将小于基准数的换到左边，大于基准数的换到右边，然后将基准数换到他们中间，这成为分区。快排就是不断分区的过程，完成第一个分区后，再对左右两边分成的数组进行分区，一直重复到排序完成。</p>
+<p>function quickSort(arr){<br>
+var len = arr.length;<br>
+if(len&lt;=1){<br>
+return arr<br>
+}<br>
+var pivotIndex = Math.floor(len/2);<br>
+var pivot = arr.splice(pivotIndex, 1)[0];<br>
+var left = [], right = [];<br>
+for(var i = 0; i &lt; len; i++){<br>
+if(arr[i] &lt; pivot){<br>
+left.push(arr[i] )<br>
+}else{<br>
+right.push(arr[i] )<br>
+}<br>
+}<br>
+return quickSort(left).concat([pivot], quickSort(right))<br>
+}</p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://liujia12138.github.io/post/wei-shi-me-ye-mian-xie-liao-settimeout-yao-zai-ye-mian-xiao-hui-shi-qing-chu-zhe-ge-timeout/">
+              <h3 class="post-title">
+                为什么页面写了setTimeout要在页面销毁时清除这个timeout？
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  AzhA
+  <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
