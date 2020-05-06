@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2020-05-06T12:48:44.930Z</updated>
+    <updated>2020-05-06T14:07:50.389Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -99,42 +99,47 @@ var b = {};    // a指向对象的引用次数减1，为2<br>
         <link href="https://liujia12138.github.io/post/ru-he-pan-duan-shu-zu-he-lei-shu-zu-ru-he-jiang-lei-shu-zu-zhuan-cheng-shu-zu/">
         </link>
         <updated>2020-05-06T12:39:45.000Z</updated>
-        <content type="html"><![CDATA[<p>var arr = [1,2,3,4];<br>
-var likeArr = {<br>
-'0':'a',<br>
-'1':'b',<br>
-'2':'c',<br>
-length:3<br>
-};<br>
-1.判断数组类型：<br>
+        <content type="html"><![CDATA[<pre><code>var arr = [1,2,3,4];
+var likeArr = {
+    '0':'a',
+    '1':'b',
+    '2':'c',
+    length:3
+};
+</code></pre>
+<p>1.判断数组类型：<br>
 arr instanceof Array;//true<br>
 Array.isArray(arr);//true<br>
 Object.prototype.toString.call(arr); //'[object Array]'<br>
 2.将类数组转成数组<br>
-1.[].slice.call()<br>
-var fn = function(likeArr){<br>
-var arr = Array.prototype.slice.call(likeArr);<br>
-//或者：var arr = [].slice.call(arguments);<br>
-return arr;<br>
-}<br>
-2.Array.from()<br>
-var fn = function(likeArr){<br>
-var arr = Array.from(likeArr)<br>
-return arr;<br>
-}<br>
-3.扩展运算符(...)<br>
-//转换arguments<br>
-var fn = function(){<br>
-var args = [...arguments];<br>
-}<br>
-兼容写法<br>
-function toArray(likeArr){<br>
-if(Array.from){<br>
-return Array.from(likeArr)<br>
-}else{<br>
-return [].slice.call(likeArr)<br>
-}<br>
-}</p>
+1.[].slice.call()</p>
+<pre><code>var fn = function(likeArr){
+    var arr = Array.prototype.slice.call(likeArr);
+    //或者：var arr = [].slice.call(arguments);
+    return arr;
+}
+</code></pre>
+<p>2.Array.from()</p>
+<pre><code>var fn = function(likeArr){
+    var arr = Array.from(likeArr)
+    return arr;
+}
+</code></pre>
+<p>3.扩展运算符(...)</p>
+<pre><code>//转换arguments
+var fn = function(){
+    var args = [...arguments];
+}
+</code></pre>
+<p>兼容写法</p>
+<pre><code>function toArray(likeArr){
+    if(Array.from){
+        return Array.from(likeArr)
+    }else{
+        return [].slice.call(likeArr)
+    }
+}
+</code></pre>
 ]]></content>
     </entry>
     <entry>
@@ -387,27 +392,28 @@ return quickSort(left).concat([pivot], quickSort(right))<br>
         <updated>2020-05-06T12:38:05.000Z</updated>
         <content type="html"><![CDATA[<p>vue、react等创建的单页面应用，切换路由的时候并不会刷新页面，定时器也不会被销毁，所以需要在beforeDestroy中手动清除；</p>
 <p>用setTimeout实现setInterval？</p>
-<p>var t = null;<br>
-var count = 0;<br>
-function time(){<br>
-clearTimeout(t);<br>
-count ++;<br>
-t = setTimeout(time, 1000);<br>
-}<br>
-t = setTimeout(time, 1000);<br>
-var t = null;<br>
-function f(fn, time){<br>
-var _this = this;<br>
-var args = [...arguments].slice(2)<br>
-function setFun(){<br>
-clearTimeout(t);<br>
-t = setTimeout(function(){<br>
-setFun();<br>
-fn(args);<br>
-}, time)<br>
-}<br>
-setFun();<br>
-}</p>
+<pre><code>var t = null;
+var count = 0;
+function time(){
+    clearTimeout(t);
+    count ++;
+    t = setTimeout(time, 1000);
+}
+t = setTimeout(time, 1000);
+var t = null;
+function f(fn, time){
+    var _this = this;
+    var args = [...arguments].slice(2)
+    function setFun(){
+        clearTimeout(t);
+        t = setTimeout(function(){
+            setFun();
+            fn(args);
+        }, time)
+    }
+    setFun();
+}
+</code></pre>
 ]]></content>
     </entry>
     <entry>

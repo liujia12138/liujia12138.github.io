@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>为什么页面写了setTimeout要在页面销毁时清除这个timeout？ | AzhA</title>
-<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588769318567">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588774003494">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="为什么页面写了setTimeout要在页面销毁时清除这个timeout？ | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
@@ -24,7 +24,7 @@ var count =..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://liujia12138.github.io">
-  <img class="avatar" src="https://liujia12138.github.io/images/avatar.png?v=1588769318567" alt="">
+  <img class="avatar" src="https://liujia12138.github.io/images/avatar.png?v=1588774003494" alt="">
   </a>
   <h1 class="site-title">
     AzhA
@@ -93,27 +93,28 @@ var count =..." />
               <div class="post-content">
                 <p>vue、react等创建的单页面应用，切换路由的时候并不会刷新页面，定时器也不会被销毁，所以需要在beforeDestroy中手动清除；</p>
 <p>用setTimeout实现setInterval？</p>
-<p>var t = null;<br>
-var count = 0;<br>
-function time(){<br>
-clearTimeout(t);<br>
-count ++;<br>
-t = setTimeout(time, 1000);<br>
-}<br>
-t = setTimeout(time, 1000);<br>
-var t = null;<br>
-function f(fn, time){<br>
-var _this = this;<br>
-var args = [...arguments].slice(2)<br>
-function setFun(){<br>
-clearTimeout(t);<br>
-t = setTimeout(function(){<br>
-setFun();<br>
-fn(args);<br>
-}, time)<br>
-}<br>
-setFun();<br>
-}</p>
+<pre><code>var t = null;
+var count = 0;
+function time(){
+    clearTimeout(t);
+    count ++;
+    t = setTimeout(time, 1000);
+}
+t = setTimeout(time, 1000);
+var t = null;
+function f(fn, time){
+    var _this = this;
+    var args = [...arguments].slice(2)
+    function setFun(){
+        clearTimeout(t);
+        t = setTimeout(function(){
+            setFun();
+            fn(args);
+        }, time)
+    }
+    setFun();
+}
+</code></pre>
 
               </div>
               <div class="toc-container">

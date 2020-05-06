@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>如何判断数组和类数组？如何将类数组转成数组？ | AzhA</title>
-<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588769318567">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588774003494">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="如何判断数组和类数组？如何将类数组转成数组？ | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
@@ -13,14 +13,14 @@
 
     <meta name="description" content="var arr = [1,2,3,4];
 var likeArr = {
-'0':'a',
-'1':'b',
-'2':'c',
-length:3
+    '0':'a',
+    '1':'b',
+    '2':'c',
+    length:3
 };
+
 1.判断数组类型：
-arr instanceof Array;//true
-Array...." />
+arr instanceof Ar..." />
     <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -30,7 +30,7 @@ Array...." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://liujia12138.github.io">
-  <img class="avatar" src="https://liujia12138.github.io/images/avatar.png?v=1588769318567" alt="">
+  <img class="avatar" src="https://liujia12138.github.io/images/avatar.png?v=1588774003494" alt="">
   </a>
   <h1 class="site-title">
     AzhA
@@ -97,42 +97,47 @@ Array...." />
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>var arr = [1,2,3,4];<br>
-var likeArr = {<br>
-'0':'a',<br>
-'1':'b',<br>
-'2':'c',<br>
-length:3<br>
-};<br>
-1.判断数组类型：<br>
+                <pre><code>var arr = [1,2,3,4];
+var likeArr = {
+    '0':'a',
+    '1':'b',
+    '2':'c',
+    length:3
+};
+</code></pre>
+<p>1.判断数组类型：<br>
 arr instanceof Array;//true<br>
 Array.isArray(arr);//true<br>
 Object.prototype.toString.call(arr); //'[object Array]'<br>
 2.将类数组转成数组<br>
-1.[].slice.call()<br>
-var fn = function(likeArr){<br>
-var arr = Array.prototype.slice.call(likeArr);<br>
-//或者：var arr = [].slice.call(arguments);<br>
-return arr;<br>
-}<br>
-2.Array.from()<br>
-var fn = function(likeArr){<br>
-var arr = Array.from(likeArr)<br>
-return arr;<br>
-}<br>
-3.扩展运算符(...)<br>
-//转换arguments<br>
-var fn = function(){<br>
-var args = [...arguments];<br>
-}<br>
-兼容写法<br>
-function toArray(likeArr){<br>
-if(Array.from){<br>
-return Array.from(likeArr)<br>
-}else{<br>
-return [].slice.call(likeArr)<br>
-}<br>
-}</p>
+1.[].slice.call()</p>
+<pre><code>var fn = function(likeArr){
+    var arr = Array.prototype.slice.call(likeArr);
+    //或者：var arr = [].slice.call(arguments);
+    return arr;
+}
+</code></pre>
+<p>2.Array.from()</p>
+<pre><code>var fn = function(likeArr){
+    var arr = Array.from(likeArr)
+    return arr;
+}
+</code></pre>
+<p>3.扩展运算符(...)</p>
+<pre><code>//转换arguments
+var fn = function(){
+    var args = [...arguments];
+}
+</code></pre>
+<p>兼容写法</p>
+<pre><code>function toArray(likeArr){
+    if(Array.from){
+        return Array.from(likeArr)
+    }else{
+        return [].slice.call(likeArr)
+    }
+}
+</code></pre>
 
               </div>
               <div class="toc-container">
