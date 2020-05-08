@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2020-05-08T14:58:14.572Z</updated>
+    <updated>2020-05-08T15:09:34.450Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -144,6 +144,64 @@ loader: ['style', 'css', 'sass']<br>
 ]]></content>
     </entry>
     <entry>
+        <title type="html"><![CDATA[websocket是什么?基于什么实现的？]]></title>
+        <id>https://liujia12138.github.io/post/websocket-shi-shi-me-ji-yu-shi-me-shi-xian-de/</id>
+        <link href="https://liujia12138.github.io/post/websocket-shi-shi-me-ji-yu-shi-me-shi-xian-de/">
+        </link>
+        <updated>2020-02-08T15:03:13.000Z</updated>
+        <content type="html"><![CDATA[<p>WebSocket是html5新增的协议，能在浏览器和服务器之间建立一个不受限制的双向通信的通道，服务器可以主动向浏览器发送消息。</p>
+<p>传统的http协议不能做到websocket实现的功能，因为http协议是一个请求-响应协议，只能由浏览器发起请求，服务器才能响应这个请求把数据发送给浏览器，服务器不能主动发起请求。</p>
+<p>ajax轮询：每隔一段时间发起一个http请求，询问服务器有没有新消息，没有的话就一直发</p>
+<p>长轮询：采用阻塞的方式，浏览器发起请求后，如果服务器没有新消息，就先拖一段时间一直不返回，直到有消息才返回，返回完之后，浏览器再次建立连接</p>
+<p>ajax轮询和长轮询需要服务器有非常快的处理速度和很高的并发。</p>
+<p>websocket是基于http协议的，或者说是借用http协议来建立连接。<br>
+（http是应用层协议，基于tcp协议，tcp是传输层协议，ip协议是网络层协议）</p>
+<p>websocket连接必须由浏览器发起，因为请求协议是一个标准的http协议</p>
+<ul>
+<li>浏览器发起请求</li>
+<li>
+<ul>
+<li>请求地址以ws:开头</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>请求头Upgarde：websocket和Connection：Upgrade，表示这个连接将要被转成websocket连接</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>Sec-WebSocket-Key用于标识这个连接</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>Sec-WebSocket-Version指定webSocket协议版本</li>
+</ul>
+</li>
+</ul>
+<pre><code>GET ws://localhost:3000/ws/chat HTTP/1.1
+Host: localhost
+Upgrade: websocket
+Connection: Upgrade
+Origin: http://localhost:3000
+Sec-WebSocket-Key: client-random-string
+Sec-WebSocket-Version: 13
+</code></pre>
+<ul>
+<li>服务器返回</li>
+</ul>
+<pre><code>HTTP/1.1 101 Switching Protocols//响应代码101表示本次连接的http协议即将被更改，更改后的协议就是Upgrade: websocket指定的websocket协议
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: server-random-string
+</code></pre>
+<p>版本号和子协议规定了双方能理解的数据格式，是否支持压缩等</p>
+<p>这样一个websocket连接就建立成功了，浏览器和服务器都可以主动发消息给对方</p>
+<p>为什么http连接不可以实现双向通信呢？http协议是建立在tcp协议上的，tcp协议本身是实现了双向通信的，但是http协议的请求-应答机制限制了双向通信。</p>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[JS宏任务微任务和事件循环]]></title>
         <id>https://liujia12138.github.io/post/js-hong-ren-wu-wei-ren-wu-he-shi-jian-xun-huan/</id>
         <link href="https://liujia12138.github.io/post/js-hong-ren-wu-wei-ren-wu-he-shi-jian-xun-huan/">
@@ -199,6 +257,40 @@ outer.addEventListener('click', onClick);
 </code></pre>
 <p>点击inner会打印什么？</p>
 <p>click事件是宏任务，加入到宏任务队列，setTimeout也是宏任务，promise和MutationObserver是微任务，加入到微任务队列 click promise mutate click promise mutate timeout timeout</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[http和https的区别？]]></title>
+        <id>https://liujia12138.github.io/post/http-he-https-de-qu-bie/</id>
+        <link href="https://liujia12138.github.io/post/http-he-https-de-qu-bie/">
+        </link>
+        <updated>2019-06-08T15:06:11.000Z</updated>
+        <content type="html"><![CDATA[<p>http超文本传输协议，https是安全版的http</p>
+<p>http和https的区别？</p>
+<ol>
+<li>http是超文本传输协议，信息是明文传输，https是具有安全性的ssl加密传输协议</li>
+<li>连接方式不同，端口不同，http是80，https是443</li>
+<li>https需要到CA申请证书</li>
+<li>http连接很简单，是无状态的；https协议是由SSL/TLS+HTTP协议构建的</li>
+</ol>
+<p>http缺点：</p>
+<p>通讯使用明文不加密，内容可能被窃听<br>
+不验证通信方身份，可能遭到伪装<br>
+无法验证报文完整性，可能被篡改<br>
+https就是http加上<strong>加密处理+认证+完整性保护</strong></p>
+<p>https的安全基础是<strong>SSL</strong>，SSL位于tcp/ip协议与各应用层协议之间，为数据通信提供安全支持。</p>
+<p>SSL协议可以分为两层：SSL记录协议，建立在传输层协议（TCP）之上，为高层协议提供数据封装、压缩、加密等基本功能的支持；SSL握手协议，建立在SSL记录协议之上，用于实际的数据传输开始之前，通讯双方进行身份认证，协商加密算法，交换加密密钥等。</p>
+<p>https设计目标：数据保密性、数据完整性、身份校验安全性</p>
+<p>https://blog.csdn.net/qq_35642036/article/details/82788421</p>
+<p>https原理：</p>
+<ul>
+<li>客户端将他支持的算法列表和一个用作产生密钥的随机数发送给服务器</li>
+<li>服务端从算法列表中选择一种加密算法，将它和一份包含服务器公用秘钥的证书发送给客户端，该证书还包含用于认证目的的服务器标识，同时还提供了一个用作产生密钥的随机数</li>
+<li>客户端对服务器证书进行验证，并抽取服务器的公用密钥，然后产生一个随机密码串，并且使用服务器的密钥对其加密，然后将加密后的信息发送给服务端</li>
+<li>客户端与服务端根据随机密码串pre-master key以及客户端和服务端的随机数值独立计算出加密和MAC密钥，参考DH密钥交换算法</li>
+<li>客户端将所有握手消息的MAC值发送给服务端</li>
+<li>服务端将所有握手消息的MAC值发送给客户端</li>
+</ul>
 ]]></content>
     </entry>
     <entry>
@@ -284,6 +376,29 @@ document.getElementById('debounce').addEventListener(&quot;click&quot;,function(
     }
 }
 </code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[闭包是什么？优缺点？]]></title>
+        <id>https://liujia12138.github.io/post/bi-bao-shi-shi-me-you-que-dian/</id>
+        <link href="https://liujia12138.github.io/post/bi-bao-shi-shi-me-you-que-dian/">
+        </link>
+        <updated>2019-02-21T15:08:06.000Z</updated>
+        <content type="html"><![CDATA[<p>闭包就是能够访问其他函数内部变量的函数</p>
+<p>闭包的优点：</p>
+<ul>
+<li>保护全局变量不被污染</li>
+<li>可以访问函数内部的变量</li>
+<li>保护变量不被垃圾回收机制回收</li>
+</ul>
+<p>缺点：会造成内存泄漏</p>
+<p>怎么避免？</p>
+<ul>
+<li>1 在退出函数之前，将不使用的局部变量全部删除。可以使变量赋值为null;</li>
+<li>2 避免变量的循环赋值和引用</li>
+<li>3 利用jquery释放自身指定的所有事件处理程序<br>
+由于jquery考虑到了内存泄漏的潜在危害，所以他会手动释放自己指定的所有事件处理程序，只要坚持使用jquery的事件绑定方法，就能在一定程度上避免内存泄漏</li>
+</ul>
 ]]></content>
     </entry>
     <entry>
@@ -383,79 +498,6 @@ const store = new Vuex.store({
 </code></pre>
 <h5 id="5module">5.<a href="https://vuex.vuejs.org/zh/guide/modules.html">module</a></h5>
 <p>为了方便模块化开发，vuex允许我们将store分割成module，每个模块拥有自己的state，getter，mutation，action；</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[CSS预处理器，sass、less、stylus]]></title>
-        <id>https://liujia12138.github.io/post/css-yu-chu-li-qi-sasslessstylus/</id>
-        <link href="https://liujia12138.github.io/post/css-yu-chu-li-qi-sasslessstylus/">
-        </link>
-        <updated>2018-07-10T12:38:58.000Z</updated>
-        <content type="html"><![CDATA[<p>css预处理器是一种专门用来为css增加编程特性的编程语言，css本身不是编程语言。</p>
-<p>css预处理器的作用：</p>
-<p>css语法不够强大，选择器无法嵌套，导致css中存在较多重复的选择器语句；<br>
-css无法定义变量，没有合理的样式复用机制，css预处理器为css提供样式复用机制，减少css代码冗余，提高css可维护性；<br>
-工作流程（以sass为例）：</p>
-<p>以sass提供的语法规则编写样式；<br>
-编译器把sass代码转换成标准的css代码；<br>
-浏览器加载解析后的css样式；<br>
-主流css预处理器：</p>
-<p>sass：最早最成熟的css预处理器，有两种语法，分别以.sass和.scss为扩展名，scss兼容css3<br>
-less<br>
-stylus：主要用来给node项目进行css预处理，以.styl为扩展名</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[为什么页面写了setTimeout要在页面销毁时清除这个timeout？]]></title>
-        <id>https://liujia12138.github.io/post/wei-shi-me-ye-mian-xie-liao-settimeout-yao-zai-ye-mian-xiao-hui-shi-qing-chu-zhe-ge-timeout/</id>
-        <link href="https://liujia12138.github.io/post/wei-shi-me-ye-mian-xie-liao-settimeout-yao-zai-ye-mian-xiao-hui-shi-qing-chu-zhe-ge-timeout/">
-        </link>
-        <updated>2018-07-06T12:38:05.000Z</updated>
-        <content type="html"><![CDATA[<p>vue、react等创建的单页面应用，切换路由的时候并不会刷新页面，定时器也不会被销毁，所以需要在beforeDestroy中手动清除；</p>
-<p>用setTimeout实现setInterval？</p>
-<pre><code>var t = null;
-var count = 0;
-function time(){
-    clearTimeout(t);
-    count ++;
-    t = setTimeout(time, 1000);
-}
-t = setTimeout(time, 1000);
-var t = null;
-function f(fn, time){
-    var _this = this;
-    var args = [...arguments].slice(2)
-    function setFun(){
-        clearTimeout(t);
-        t = setTimeout(function(){
-            setFun();
-            fn(args);
-        }, time)
-    }
-    setFun();
-}
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[圣杯布局和双飞翼布局]]></title>
-        <id>https://liujia12138.github.io/post/sheng-bei-bu-ju-he-shuang-fei-yi-bu-ju/</id>
-        <link href="https://liujia12138.github.io/post/sheng-bei-bu-ju-he-shuang-fei-yi-bu-ju/">
-        </link>
-        <updated>2018-06-07T13:51:30.000Z</updated>
-        <content type="html"><![CDATA[<p>参考：<a href="https://www.jianshu.com/p/81ef7e7094e8">圣杯布局和双飞翼布局</a></p>
-<p>都是三栏布局，左右两边宽度固定，中间宽度自适应</p>
-<ul>
-<li>圣杯布局：左浮动+定位</li>
-</ul>
-<p>主体部分container内包括center，left、right三个子元素，让这个三个子元素都float：left；container设置padding左右的值为左右元素的 width；然后给左右两侧的元素设置宽度，然后左边的元素margin-left：-100%;position:relative;right:(left的宽度)，右边的元素margin-right：-（width）；</p>
-<p>注意中间元素一定要设置宽度为100%，因为设置了浮动，是行内块，内容太少的话宽度会自己缩到内容的大小</p>
-<ul>
-<li>双飞翼布局：只用了float，没有定位</li>
-</ul>
-<p>与圣杯布局的区别是container只包裹住center</p>
-<p>conatiner和left、right平级，全都左浮动，container宽度为100%来保证宽度自适应，left和right设置宽度，center设置margin-left和margin-right分别为左右元素的宽度，left设置margin-left：-100%，right设置margin-left：-（right的宽度）;<br>
-给外层容器清浮动</p>
 ]]></content>
     </entry>
 </feed>

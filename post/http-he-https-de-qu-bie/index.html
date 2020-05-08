@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>标签列表 | AzhA</title>
+  <title>http和https的区别？ | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="标签列表 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="http和https的区别？ | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +25,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="http和https的区别？"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/http-he-https-de-qu-bie/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
   	<!-- Navigation -->
@@ -66,69 +71,76 @@
       </div>
     </div>
   </nav>
-<!-- Page Header -->
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1 class="tag-tl">Tags</h1>
+          	<span class="tags">
+          	 
+            <a href="https://liujia12138.github.io/tag/uJlN5zVW5/" class="tag">网络协议</a>
+            
+        </span>
+            <h1>http和https的区别？</h1>
+            <span class="meta">
+            	Posted on
+              2019-06-08，3 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
-  <div class="container">
-    <div class="row">
-     
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-           <div class="post-preview tag-list">
-          <a href="https://liujia12138.github.io/tag/uJlN5zVW5/" class="tag">
-              网络协议
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p>http超文本传输协议，https是安全版的http</p>
+<p>http和https的区别？</p>
+<ol>
+<li>http是超文本传输协议，信息是明文传输，https是具有安全性的ssl加密传输协议</li>
+<li>连接方式不同，端口不同，http是80，https是443</li>
+<li>https需要到CA申请证书</li>
+<li>http连接很简单，是无状态的；https协议是由SSL/TLS+HTTP协议构建的</li>
+</ol>
+<p>http缺点：</p>
+<p>通讯使用明文不加密，内容可能被窃听<br>
+不验证通信方身份，可能遭到伪装<br>
+无法验证报文完整性，可能被篡改<br>
+https就是http加上<strong>加密处理+认证+完整性保护</strong></p>
+<p>https的安全基础是<strong>SSL</strong>，SSL位于tcp/ip协议与各应用层协议之间，为数据通信提供安全支持。</p>
+<p>SSL协议可以分为两层：SSL记录协议，建立在传输层协议（TCP）之上，为高层协议提供数据封装、压缩、加密等基本功能的支持；SSL握手协议，建立在SSL记录协议之上，用于实际的数据传输开始之前，通讯双方进行身份认证，协商加密算法，交换加密密钥等。</p>
+<p>https设计目标：数据保密性、数据完整性、身份校验安全性</p>
+<p>https://blog.csdn.net/qq_35642036/article/details/82788421</p>
+<p>https原理：</p>
+<ul>
+<li>客户端将他支持的算法列表和一个用作产生密钥的随机数发送给服务器</li>
+<li>服务端从算法列表中选择一种加密算法，将它和一份包含服务器公用秘钥的证书发送给客户端，该证书还包含用于认证目的的服务器标识，同时还提供了一个用作产生密钥的随机数</li>
+<li>客户端对服务器证书进行验证，并抽取服务器的公用密钥，然后产生一个随机密码串，并且使用服务器的密钥对其加密，然后将加密后的信息发送给服务端</li>
+<li>客户端与服务端根据随机密码串pre-master key以及客户端和服务端的随机数值独立计算出加密和MAC密钥，参考DH密钥交换算法</li>
+<li>客户端将所有握手消息的MAC值发送给服务端</li>
+<li>服务端将所有握手消息的MAC值发送给客户端</li>
+</ul>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/liu-lan-qi-shu-ru-yi-ge-url-dao-ye-mian-xuan-ran-chu-lai-du-fa-sheng-liao-shi-me/">
+              <span class="post-title">
+                浏览器输入一个url到页面渲染出来都发生了什么？&rarr;
+              </span>
             </a>
-        </div>
+          </p>
         
-           <div class="post-preview tag-list">
-          <a href="https://liujia12138.github.io/tag/CvMd75xEg/" class="tag">
-              js
-            </a>
+        <div class="comment">
+          
         </div>
-        
-           <div class="post-preview tag-list">
-          <a href="https://liujia12138.github.io/tag/d8mNIHknn/" class="tag">
-              vue
-            </a>
-        </div>
-        
-           <div class="post-preview tag-list">
-          <a href="https://liujia12138.github.io/tag/yf3fMR6HV/" class="tag">
-              css
-            </a>
-        </div>
-        
-           <div class="post-preview tag-list">
-          <a href="https://liujia12138.github.io/tag/7pa3gWqBF/" class="tag">
-              兼容
-            </a>
-        </div>
-        
-           <div class="post-preview tag-list">
-          <a href="https://liujia12138.github.io/tag/NaR04YJjP/" class="tag">
-              es6
-            </a>
-        </div>
-        
-           <div class="post-preview tag-list">
-          <a href="https://liujia12138.github.io/tag/BL8c3orKf/" class="tag">
-              html
-            </a>
-        </div>
-        
       </div>
     </div>
-  </div>
+  </article>
  <!-- Footer -->
   <footer>
     <div class="container">
@@ -236,3 +248,4 @@
   })(this));</script>
   </body>
 </html>
+

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>标签列表 | AzhA</title>
+  <title>websocket是什么?基于什么实现的？ | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="标签列表 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="websocket是什么?基于什么实现的？ | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +25,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="websocket是什么?基于什么实现的？"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/websocket-shi-shi-me-ji-yu-shi-me-shi-xian-de/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
   	<!-- Navigation -->
@@ -66,69 +71,100 @@
       </div>
     </div>
   </nav>
-<!-- Page Header -->
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1 class="tag-tl">Tags</h1>
+          	<span class="tags">
+          	 
+            <a href="https://liujia12138.github.io/tag/uJlN5zVW5/" class="tag">网络协议</a>
+            
+        </span>
+            <h1>websocket是什么?基于什么实现的？</h1>
+            <span class="meta">
+            	Posted on
+              2020-02-08，3 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
-  <div class="container">
-    <div class="row">
-     
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-           <div class="post-preview tag-list">
-          <a href="https://liujia12138.github.io/tag/uJlN5zVW5/" class="tag">
-              网络协议
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p>WebSocket是html5新增的协议，能在浏览器和服务器之间建立一个不受限制的双向通信的通道，服务器可以主动向浏览器发送消息。</p>
+<p>传统的http协议不能做到websocket实现的功能，因为http协议是一个请求-响应协议，只能由浏览器发起请求，服务器才能响应这个请求把数据发送给浏览器，服务器不能主动发起请求。</p>
+<p>ajax轮询：每隔一段时间发起一个http请求，询问服务器有没有新消息，没有的话就一直发</p>
+<p>长轮询：采用阻塞的方式，浏览器发起请求后，如果服务器没有新消息，就先拖一段时间一直不返回，直到有消息才返回，返回完之后，浏览器再次建立连接</p>
+<p>ajax轮询和长轮询需要服务器有非常快的处理速度和很高的并发。</p>
+<p>websocket是基于http协议的，或者说是借用http协议来建立连接。<br>
+（http是应用层协议，基于tcp协议，tcp是传输层协议，ip协议是网络层协议）</p>
+<p>websocket连接必须由浏览器发起，因为请求协议是一个标准的http协议</p>
+<ul>
+<li>浏览器发起请求</li>
+<li>
+<ul>
+<li>请求地址以ws:开头</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>请求头Upgarde：websocket和Connection：Upgrade，表示这个连接将要被转成websocket连接</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>Sec-WebSocket-Key用于标识这个连接</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>Sec-WebSocket-Version指定webSocket协议版本</li>
+</ul>
+</li>
+</ul>
+<pre><code>GET ws://localhost:3000/ws/chat HTTP/1.1
+Host: localhost
+Upgrade: websocket
+Connection: Upgrade
+Origin: http://localhost:3000
+Sec-WebSocket-Key: client-random-string
+Sec-WebSocket-Version: 13
+</code></pre>
+<ul>
+<li>服务器返回</li>
+</ul>
+<pre><code>HTTP/1.1 101 Switching Protocols//响应代码101表示本次连接的http协议即将被更改，更改后的协议就是Upgrade: websocket指定的websocket协议
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: server-random-string
+</code></pre>
+<p>版本号和子协议规定了双方能理解的数据格式，是否支持压缩等</p>
+<p>这样一个websocket连接就建立成功了，浏览器和服务器都可以主动发消息给对方</p>
+<p>为什么http连接不可以实现双向通信呢？http协议是建立在tcp协议上的，tcp协议本身是实现了双向通信的，但是http协议的请求-应答机制限制了双向通信。</p>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/js-hong-ren-wu-wei-ren-wu-he-shi-jian-xun-huan/">
+              <span class="post-title">
+                JS宏任务微任务和事件循环&rarr;
+              </span>
             </a>
-        </div>
+          </p>
         
-           <div class="post-preview tag-list">
-          <a href="https://liujia12138.github.io/tag/CvMd75xEg/" class="tag">
-              js
-            </a>
+        <div class="comment">
+          
         </div>
-        
-           <div class="post-preview tag-list">
-          <a href="https://liujia12138.github.io/tag/d8mNIHknn/" class="tag">
-              vue
-            </a>
-        </div>
-        
-           <div class="post-preview tag-list">
-          <a href="https://liujia12138.github.io/tag/yf3fMR6HV/" class="tag">
-              css
-            </a>
-        </div>
-        
-           <div class="post-preview tag-list">
-          <a href="https://liujia12138.github.io/tag/7pa3gWqBF/" class="tag">
-              兼容
-            </a>
-        </div>
-        
-           <div class="post-preview tag-list">
-          <a href="https://liujia12138.github.io/tag/NaR04YJjP/" class="tag">
-              es6
-            </a>
-        </div>
-        
-           <div class="post-preview tag-list">
-          <a href="https://liujia12138.github.io/tag/BL8c3orKf/" class="tag">
-              html
-            </a>
-        </div>
-        
       </div>
     </div>
-  </div>
+  </article>
  <!-- Footer -->
   <footer>
     <div class="container">
@@ -236,3 +272,4 @@
   })(this));</script>
   </body>
 </html>
+
