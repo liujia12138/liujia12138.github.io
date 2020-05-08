@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2020-05-08T14:28:09.266Z</updated>
+    <updated>2020-05-08T14:55:44.466Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -287,6 +287,105 @@ document.getElementById('debounce').addEventListener(&quot;click&quot;,function(
 ]]></content>
     </entry>
     <entry>
+        <title type="html"><![CDATA[vuex的辅助函数和基本属性使用的区别?]]></title>
+        <id>https://liujia12138.github.io/post/vuex-de-fu-zhu-han-shu-he-ji-ben-shu-xing-shi-yong-de-qu-bie/</id>
+        <link href="https://liujia12138.github.io/post/vuex-de-fu-zhu-han-shu-he-ji-ben-shu-xing-shi-yong-de-qu-bie/">
+        </link>
+        <updated>2018-10-17T14:54:05.000Z</updated>
+        <content type="html"><![CDATA[<h5 id="1-state">1. state</h5>
+<p>当我们需要读取state中的一个属性的时候，可以在组件内用computed来读取，这样当state变化的时候，组件就能实时改变<br>
+但是如果组件内需要用到多个state，每个状态都声明为计算属性的话重复代码就太多了，这是就需要用到辅助函数mapState来帮助我们生成计算属性</p>
+<pre><code class="language-js">computed:{
+    count(){
+        //....
+    },
+    ...mapState({//结合展开运算符使用
+        &quot;count&quot;,//等同于  this.count ：store.state.count
+        count: state =&gt; state.count
+    })
+}
+</code></pre>
+<h5 id="2-getter">2. getter</h5>
+<p>当我们需要从store的state中派生出一些状态，比如一个list的长度，过滤掉某个state中的一些数据，可以在getter中定义这个派生状态</p>
+<p>可以理解为getter就是state的计算属性，在组件中使用store.getters.count访问</p>
+<p>getter和计算属性一样，返回值会根据他的依赖被缓存起来，只有当他的依赖值发生变化时才会重新计算<br>
+<strong>（computed和watch的区别？）</strong></p>
+<p>可以通过让getter返回一个函数来实现给getter传参</p>
+<p>mapGetters辅助函数：将store中的getter映射到组件的计算属性中</p>
+<h5 id="3-mutation">3. mutation</h5>
+<p>更改vuex中store中的状态的唯一方法就是提交mutation。</p>
+<p>mutation类似事件，每个mutation都有一个字符串的事件类型type（函数名）和一个回调函数，这个回调函数就是我们实际进行状态更改的地方，他会接受state作为第一个参数。</p>
+<pre><code class="language-js">const mutations = {
+    increment(state){
+        state.count++
+    }
+}
+</code></pre>
+<p>但是我们修改state的时候，不能够直接调用mutation的回调函数increment()，需要使用store.commit(type)来调用相应的方法</p>
+<p>我们也可以向store.commit中传入额外的参数，传递给mutation，即mutation的载荷 <code>store.commit('increment', 10)</code></p>
+<pre><code class="language-js">const mutations = {
+    increment(state, n){
+        state.count += n
+    }
+}
+</code></pre>
+<p>使用常量代替mutation事件类型，在各种Flux中非常常见，可以把这些常量单独放在一个文件中，这样整个app包含的mutation看起来非常清晰</p>
+<pre><code class="language-js">//mutation-types.js
+export const SOME_MUTATION = &quot;SOME_MUTATION&quot;
+</code></pre>
+<pre><code class="language-js">import Vuex from 'vuex'
+import {SOME_MUTATION} from &quot;mutation-types.js&quot;
+
+const store = new Vuex.store({
+    state: {...},
+    mutations: {
+        //可以使用常量来作为函数名
+        [SOME_MUTATION](state){
+            //....
+        }
+    }
+})
+</code></pre>
+<p><strong>mutation必须是同步函数</strong></p>
+<p>在组件中提交mutation，可以使用<code>this.$store.commit('xxx', payload)</code>来提交mutation，或者使用mapMutations辅助函数将组件中的methods映射为store.commit来调用</p>
+<h5 id="4action">4.action</h5>
+<p>action类似于mutation，但是不同的是action修改状态是通过提交mutation，而不是直接修改状态；<strong>action可以进行异步操作</strong></p>
+<pre><code class="language-js">const store = new Vuex.Store({
+  state: {
+    count: 0
+  },
+  mutations: {
+    increment (state) {
+      state.count++
+    }
+  },
+  actions: {
+    increment (context) {
+      context.commit('increment')
+    }
+  }
+})
+</code></pre>
+<p>从上面例子我们可以看出，action函数接收一个和store实例具有相同方法和属性的context对象，因此我们可以调用context.commit()来提交mutation，或者通过context.getters和context.state来获取getters和state。</p>
+<p><strong>注意</strong>：context对象并不是store实例本身。</p>
+<p>分发action，可以通过<code>store.dispatch('increment')</code>来触发<br>
+在组件中分发action，可以使用 <code>this.$store.dispatch('increment')</code>,或者使用mapActions将组件的methods映射为store.dispatch调用（需要在根节点注入store）</p>
+<p>组合action：actions通常是异步的，怎么才能知道action什么时候结束呢？</p>
+<ul>
+<li>可以在action内返回promise，组件内使用<code>this.$store.dispatch('increment').then(()=&gt;{})</code></li>
+<li>利用async/await</li>
+</ul>
+<pre><code class="language-js">actions: {
+    async actionA({commit}){
+        commit('gotData', await getData());//getData返回的是promise
+    }
+}
+</code></pre>
+<h5 id="5module">5.<a href="https://vuex.vuejs.org/zh/guide/modules.html">module</a></h5>
+<p>为了方便模块化开发，vuex允许我们将store分割成module，每个模块拥有自己的state，getter，mutation，action；</p>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[CSS预处理器，sass、less、stylus]]></title>
         <id>https://liujia12138.github.io/post/css-yu-chu-li-qi-sasslessstylus/</id>
         <link href="https://liujia12138.github.io/post/css-yu-chu-li-qi-sasslessstylus/">
@@ -357,169 +456,6 @@ function f(fn, time){
 <p>与圣杯布局的区别是container只包裹住center</p>
 <p>conatiner和left、right平级，全都左浮动，container宽度为100%来保证宽度自适应，left和right设置宽度，center设置margin-left和margin-right分别为左右元素的宽度，left设置margin-left：-100%，right设置margin-left：-（right的宽度）;<br>
 给外层容器清浮动</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[浏览器兼容问题]]></title>
-        <id>https://liujia12138.github.io/post/liu-lan-qi-jian-rong-wen-ti/</id>
-        <link href="https://liujia12138.github.io/post/liu-lan-qi-jian-rong-wen-ti/">
-        </link>
-        <updated>2018-04-11T12:39:20.000Z</updated>
-        <content type="html"><![CDATA[<p>1.ie8不支持background-size设置背景图大小<br>
-用filter：</p>
-<pre><code>filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled='true', src='背景图url', sizingMethod='scale');
-</code></pre>
-<p>参数:<br>
-1.enabled：设置或检索滤镜是否激活，true/false，默认为true<br>
-2.src：图片地址<br>
-3.sizingMethod：设置或检索滤镜作用的对象的图片在容器边界内的显示方式，crop剪切/image默认值/scale缩放图片</p>
-<p>2.ie8支持的伪类选择器只有:hover,:focus,:first-child<br>
-想实现li:nth-of-type(2)只能用li:first-child+li</p>
-<ol start="4">
-<li>ie8不支持css border-radius, css3的属性基本上都是要求IE9以上的，border-radius，box-shadow都是css3的属性<br>
-解决方法：使用<a href="http://css3pie.com/download/">css3pie</a>，将解压后的PIE.htc文件放在目标html同一路径下，</li>
-</ol>
-<pre><code class="language-css">img{
-    position:relative;
-    z-index:2
-    -moz-border-radius:5px;
-    -webkit-border-radius:5px;
-    border-radius: 5px;
-    behavior: url(PIC.htc);
-}
-</code></pre>
-<p>注意：</p>
-<ul>
-<li>必须设置position:relative 和 z-index:2</li>
-<li>behavior引入PIE.htc文件，路径为相对与html的路径，不是相对于当前css的路径</li>
-</ul>
-<p>3.sfaire浏览器中input如果设置了高度，输入的时候光标就会跑到上面去了，所以要用padding撑开<br>
-4.ie8不支持placeholder属性，用js实现<br>
-1.先判断浏览器是否支持placeholder属性，如果不支持就模拟placeholder<br>
-2.创建一个label标签：<label>密码：<label/>标签里的内容为placeholder属性值，再讲标签覆盖到对应的input上</p>
-<pre><code>; (function (win) {
-
-    win.isPlaceholer = function () {
-        var input = document.createElement(&quot;input&quot;);
-        return &quot;placeholder&quot; in input;
-    };
-  
-    win.placeholder = function () {
-
-        if (!isPlaceholer()) {
-            var Placeholder =function (obj) {
-                this.input = obj;
-                var te = obj.getAttribute('placeholder');
-                this.label = document.createElement('label');
-                this.label.innerHTML = te;
-                this.label.id = obj.id + 'Label';
-                this.label.style.cssText = 'position:absolute; text-indent:4px;color:#999999; font-size:14px;';
-                if (obj.value !== '') {
-                    this.label.style.display = 'none';
-                }
-                this.init();
-            };
-            Placeholder.prototype = {
-
-                getxy: function (obj) {
-                    var left, top;
-                    if (document.documentElement.getBoundingClientRect) {
-                        var html = document.documentElement,
-                        body = document.body,
-                        pos = obj.getBoundingClientRect(),
-                        st = html.scrollTop || body.scrollTop,
-                        sl = html.scrollLeft || body.scrollLeft,
-                        ct = html.clientTop || body.clientTop,
-                        cl = html.clientLeft || body.clientLeft;
-                        left = pos.left + sl - cl;
-                        top = pos.top + st - ct;
-                    } else {
-                        while (obj) {
-                            left += obj.offsetLeft;
-                            top += obj.offsetTop;
-                            obj = obj.offsetParent;
-                        }
-                    }
-                    return {
-                        left: left,
-                        top: top
-                    };
-                },
-
-                getwh: function (obj) {
-                    return {
-                        w: obj.offsetWidth,
-                        h: obj.offsetHeight
-                    };
-                },
-
-                setStyles: function (obj, styles) {
-                    for (var p in styles) {
-                        obj.style[p] = styles[p] + 'px';
-                    }
-                },
-                init: function () {
-                    var label = this.label,
-                    input = this.input,
-                    getXY = this.getxy,
-                    xy = this.getxy(input),
-                    wh = this.getwh(input);
-                    this.setStyles(label, { 'width': wh.w, 'height': wh.h, 'lineHeight': 40, 'left': xy.left + 8, 'top': xy.top });
-                    document.body.appendChild(label);
-                    label.onclick = function () {
-                        this.style.display = &quot;none&quot;;
-                        input.focus();
-                    };
-                    input.onfocus = function () {
-                        label.style.display = &quot;none&quot;;
-                    };
-                    input.onblur = function () {
-                        if (this.value === &quot;&quot;) {
-                            label.style.display = &quot;block&quot;;
-                        }
-                    };
-                    if (window.attachEvent) {
-                        window.attachEvent(&quot;onresize&quot;, function () {
-                            var xy = getXY(input);
-                            Placeholder.prototype.setStyles(label, { 'left': xy.left + 8, 'top': xy.top });
-                        });
-                    } else {
-                        window.addEventListener(&quot;resize&quot;, function () {
-                            var xy = getXY(input);
-                            Placeholder.prototype.setStyles(label, { 'left': xy.left + 8, 'top': xy.top });
-                        }, false);
-                    }
-                }
-            };
-
-            var inpColl = $(&quot;#Box input:visible&quot;);//这里是页面上要添加placeholder支持的input
-            //var inpColl = document.getElementsByTagName('input'),          
-            var textColl = document.getElementsByTagName('textarea');//这里是页面上要添加placeholder支持的textarea
-            //var lableArr = $(&quot;#Box lable&quot;);
-            var toArray = function (coll) {
-                for (var i = 0, a = [], len = coll.length; i &lt; len; i++) {
-                    a[i] = coll[i];
-                }
-                return a;
-            };
-            var inpArr = toArray(inpColl),
-            textArr = toArray(textColl),
-
-            placeholderArr = inpArr.concat(textArr);
-            for (var i = 0; i &lt; placeholderArr.length; i++) {
-                if (placeholderArr[i].getAttribute('placeholder') !== null) {
-
-                    new Placeholder(placeholderArr[i]);
-                }
-            }
-        }
-
-    };
-}(window));
-</code></pre>
-<p>5.ie8不支持css3动画<br>
-6.element-ui在火狐浏览器下的滚动问题<br>
-用<code>&lt;el-scrollbar&gt;&lt;/el-scrollbar&gt;</code>组件</p>
 ]]></content>
     </entry>
 </feed>

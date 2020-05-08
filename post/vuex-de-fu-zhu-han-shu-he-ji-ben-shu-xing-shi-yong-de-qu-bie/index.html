@@ -1,0 +1,284 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>vuex的辅助函数和基本属性使用的区别? | AzhA</title>
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588949704527">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="vuex的辅助函数和基本属性使用的区别? | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="1. state
+当我们需要读取state中的一个属性的时候，可以在组件内用computed来读取，这样当state变化的时候，组件就能实时改变
+但是如果组件内需要用到多个state，每个状态都声明为计算属性的话重复代码就太多了，这是就需要..." />
+    <meta name="keywords" content="vue" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://liujia12138.github.io">
+  <img class="avatar" src="https://liujia12138.github.io/images/avatar.png?v=1588949704527" alt="">
+  </a>
+  <h1 class="site-title">
+    AzhA
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://liujia12138.github.io" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/archives" class="menu">
+          Archives
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/post/about" class="menu">
+          About
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              vuex的辅助函数和基本属性使用的区别?
+            </h2>
+            <div class="post-info">
+              <span>
+                2018-10-17
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://liujia12138.github.io/tag/d8mNIHknn/" class="post-tag">
+                  # vue
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h5 id="1-state">1. state</h5>
+<p>当我们需要读取state中的一个属性的时候，可以在组件内用computed来读取，这样当state变化的时候，组件就能实时改变<br>
+但是如果组件内需要用到多个state，每个状态都声明为计算属性的话重复代码就太多了，这是就需要用到辅助函数mapState来帮助我们生成计算属性</p>
+<pre><code class="language-js">computed:{
+    count(){
+        //....
+    },
+    ...mapState({//结合展开运算符使用
+        &quot;count&quot;,//等同于  this.count ：store.state.count
+        count: state =&gt; state.count
+    })
+}
+</code></pre>
+<h5 id="2-getter">2. getter</h5>
+<p>当我们需要从store的state中派生出一些状态，比如一个list的长度，过滤掉某个state中的一些数据，可以在getter中定义这个派生状态</p>
+<p>可以理解为getter就是state的计算属性，在组件中使用store.getters.count访问</p>
+<p>getter和计算属性一样，返回值会根据他的依赖被缓存起来，只有当他的依赖值发生变化时才会重新计算<br>
+<strong>（computed和watch的区别？）</strong></p>
+<p>可以通过让getter返回一个函数来实现给getter传参</p>
+<p>mapGetters辅助函数：将store中的getter映射到组件的计算属性中</p>
+<h5 id="3-mutation">3. mutation</h5>
+<p>更改vuex中store中的状态的唯一方法就是提交mutation。</p>
+<p>mutation类似事件，每个mutation都有一个字符串的事件类型type（函数名）和一个回调函数，这个回调函数就是我们实际进行状态更改的地方，他会接受state作为第一个参数。</p>
+<pre><code class="language-js">const mutations = {
+    increment(state){
+        state.count++
+    }
+}
+</code></pre>
+<p>但是我们修改state的时候，不能够直接调用mutation的回调函数increment()，需要使用store.commit(type)来调用相应的方法</p>
+<p>我们也可以向store.commit中传入额外的参数，传递给mutation，即mutation的载荷 <code>store.commit('increment', 10)</code></p>
+<pre><code class="language-js">const mutations = {
+    increment(state, n){
+        state.count += n
+    }
+}
+</code></pre>
+<p>使用常量代替mutation事件类型，在各种Flux中非常常见，可以把这些常量单独放在一个文件中，这样整个app包含的mutation看起来非常清晰</p>
+<pre><code class="language-js">//mutation-types.js
+export const SOME_MUTATION = &quot;SOME_MUTATION&quot;
+</code></pre>
+<pre><code class="language-js">import Vuex from 'vuex'
+import {SOME_MUTATION} from &quot;mutation-types.js&quot;
+
+const store = new Vuex.store({
+    state: {...},
+    mutations: {
+        //可以使用常量来作为函数名
+        [SOME_MUTATION](state){
+            //....
+        }
+    }
+})
+</code></pre>
+<p><strong>mutation必须是同步函数</strong></p>
+<p>在组件中提交mutation，可以使用<code>this.$store.commit('xxx', payload)</code>来提交mutation，或者使用mapMutations辅助函数将组件中的methods映射为store.commit来调用</p>
+<h5 id="4action">4.action</h5>
+<p>action类似于mutation，但是不同的是action修改状态是通过提交mutation，而不是直接修改状态；<strong>action可以进行异步操作</strong></p>
+<pre><code class="language-js">const store = new Vuex.Store({
+  state: {
+    count: 0
+  },
+  mutations: {
+    increment (state) {
+      state.count++
+    }
+  },
+  actions: {
+    increment (context) {
+      context.commit('increment')
+    }
+  }
+})
+</code></pre>
+<p>从上面例子我们可以看出，action函数接收一个和store实例具有相同方法和属性的context对象，因此我们可以调用context.commit()来提交mutation，或者通过context.getters和context.state来获取getters和state。</p>
+<p><strong>注意</strong>：context对象并不是store实例本身。</p>
+<p>分发action，可以通过<code>store.dispatch('increment')</code>来触发<br>
+在组件中分发action，可以使用 <code>this.$store.dispatch('increment')</code>,或者使用mapActions将组件的methods映射为store.dispatch调用（需要在根节点注入store）</p>
+<p>组合action：actions通常是异步的，怎么才能知道action什么时候结束呢？</p>
+<ul>
+<li>可以在action内返回promise，组件内使用<code>this.$store.dispatch('increment').then(()=&gt;{})</code></li>
+<li>利用async/await</li>
+</ul>
+<pre><code class="language-js">actions: {
+    async actionA({commit}){
+        commit('gotData', await getData());//getData返回的是promise
+    }
+}
+</code></pre>
+<h5 id="5module">5.<a href="https://vuex.vuejs.org/zh/guide/modules.html">module</a></h5>
+<p>为了方便模块化开发，vuex允许我们将store分割成module，每个模块拥有自己的state，getter，mutation，action；</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-state">1. state</a></li>
+<li><a href="#2-getter">2. getter</a></li>
+<li><a href="#3-mutation">3. mutation</a></li>
+<li><a href="#4action">4.action</a></li>
+<li><a href="#5module">5.module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://liujia12138.github.io/post/css-yu-chu-li-qi-sasslessstylus/">
+              <h3 class="post-title">
+                CSS预处理器，sass、less、stylus
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  AzhA
+  <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
