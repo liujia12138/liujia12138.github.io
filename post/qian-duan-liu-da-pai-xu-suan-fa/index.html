@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>前端六大排序算法 | AzhA</title>
-<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588774003494">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588948077230">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="前端六大排序算法 | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
@@ -14,7 +14,7 @@
     <meta name="description" content="1.冒泡排序
 原理：比较相邻两个数的大小，将较大（或小）的数换到右边（或左边），这样就能将最大（或最小）的数一个一个的比较出来，放到一端。循环这个过程，将所有的数字的顺序排列出来。
 数组长度为n，总共要进行n-1趟，每第i趟的排序次数为n-..." />
-    <meta name="keywords" content="" />
+    <meta name="keywords" content="js" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -23,7 +23,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://liujia12138.github.io">
-  <img class="avatar" src="https://liujia12138.github.io/images/avatar.png?v=1588774003494" alt="">
+  <img class="avatar" src="https://liujia12138.github.io/images/avatar.png?v=1588948077230" alt="">
   </a>
   <h1 class="site-title">
     AzhA
@@ -80,91 +80,119 @@
             </h2>
             <div class="post-info">
               <span>
-                2020-05-06
+                2017-04-09
               </span>
               <span>
                 3 min read
               </span>
               
+                <a href="https://liujia12138.github.io/tag/CvMd75xEg/" class="post-tag">
+                  # js
+                </a>
+              
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>1.冒泡排序<br>
-原理：比较相邻两个数的大小，将较大（或小）的数换到右边（或左边），这样就能将最大（或最小）的数一个一个的比较出来，放到一端。循环这个过程，将所有的数字的顺序排列出来。<br>
+                <h4 id="1冒泡排序">1.冒泡排序</h4>
+<p>原理：比较相邻两个数的大小，将较大（或小）的数换到右边（或左边），这样就能将最大（或最小）的数一个一个的比较出来，放到一端。循环这个过程，将所有的数字的顺序排列出来。<br>
 数组长度为n，总共要进行n-1趟，每第i趟的排序次数为n-i-1次<br>
 时间复杂度：O(n^2)；空间复杂度O(1)</p>
-<p>function bubbleSort(arr){<br>
-for(var i = 0; i&lt;arr.length-1; i++){//冒泡次数<br>
-for(var j = 0; j &lt; arr.length - i -1; j++){<br>
-if(arr[j] &gt; arr[j+1]){<br>
-let temp = arr[j];<br>
-arr[j] = arr[j+1];<br>
-arr[j+1] = temp;<br>
-}<br>
-}<br>
-}<br>
-return arr<br>
-}<br>
-2.选择排序<br>
-原理：先找出数组中最大（或最小）的值，放到一头，然后重复这个过程<br>
+<pre><code>function bubbleSort(arr){
+    for(var i = 0; i&lt;arr.length-1; i++){//冒泡次数
+        for(var j = 0; j &lt; arr.length - i -1; j++){
+            if(arr[j] &gt; arr[j+1]){
+                let temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        } 
+    }
+    return arr
+}
+</code></pre>
+<h4 id="2选择排序">2.选择排序</h4>
+<p>原理：先找出数组中最大（或最小）的值，放到一头，然后重复这个过程<br>
 时间复杂度：O(n^2)</p>
-<p>function selectSort(arr){<br>
-for(var i = 0; i&lt; arr.length-1; i++){//循环次数<br>
-for(var j = i+1; j &lt; arr.length; j++){<br>
-if(arr[i] &gt; arr[j]){<br>
-var tmp = arr[i];<br>
-arr[i] = arr[j];<br>
-arr[j] = tmp<br>
-}<br>
-}<br>
-}<br>
-return arr<br>
-}<br>
-3.插入排序<br>
-原理：构建有序序列，对于未排序数据，在已排序的序列中从后向前扫描，找到相应的位置并插入。<br>
+<pre><code>function selectSort(arr){
+    for(var i = 0; i&lt; arr.length-1; i++){//循环次数
+        for(var j = i+1; j &lt; arr.length; j++){
+            if(arr[i] &gt; arr[j]){
+                var tmp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = tmp
+            }
+        }
+    }
+    return arr
+}
+</code></pre>
+<h4 id="3插入排序">3.插入排序</h4>
+<p>原理：构建有序序列，对于未排序数据，在已排序的序列中从后向前扫描，找到相应的位置并插入。<br>
 默认该有序数列的第一个值是数组的第一个元素，i从1开始取，arr[i]和 arr[0]到arr[i] 之间的数进行比较，找到自己的位置</p>
-<p>function insertSort(arr){<br>
-for(var i = 1; i&lt; arr.length; i++){<br>
-let j = i;<br>
-while(j &gt;=0 ){<br>
-if(arr[j] &lt; arr[j-1]){<br>
-var temp = arr[j];<br>
-arr[j] = arr[j-1];<br>
-arr[j-1] = temp;<br>
-}<br>
-j--;<br>
-}<br>
-}<br>
-return arr<br>
-}<br>
-4.希尔排序<br>
-原理：简单插入排序的改进版。与插入排序的不同之处在于，它会优先比较距离较远的元素。希尔排序又叫缩小增量排序。</p>
-<p>5.归并排序<br>
-原理：归并排序是采用分治法的一个非常典型的应用。将已有序的子序列合并，得到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表，成为2-路归并。</p>
-<p>6.快速排序<br>
-原理：设置一个基准数，将基准数交换到数组的末尾，遍历数组，将小于基准数的换到左边，大于基准数的换到右边，然后将基准数换到他们中间，这成为分区。快排就是不断分区的过程，完成第一个分区后，再对左右两边分成的数组进行分区，一直重复到排序完成。</p>
-<p>function quickSort(arr){<br>
-var len = arr.length;<br>
-if(len&lt;=1){<br>
-return arr<br>
-}<br>
-var pivotIndex = Math.floor(len/2);<br>
-var pivot = arr.splice(pivotIndex, 1)[0];<br>
-var left = [], right = [];<br>
-for(var i = 0; i &lt; len; i++){<br>
-if(arr[i] &lt; pivot){<br>
-left.push(arr[i] )<br>
-}else{<br>
-right.push(arr[i] )<br>
-}<br>
-}<br>
-return quickSort(left).concat([pivot], quickSort(right))<br>
-}</p>
+<pre><code>function insertSort(arr){
+    for(var i = 1; i&lt; arr.length; i++){
+        let j = i;
+        while(j &gt;=0 ){
+            if(arr[j] &lt; arr[j-1]){
+               var temp = arr[j];
+               arr[j] = arr[j-1];
+               arr[j-1] = temp;
+            }
+            j--;
+        }
+    }
+    return arr
+}
+</code></pre>
+<h4 id="4希尔排序">4.希尔排序</h4>
+<p>原理：简单插入排序的改进版。与插入排序的不同之处在于，它会优先比较距离较远的元素。希尔排序又叫缩小增量排序。</p>
+<h4 id="5归并排序">5.归并排序</h4>
+<p>原理：归并排序是采用分治法的一个非常典型的应用。将已有序的子序列合并，得到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表，成为2-路归并。</p>
+<h4 id="6快速排序">6.快速排序</h4>
+<p>原理：设置一个基准数，将基准数交换到数组的末尾，遍历数组，将小于基准数的换到左边，大于基准数的换到右边，然后将基准数换到他们中间，这成为分区。快排就是不断分区的过程，完成第一个分区后，再对左右两边分成的数组进行分区，一直重复到排序完成。</p>
+<pre><code>function quickSort(arr){
+    var len = arr.length;
+    if(len&lt;=1){
+        return arr
+    }
+    var pivotIndex = Math.floor(len/2);
+    var pivot = arr.splice(pivotIndex, 1)[0];
+    var left = [], right = [];
+    for(var i = 0; i &lt; len; i++){
+        if(arr[i] &lt; pivot){
+            left.push(arr[i] )
+        }else{
+            right.push(arr[i] )
+        }
+    }
+    return quickSort(left).concat([pivot], quickSort(right))
+}
+</code></pre>
 
               </div>
               <div class="toc-container">
-                
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F">1.冒泡排序</a></li>
+<li><a href="#2%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F">2.选择排序</a></li>
+<li><a href="#3%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F">3.插入排序</a></li>
+<li><a href="#4%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F">4.希尔排序</a></li>
+<li><a href="#5%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F">5.归并排序</a></li>
+<li><a href="#6%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F">6.快速排序</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
               </div>
             </div>
           </article>
@@ -173,9 +201,9 @@ return quickSort(left).concat([pivot], quickSort(right))<br>
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://liujia12138.github.io/post/wei-shi-me-ye-mian-xie-liao-settimeout-yao-zai-ye-mian-xiao-hui-shi-qing-chu-zhe-ge-timeout/">
+            <a href="https://liujia12138.github.io/post/he-mo-xing-kuan-gao-zhi-de-ji-suan-fang-shi-bian-jie-ta-xian-fu-zhi-zuo-yong-box-sizing-gai-nian/">
               <h3 class="post-title">
-                为什么页面写了setTimeout要在页面销毁时清除这个timeout？
+                盒模型宽高值的计算方式，边界塌陷，负值作用，box-sizing概念
               </h3>
             </a>
           </div>

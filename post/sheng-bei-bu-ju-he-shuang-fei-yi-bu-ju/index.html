@@ -2,24 +2,22 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>关于 | AzhA</title>
+<title>圣杯布局和双飞翼布局 | AzhA</title>
 <link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588948077230">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="关于 | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="圣杯布局和双飞翼布局 | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="
-欢迎来到我的小站呀，很高兴遇见你！🤝
+    <meta name="description" content="参考：圣杯布局和双飞翼布局
+都是三栏布局，左右两边宽度固定，中间宽度自适应
 
-🏠 关于本站
-👨‍💻 博主是谁
-⛹ 兴趣爱好
-📬 联系我呀
-..." />
-    <meta name="keywords" content="" />
+圣杯布局：左浮动+定位
+
+主体部分container内包括center，left、right三个子元素，让这个三个子元素都float：left；container..." />
+    <meta name="keywords" content="css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -81,46 +79,55 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              关于
+              圣杯布局和双飞翼布局
             </h2>
             <div class="post-info">
               <span>
-                2019-01-25
+                2018-06-07
               </span>
               <span>
                 1 min read
               </span>
               
+                <a href="https://liujia12138.github.io/tag/yf3fMR6HV/" class="post-tag">
+                  # css
+                </a>
+              
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <blockquote>
-<p>欢迎来到我的小站呀，很高兴遇见你！🤝</p>
-</blockquote>
-<h2 id="关于本站">🏠 关于本站</h2>
-<h2 id="博主是谁">👨‍💻 博主是谁</h2>
-<h2 id="兴趣爱好">⛹ 兴趣爱好</h2>
-<h2 id="联系我呀">📬 联系我呀</h2>
+                <p>参考：<a href="https://www.jianshu.com/p/81ef7e7094e8">圣杯布局和双飞翼布局</a></p>
+<p>都是三栏布局，左右两边宽度固定，中间宽度自适应</p>
+<ul>
+<li>圣杯布局：左浮动+定位</li>
+</ul>
+<p>主体部分container内包括center，left、right三个子元素，让这个三个子元素都float：left；container设置padding左右的值为左右元素的 width；然后给左右两侧的元素设置宽度，然后左边的元素margin-left：-100%;position:relative;right:(left的宽度)，右边的元素margin-right：-（width）；</p>
+<p>注意中间元素一定要设置宽度为100%，因为设置了浮动，是行内块，内容太少的话宽度会自己缩到内容的大小</p>
+<ul>
+<li>双飞翼布局：只用了float，没有定位</li>
+</ul>
+<p>与圣杯布局的区别是container只包裹住center</p>
+<p>conatiner和left、right平级，全都左浮动，container宽度为100%来保证宽度自适应，left和right设置宽度，center设置margin-left和margin-right分别为左右元素的宽度，left设置margin-left：-100%，right设置margin-left：-（right的宽度）;<br>
+给外层容器清浮动</p>
 
               </div>
               <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E5%85%B3%E4%BA%8E%E6%9C%AC%E7%AB%99">🏠 关于本站</a></li>
-<li><a href="#%E5%8D%9A%E4%B8%BB%E6%98%AF%E8%B0%81">👨‍💻 博主是谁</a></li>
-<li><a href="#%E5%85%B4%E8%B6%A3%E7%88%B1%E5%A5%BD">⛹ 兴趣爱好</a></li>
-<li><a href="#%E8%81%94%E7%B3%BB%E6%88%91%E5%91%80">📬 联系我呀</a></li>
-</ul>
-</li>
-</ul>
-
+                
               </div>
             </div>
           </article>
         </div>
 
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://liujia12138.github.io/post/liu-lan-qi-jian-rong-wen-ti/">
+              <h3 class="post-title">
+                浏览器兼容问题
+              </h3>
+            </a>
+          </div>
         
 
         

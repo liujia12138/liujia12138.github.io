@@ -2,24 +2,20 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>关于 | AzhA</title>
+<title>节流和防抖 | AzhA</title>
 <link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588948077230">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="关于 | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="节流和防抖 | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="
-欢迎来到我的小站呀，很高兴遇见你！🤝
-
-🏠 关于本站
-👨‍💻 博主是谁
-⛹ 兴趣爱好
-📬 联系我呀
+    <meta name="description" content="一些用户频繁触发的事件操作，对于dom操作，资源加载等消耗性能的处理可能会导致页面卡顿，这时就需要用到函数节流（throttle）和函数防抖（debounce）
+函数防抖
+事件被触发n秒之后再执行，如果在这个n秒之内被再次触发，就重新计时
 ..." />
-    <meta name="keywords" content="" />
+    <meta name="keywords" content="js" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -81,37 +77,87 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              关于
+              节流和防抖
             </h2>
             <div class="post-info">
               <span>
-                2019-01-25
+                2019-03-14
               </span>
               <span>
-                1 min read
+                2 min read
               </span>
+              
+                <a href="https://liujia12138.github.io/tag/CvMd75xEg/" class="post-tag">
+                  # js
+                </a>
               
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <blockquote>
-<p>欢迎来到我的小站呀，很高兴遇见你！🤝</p>
-</blockquote>
-<h2 id="关于本站">🏠 关于本站</h2>
-<h2 id="博主是谁">👨‍💻 博主是谁</h2>
-<h2 id="兴趣爱好">⛹ 兴趣爱好</h2>
-<h2 id="联系我呀">📬 联系我呀</h2>
+                <p>一些用户频繁触发的事件操作，对于dom操作，资源加载等消耗性能的处理可能会导致页面卡顿，这时就需要用到函数节流（throttle）和函数防抖（debounce）</p>
+<h4 id="函数防抖">函数防抖</h4>
+<p>事件被触发n秒之后再执行，如果在这个n秒之内被再次触发，就重新计时</p>
+<p>使用场景：</p>
+<ul>
+<li>做输入框自动补全提示（实时搜索），需要监听用户的输入行为，根据输入内容去请求后端接口，如果不做函数防抖的话，每次触发keyup就要请求一次，非常消耗性能</li>
+<li>拖拽</li>
+</ul>
+<p>实现函数防抖：用setTimeout</p>
+<pre><code class="language-js">function debounce(fn, delay){
+    var timer;
+    return function(e){
+        var that =  this;
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+            fn.call(that, e)
+        }, delay)
+    }
+}
+
+function fn(args){
+    console.log(args)
+}
+document.getElementById('debounce').addEventListener(&quot;click&quot;,function(e){
+    debounce(click, 500)(e)
+})
+</code></pre>
+<h4 id="函数节流">函数节流</h4>
+<p>预定一个函数只有在大于等于执行周期时才执行，周期内调用不执行，不管函数触发的多频繁都会保证一个周期执行一次</p>
+<p>使用场景：</p>
+<ul>
+<li>窗口resize</li>
+<li>页面滚动scroll</li>
+</ul>
+<p>实现函数节流：</p>
+<pre><code class="language-js">function throttle(fn, delay){
+    let prev = 0;
+    return function(args){
+        let that = this;
+        let now = Date.now();
+        if(now - prev &gt;= delay){
+            fn.call(that, args);
+            prev = now;
+        }
+    }
+}
+</code></pre>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
 <li>
 <ul>
-<li><a href="#%E5%85%B3%E4%BA%8E%E6%9C%AC%E7%AB%99">🏠 关于本站</a></li>
-<li><a href="#%E5%8D%9A%E4%B8%BB%E6%98%AF%E8%B0%81">👨‍💻 博主是谁</a></li>
-<li><a href="#%E5%85%B4%E8%B6%A3%E7%88%B1%E5%A5%BD">⛹ 兴趣爱好</a></li>
-<li><a href="#%E8%81%94%E7%B3%BB%E6%88%91%E5%91%80">📬 联系我呀</a></li>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%87%BD%E6%95%B0%E9%98%B2%E6%8A%96">函数防抖</a></li>
+<li><a href="#%E5%87%BD%E6%95%B0%E8%8A%82%E6%B5%81">函数节流</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -121,6 +167,15 @@
           </article>
         </div>
 
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://liujia12138.github.io/post/css-yu-chu-li-qi-sasslessstylus/">
+              <h3 class="post-title">
+                CSS预处理器，sass、less、stylus
+              </h3>
+            </a>
+          </div>
         
 
         

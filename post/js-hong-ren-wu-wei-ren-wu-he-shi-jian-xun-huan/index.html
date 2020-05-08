@@ -2,26 +2,17 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>如何判断数组和类数组？如何将类数组转成数组？ | AzhA</title>
+<title>JS宏任务微任务和事件循环 | AzhA</title>
 <link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1588948077230">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="如何判断数组和类数组？如何将类数组转成数组？ | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="JS宏任务微任务和事件循环 | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="var arr = [1,2,3,4];
-var likeArr = {
-    '0':'a',
-    '1':'b',
-    '2':'c',
-    length:3
-};
-
-1.判断数组类型：
-arr instanceof Ar..." />
-    <meta name="keywords" content="js,es6" />
+    <meta name="description" content="js是一门单线程语言，所有任务都需要排队执行，如果上一个任务要消耗很长的时间，下一个任务都不得不等待很长时间，这时设计者就把任务分为了同步任务和异步任务。同步任务在主线程上一个个执行，异步任务则会加入到任务队列，只有所有同步任务执行完，才会..." />
+    <meta name="keywords" content="js" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -83,69 +74,74 @@ arr instanceof Ar..." />
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              如何判断数组和类数组？如何将类数组转成数组？
+              JS宏任务微任务和事件循环
             </h2>
             <div class="post-info">
               <span>
-                2017-07-06
+                2020-01-07
               </span>
               <span>
-                1 min read
+                3 min read
               </span>
               
                 <a href="https://liujia12138.github.io/tag/CvMd75xEg/" class="post-tag">
                   # js
                 </a>
               
-                <a href="https://liujia12138.github.io/tag/NaR04YJjP/" class="post-tag">
-                  # es6
-                </a>
-              
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <pre><code>var arr = [1,2,3,4];
-var likeArr = {
-    '0':'a',
-    '1':'b',
-    '2':'c',
-    length:3
-};
-</code></pre>
-<p>1.判断数组类型：<br>
-arr instanceof Array;//true<br>
-Array.isArray(arr);//true<br>
-Object.prototype.toString.call(arr); //'[object Array]'<br>
-2.将类数组转成数组<br>
-1.[].slice.call()</p>
-<pre><code>var fn = function(likeArr){
-    var arr = Array.prototype.slice.call(likeArr);
-    //或者：var arr = [].slice.call(arguments);
-    return arr;
+                <p>js是一门单线程语言，所有任务都需要排队执行，如果上一个任务要消耗很长的时间，下一个任务都不得不等待很长时间，这时设计者就把任务分为了同步任务和异步任务。同步任务在主线程上一个个执行，异步任务则会加入到任务队列，只有所有同步任务执行完，才会执行异步任务。</p>
+<p>异步任务有：setTimeout，setInterval，dom事件，promise， ajax</p>
+<p>按照这样的话，上面例子的setTimeout和promise是异步任务，加入到任务队列然后依次执行，但并不是这样，任务又分为宏任务和微任务</p>
+<p>宏任务和微任务：宏任务优先于微任务执行， 宏任务包括整体代码script，setTimeout，setInterval； 微任务包括promise，process.nextTick</p>
+<p>所以上面的例子先打印start---然后遇到setTimeout，setTimeout属于异步任务也属于宏任务，放到task（宏任务队列）里面---然后是promise，也是异步任务，但是是微任务，所以放到microtask（微任务队列）里面---然后执行到最后打印end；此时主线程js stack被清空。</p>
+<p>主线程执行完毕之后就会去清空微任务，所以接下来promise.then会被加入到主线程中去执行，执行完毕后，主线程又被清空了</p>
+<p>此时微任务队列里还有刚刚产生的promise.then，又被加入到主线程，打印出promise2</p>
+<p>此时微任务和主线程都被清空，接着从宏任务队列中取出一个宏任务加入到主线程中执行，打印出setTimeout</p>
+<p>此时主线程，微任务队列，宏任务队列都被清空了。</p>
+<p>如果宏任务队列和微任务队列还没清空，就会：主栈全部执行完毕后--&gt;清空微任务--&gt;会取出一个宏任务 --&gt; 执行完毕后--&gt;清空微任务 -&gt; 无线循环，这就是我们所说的事件环（Event Loop），也就是javascript的执行机制。</p>
+<p>看下面的例子</p>
+<pre><code>&lt;div class=&quot;outer&quot;&gt;
+  &lt;div class=&quot;inner&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+// Let's get hold of those elements
+var outer = document.querySelector('.outer');
+var inner = document.querySelector('.inner');
+
+// Let's listen for attribute changes on the
+// outer element
+//监听element属性变化
+new MutationObserver(function() {
+  console.log('mutate');
+}).observe(outer, {
+  attributes: true
+});
+
+// Here's a click listener…
+function onClick() {
+  console.log('click');
+
+  setTimeout(function() {
+    console.log('timeout');
+  }, 0);
+
+  Promise.resolve().then(function() {
+    console.log('promise');
+  });
+
+  outer.setAttribute('data-random', Math.random());
 }
+
+// …which we'll attach to both elements
+inner.addEventListener('click', onClick);
+outer.addEventListener('click', onClick);
+&lt;/script&gt;
 </code></pre>
-<p>2.Array.from()</p>
-<pre><code>var fn = function(likeArr){
-    var arr = Array.from(likeArr)
-    return arr;
-}
-</code></pre>
-<p>3.扩展运算符(...)</p>
-<pre><code>//转换arguments
-var fn = function(){
-    var args = [...arguments];
-}
-</code></pre>
-<p>兼容写法</p>
-<pre><code>function toArray(likeArr){
-    if(Array.from){
-        return Array.from(likeArr)
-    }else{
-        return [].slice.call(likeArr)
-    }
-}
-</code></pre>
+<p>点击inner会打印什么？</p>
+<p>click事件是宏任务，加入到宏任务队列，setTimeout也是宏任务，promise和MutationObserver是微任务，加入到微任务队列 click promise mutate click promise mutate timeout timeout</p>
 
               </div>
               <div class="toc-container">
@@ -158,9 +154,9 @@ var fn = function(){
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://liujia12138.github.io/post/qian-duan-liu-da-pai-xu-suan-fa/">
+            <a href="https://liujia12138.github.io/post/liu-lan-qi-shu-ru-yi-ge-url-dao-ye-mian-xuan-ran-chu-lai-du-fa-sheng-liao-shi-me/">
               <h3 class="post-title">
-                前端六大排序算法
+                浏览器输入一个url到页面渲染出来都发生了什么？
               </h3>
             </a>
           </div>

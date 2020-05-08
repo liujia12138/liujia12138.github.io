@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2020-05-06T14:07:50.389Z</updated>
+    <updated>2020-05-08T14:28:09.266Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -94,329 +94,6 @@ var b = {};    // a指向对象的引用次数减1，为2<br>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[如何判断数组和类数组？如何将类数组转成数组？]]></title>
-        <id>https://liujia12138.github.io/post/ru-he-pan-duan-shu-zu-he-lei-shu-zu-ru-he-jiang-lei-shu-zu-zhuan-cheng-shu-zu/</id>
-        <link href="https://liujia12138.github.io/post/ru-he-pan-duan-shu-zu-he-lei-shu-zu-ru-he-jiang-lei-shu-zu-zhuan-cheng-shu-zu/">
-        </link>
-        <updated>2020-05-06T12:39:45.000Z</updated>
-        <content type="html"><![CDATA[<pre><code>var arr = [1,2,3,4];
-var likeArr = {
-    '0':'a',
-    '1':'b',
-    '2':'c',
-    length:3
-};
-</code></pre>
-<p>1.判断数组类型：<br>
-arr instanceof Array;//true<br>
-Array.isArray(arr);//true<br>
-Object.prototype.toString.call(arr); //'[object Array]'<br>
-2.将类数组转成数组<br>
-1.[].slice.call()</p>
-<pre><code>var fn = function(likeArr){
-    var arr = Array.prototype.slice.call(likeArr);
-    //或者：var arr = [].slice.call(arguments);
-    return arr;
-}
-</code></pre>
-<p>2.Array.from()</p>
-<pre><code>var fn = function(likeArr){
-    var arr = Array.from(likeArr)
-    return arr;
-}
-</code></pre>
-<p>3.扩展运算符(...)</p>
-<pre><code>//转换arguments
-var fn = function(){
-    var args = [...arguments];
-}
-</code></pre>
-<p>兼容写法</p>
-<pre><code>function toArray(likeArr){
-    if(Array.from){
-        return Array.from(likeArr)
-    }else{
-        return [].slice.call(likeArr)
-    }
-}
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[浏览器兼容问题]]></title>
-        <id>https://liujia12138.github.io/post/liu-lan-qi-jian-rong-wen-ti/</id>
-        <link href="https://liujia12138.github.io/post/liu-lan-qi-jian-rong-wen-ti/">
-        </link>
-        <updated>2020-05-06T12:39:20.000Z</updated>
-        <content type="html"><![CDATA[<p>1.ie8不支持background-size设置背景图大小<br>
-用filter：</p>
-<p>filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled='true', src='背景图url', sizingMethod='scale');<br>
-参数:<br>
-1.enabled：设置或检索滤镜是否激活，true/false，默认为true<br>
-2.src：图片地址<br>
-3.sizingMethod：设置或检索滤镜作用的对象的图片在容器边界内的显示方式，crop剪切/image默认值/scale缩放图片</p>
-<p>2.ie8支持的伪类选择器只有:hover,:focus,:first-child<br>
-想实现li:nth-of-type(2)只能用li:first-child+li</p>
-<p>3.sfaire浏览器中input如果设置了高度，输入的时候光标就会跑到上面去了，所以要用padding撑开<br>
-4.ie8不支持placeholder属性，用js实现<br>
-1.先判断浏览器是否支持placeholder属性，如果不支持就模拟placeholder<br>
-2.创建一个label标签：<label>密码：<label/>标签里的内容为placeholder属性值，再讲标签覆盖到对应的input上</p>
-<p>; (function (win) {</p>
-<pre><code>win.isPlaceholer = function () {
-    var input = document.createElement(&quot;input&quot;);
-    return &quot;placeholder&quot; in input;
-};
-
-win.placeholder = function () {
-
-    if (!isPlaceholer()) {
-        var Placeholder =function (obj) {
-            this.input = obj;
-            var te = obj.getAttribute('placeholder');
-            this.label = document.createElement('label');
-            this.label.innerHTML = te;
-            this.label.id = obj.id + 'Label';
-            this.label.style.cssText = 'position:absolute; text-indent:4px;color:#999999; font-size:14px;';
-            if (obj.value !== '') {
-                this.label.style.display = 'none';
-            }
-            this.init();
-        };
-        Placeholder.prototype = {
-
-            getxy: function (obj) {
-                var left, top;
-                if (document.documentElement.getBoundingClientRect) {
-                    var html = document.documentElement,
-                    body = document.body,
-                    pos = obj.getBoundingClientRect(),
-                    st = html.scrollTop || body.scrollTop,
-                    sl = html.scrollLeft || body.scrollLeft,
-                    ct = html.clientTop || body.clientTop,
-                    cl = html.clientLeft || body.clientLeft;
-                    left = pos.left + sl - cl;
-                    top = pos.top + st - ct;
-                } else {
-                    while (obj) {
-                        left += obj.offsetLeft;
-                        top += obj.offsetTop;
-                        obj = obj.offsetParent;
-                    }
-                }
-                return {
-                    left: left,
-                    top: top
-                };
-            },
-
-            getwh: function (obj) {
-                return {
-                    w: obj.offsetWidth,
-                    h: obj.offsetHeight
-                };
-            },
-
-            setStyles: function (obj, styles) {
-                for (var p in styles) {
-                    obj.style[p] = styles[p] + 'px';
-                }
-            },
-            init: function () {
-                var label = this.label,
-                input = this.input,
-                getXY = this.getxy,
-                xy = this.getxy(input),
-                wh = this.getwh(input);
-                this.setStyles(label, { 'width': wh.w, 'height': wh.h, 'lineHeight': 40, 'left': xy.left + 8, 'top': xy.top });
-                document.body.appendChild(label);
-                label.onclick = function () {
-                    this.style.display = &quot;none&quot;;
-                    input.focus();
-                };
-                input.onfocus = function () {
-                    label.style.display = &quot;none&quot;;
-                };
-                input.onblur = function () {
-                    if (this.value === &quot;&quot;) {
-                        label.style.display = &quot;block&quot;;
-                    }
-                };
-                if (window.attachEvent) {
-                    window.attachEvent(&quot;onresize&quot;, function () {
-                        var xy = getXY(input);
-                        Placeholder.prototype.setStyles(label, { 'left': xy.left + 8, 'top': xy.top });
-                    });
-                } else {
-                    window.addEventListener(&quot;resize&quot;, function () {
-                        var xy = getXY(input);
-                        Placeholder.prototype.setStyles(label, { 'left': xy.left + 8, 'top': xy.top });
-                    }, false);
-                }
-            }
-        };
-
-        var inpColl = $(&quot;#Box input:visible&quot;);//这里是页面上要添加placeholder支持的input
-        //var inpColl = document.getElementsByTagName('input'),          
-        var textColl = document.getElementsByTagName('textarea');//这里是页面上要添加placeholder支持的textarea
-        //var lableArr = $(&quot;#Box lable&quot;);
-        var toArray = function (coll) {
-            for (var i = 0, a = [], len = coll.length; i &lt; len; i++) {
-                a[i] = coll[i];
-            }
-            return a;
-        };
-        var inpArr = toArray(inpColl),
-        textArr = toArray(textColl),
-
-        placeholderArr = inpArr.concat(textArr);
-        for (var i = 0; i &lt; placeholderArr.length; i++) {
-            if (placeholderArr[i].getAttribute('placeholder') !== null) {
-
-                new Placeholder(placeholderArr[i]);
-            }
-        }
-    }
-
-};
-</code></pre>
-<p>}(window));<br>
-5.ie8不支持css3动画<br>
-6.element-ui在火狐浏览器下的滚动问题<br>
-用<el-scrollbar></el-scrollbar>组件</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[CSS预处理器，sass、less、stylus]]></title>
-        <id>https://liujia12138.github.io/post/css-yu-chu-li-qi-sasslessstylus/</id>
-        <link href="https://liujia12138.github.io/post/css-yu-chu-li-qi-sasslessstylus/">
-        </link>
-        <updated>2020-05-06T12:38:58.000Z</updated>
-        <content type="html"><![CDATA[<p>css预处理器是一种专门用来为css增加编程特性的编程语言，css本身不是编程语言。</p>
-<p>css预处理器的作用：</p>
-<p>css语法不够强大，选择器无法嵌套，导致css中存在较多重复的选择器语句；<br>
-css无法定义变量，没有合理的样式复用机制，css预处理器为css提供样式复用机制，减少css代码冗余，提高css可维护性；<br>
-工作流程（以sass为例）：</p>
-<p>以sass提供的语法规则编写样式；<br>
-编译器把sass代码转换成标准的css代码；<br>
-浏览器加载解析后的css样式；<br>
-主流css预处理器：</p>
-<p>sass：最早最成熟的css预处理器，有两种语法，分别以.sass和.scss为扩展名，scss兼容css3<br>
-less<br>
-stylus：主要用来给node项目进行css预处理，以.styl为扩展名</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[前端六大排序算法]]></title>
-        <id>https://liujia12138.github.io/post/qian-duan-liu-da-pai-xu-suan-fa/</id>
-        <link href="https://liujia12138.github.io/post/qian-duan-liu-da-pai-xu-suan-fa/">
-        </link>
-        <updated>2020-05-06T12:38:32.000Z</updated>
-        <content type="html"><![CDATA[<p>1.冒泡排序<br>
-原理：比较相邻两个数的大小，将较大（或小）的数换到右边（或左边），这样就能将最大（或最小）的数一个一个的比较出来，放到一端。循环这个过程，将所有的数字的顺序排列出来。<br>
-数组长度为n，总共要进行n-1趟，每第i趟的排序次数为n-i-1次<br>
-时间复杂度：O(n^2)；空间复杂度O(1)</p>
-<p>function bubbleSort(arr){<br>
-for(var i = 0; i&lt;arr.length-1; i++){//冒泡次数<br>
-for(var j = 0; j &lt; arr.length - i -1; j++){<br>
-if(arr[j] &gt; arr[j+1]){<br>
-let temp = arr[j];<br>
-arr[j] = arr[j+1];<br>
-arr[j+1] = temp;<br>
-}<br>
-}<br>
-}<br>
-return arr<br>
-}<br>
-2.选择排序<br>
-原理：先找出数组中最大（或最小）的值，放到一头，然后重复这个过程<br>
-时间复杂度：O(n^2)</p>
-<p>function selectSort(arr){<br>
-for(var i = 0; i&lt; arr.length-1; i++){//循环次数<br>
-for(var j = i+1; j &lt; arr.length; j++){<br>
-if(arr[i] &gt; arr[j]){<br>
-var tmp = arr[i];<br>
-arr[i] = arr[j];<br>
-arr[j] = tmp<br>
-}<br>
-}<br>
-}<br>
-return arr<br>
-}<br>
-3.插入排序<br>
-原理：构建有序序列，对于未排序数据，在已排序的序列中从后向前扫描，找到相应的位置并插入。<br>
-默认该有序数列的第一个值是数组的第一个元素，i从1开始取，arr[i]和 arr[0]到arr[i] 之间的数进行比较，找到自己的位置</p>
-<p>function insertSort(arr){<br>
-for(var i = 1; i&lt; arr.length; i++){<br>
-let j = i;<br>
-while(j &gt;=0 ){<br>
-if(arr[j] &lt; arr[j-1]){<br>
-var temp = arr[j];<br>
-arr[j] = arr[j-1];<br>
-arr[j-1] = temp;<br>
-}<br>
-j--;<br>
-}<br>
-}<br>
-return arr<br>
-}<br>
-4.希尔排序<br>
-原理：简单插入排序的改进版。与插入排序的不同之处在于，它会优先比较距离较远的元素。希尔排序又叫缩小增量排序。</p>
-<p>5.归并排序<br>
-原理：归并排序是采用分治法的一个非常典型的应用。将已有序的子序列合并，得到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表，成为2-路归并。</p>
-<p>6.快速排序<br>
-原理：设置一个基准数，将基准数交换到数组的末尾，遍历数组，将小于基准数的换到左边，大于基准数的换到右边，然后将基准数换到他们中间，这成为分区。快排就是不断分区的过程，完成第一个分区后，再对左右两边分成的数组进行分区，一直重复到排序完成。</p>
-<p>function quickSort(arr){<br>
-var len = arr.length;<br>
-if(len&lt;=1){<br>
-return arr<br>
-}<br>
-var pivotIndex = Math.floor(len/2);<br>
-var pivot = arr.splice(pivotIndex, 1)[0];<br>
-var left = [], right = [];<br>
-for(var i = 0; i &lt; len; i++){<br>
-if(arr[i] &lt; pivot){<br>
-left.push(arr[i] )<br>
-}else{<br>
-right.push(arr[i] )<br>
-}<br>
-}<br>
-return quickSort(left).concat([pivot], quickSort(right))<br>
-}</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[为什么页面写了setTimeout要在页面销毁时清除这个timeout？]]></title>
-        <id>https://liujia12138.github.io/post/wei-shi-me-ye-mian-xie-liao-settimeout-yao-zai-ye-mian-xiao-hui-shi-qing-chu-zhe-ge-timeout/</id>
-        <link href="https://liujia12138.github.io/post/wei-shi-me-ye-mian-xie-liao-settimeout-yao-zai-ye-mian-xiao-hui-shi-qing-chu-zhe-ge-timeout/">
-        </link>
-        <updated>2020-05-06T12:38:05.000Z</updated>
-        <content type="html"><![CDATA[<p>vue、react等创建的单页面应用，切换路由的时候并不会刷新页面，定时器也不会被销毁，所以需要在beforeDestroy中手动清除；</p>
-<p>用setTimeout实现setInterval？</p>
-<pre><code>var t = null;
-var count = 0;
-function time(){
-    clearTimeout(t);
-    count ++;
-    t = setTimeout(time, 1000);
-}
-t = setTimeout(time, 1000);
-var t = null;
-function f(fn, time){
-    var _this = this;
-    var args = [...arguments].slice(2)
-    function setFun(){
-        clearTimeout(t);
-        t = setTimeout(function(){
-            setFun();
-            fn(args);
-        }, time)
-    }
-    setFun();
-}
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
         <title type="html"><![CDATA[css实现宽高比]]></title>
         <id>https://liujia12138.github.io/post/css-shi-xian-kuan-gao-bi/</id>
         <link href="https://liujia12138.github.io/post/css-shi-xian-kuan-gao-bi/">
@@ -450,24 +127,6 @@ function f(fn, time){
 }]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[盒模型宽高值的计算方式，边界塌陷，负值作用，box-sizing概念]]></title>
-        <id>https://liujia12138.github.io/post/he-mo-xing-kuan-gao-zhi-de-ji-suan-fang-shi-bian-jie-ta-xian-fu-zhi-zuo-yong-box-sizing-gai-nian/</id>
-        <link href="https://liujia12138.github.io/post/he-mo-xing-kuan-gao-zhi-de-ji-suan-fang-shi-bian-jie-ta-xian-fu-zhi-zuo-yong-box-sizing-gai-nian/">
-        </link>
-        <updated>2020-05-06T12:37:18.000Z</updated>
-        <content type="html"><![CDATA[<p>box-sizing用来告诉浏览器如何计算一个元素的宽度和高度；<br>
-盒子的四个组成区域：内容content、内边距padding、边框border、外边距margin</p>
-<p>box-sizing有三个属性值：content-box、border-box、inherit</p>
-<p>标准盒模型：box-sizing:content-box;<br>
-元素的总宽度和总高度就是内容的宽度和高度；</p>
-<p>IE盒模型：box-sizing:border-box；<br>
-元素的总宽度包括内容，内边距和边框</p>
-<p>总结：</p>
-<p>对于给定width和height的元素，设置box-sizing会影响盒子的content width和content height。<br>
-浏览器默认使用content-box，我们设置的宽高就是内容的宽高。</p>
-]]></content>
-    </entry>
-    <entry>
         <title type="html"><![CDATA[vue项目安装sass-loader]]></title>
         <id>https://liujia12138.github.io/post/vue-xiang-mu-an-zhuang-sass-loader/</id>
         <link href="https://liujia12138.github.io/post/vue-xiang-mu-an-zhuang-sass-loader/">
@@ -482,6 +141,385 @@ npm install node-sass --save-dev<br>
 test: &quot;sass&quot;,<br>
 loader: ['style', 'css', 'sass']<br>
 }</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[JS宏任务微任务和事件循环]]></title>
+        <id>https://liujia12138.github.io/post/js-hong-ren-wu-wei-ren-wu-he-shi-jian-xun-huan/</id>
+        <link href="https://liujia12138.github.io/post/js-hong-ren-wu-wei-ren-wu-he-shi-jian-xun-huan/">
+        </link>
+        <updated>2020-01-07T13:13:21.000Z</updated>
+        <content type="html"><![CDATA[<p>js是一门单线程语言，所有任务都需要排队执行，如果上一个任务要消耗很长的时间，下一个任务都不得不等待很长时间，这时设计者就把任务分为了同步任务和异步任务。同步任务在主线程上一个个执行，异步任务则会加入到任务队列，只有所有同步任务执行完，才会执行异步任务。</p>
+<p>异步任务有：setTimeout，setInterval，dom事件，promise， ajax</p>
+<p>按照这样的话，上面例子的setTimeout和promise是异步任务，加入到任务队列然后依次执行，但并不是这样，任务又分为宏任务和微任务</p>
+<p>宏任务和微任务：宏任务优先于微任务执行， 宏任务包括整体代码script，setTimeout，setInterval； 微任务包括promise，process.nextTick</p>
+<p>所以上面的例子先打印start---然后遇到setTimeout，setTimeout属于异步任务也属于宏任务，放到task（宏任务队列）里面---然后是promise，也是异步任务，但是是微任务，所以放到microtask（微任务队列）里面---然后执行到最后打印end；此时主线程js stack被清空。</p>
+<p>主线程执行完毕之后就会去清空微任务，所以接下来promise.then会被加入到主线程中去执行，执行完毕后，主线程又被清空了</p>
+<p>此时微任务队列里还有刚刚产生的promise.then，又被加入到主线程，打印出promise2</p>
+<p>此时微任务和主线程都被清空，接着从宏任务队列中取出一个宏任务加入到主线程中执行，打印出setTimeout</p>
+<p>此时主线程，微任务队列，宏任务队列都被清空了。</p>
+<p>如果宏任务队列和微任务队列还没清空，就会：主栈全部执行完毕后--&gt;清空微任务--&gt;会取出一个宏任务 --&gt; 执行完毕后--&gt;清空微任务 -&gt; 无线循环，这就是我们所说的事件环（Event Loop），也就是javascript的执行机制。</p>
+<p>看下面的例子</p>
+<pre><code>&lt;div class=&quot;outer&quot;&gt;
+  &lt;div class=&quot;inner&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+// Let's get hold of those elements
+var outer = document.querySelector('.outer');
+var inner = document.querySelector('.inner');
+
+// Let's listen for attribute changes on the
+// outer element
+//监听element属性变化
+new MutationObserver(function() {
+  console.log('mutate');
+}).observe(outer, {
+  attributes: true
+});
+
+// Here's a click listener…
+function onClick() {
+  console.log('click');
+
+  setTimeout(function() {
+    console.log('timeout');
+  }, 0);
+
+  Promise.resolve().then(function() {
+    console.log('promise');
+  });
+
+  outer.setAttribute('data-random', Math.random());
+}
+
+// …which we'll attach to both elements
+inner.addEventListener('click', onClick);
+outer.addEventListener('click', onClick);
+&lt;/script&gt;
+</code></pre>
+<p>点击inner会打印什么？</p>
+<p>click事件是宏任务，加入到宏任务队列，setTimeout也是宏任务，promise和MutationObserver是微任务，加入到微任务队列 click promise mutate click promise mutate timeout timeout</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[浏览器输入一个url到页面渲染出来都发生了什么？]]></title>
+        <id>https://liujia12138.github.io/post/liu-lan-qi-shu-ru-yi-ge-url-dao-ye-mian-xuan-ran-chu-lai-du-fa-sheng-liao-shi-me/</id>
+        <link href="https://liujia12138.github.io/post/liu-lan-qi-shu-ru-yi-ge-url-dao-ye-mian-xuan-ran-chu-lai-du-fa-sheng-liao-shi-me/">
+        </link>
+        <updated>2019-05-07T13:23:32.000Z</updated>
+        <content type="html"><![CDATA[<p>主要分为三个过程：DNS解析，浏览器发起请求和服务器交互，浏览器接收到对应的html进行页面渲染</p>
+<h3 id="1dns解析">1.DNS解析：</h3>
+<p>浏览器向dns服务器发送域名，dns服务器查询到对应的ip地址返回给浏览器，浏览器获取到ip地址和参数一起发送给对应的服务器，发起http请求</p>
+<h3 id="2浏览器发送请求与服务器交互">2.浏览器发送请求与服务器交互</h3>
+<ul>
+<li>1.浏览器通过三次握手与服务器建立连接</li>
+<li>2.浏览器根据解析得到的ip地址和端口号发起http get请求</li>
+<li>3.服务器接收到get请求，查找对应的html文件，使用http返回响应报文</li>
+<li>4.如果状态码是200，响应成功，浏览及接收到对应的页面，开始渲染</li>
+</ul>
+<h3 id="3浏览器渲染页面">3.浏览器渲染页面</h3>
+<ul>
+<li>1.解析html生成dom树</li>
+<li>2.解析css，构建cssom树</li>
+<li>3.加载js</li>
+<li>4.dom树和cssom树结合构成渲染（render）树</li>
+<li>
+<ol start="5">
+<li></li>
+</ol>
+</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[节流和防抖]]></title>
+        <id>https://liujia12138.github.io/post/jie-liu-he-fang-dou/</id>
+        <link href="https://liujia12138.github.io/post/jie-liu-he-fang-dou/">
+        </link>
+        <updated>2019-03-14T13:59:36.000Z</updated>
+        <content type="html"><![CDATA[<p>一些用户频繁触发的事件操作，对于dom操作，资源加载等消耗性能的处理可能会导致页面卡顿，这时就需要用到函数节流（throttle）和函数防抖（debounce）</p>
+<h4 id="函数防抖">函数防抖</h4>
+<p>事件被触发n秒之后再执行，如果在这个n秒之内被再次触发，就重新计时</p>
+<p>使用场景：</p>
+<ul>
+<li>做输入框自动补全提示（实时搜索），需要监听用户的输入行为，根据输入内容去请求后端接口，如果不做函数防抖的话，每次触发keyup就要请求一次，非常消耗性能</li>
+<li>拖拽</li>
+</ul>
+<p>实现函数防抖：用setTimeout</p>
+<pre><code class="language-js">function debounce(fn, delay){
+    var timer;
+    return function(e){
+        var that =  this;
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+            fn.call(that, e)
+        }, delay)
+    }
+}
+
+function fn(args){
+    console.log(args)
+}
+document.getElementById('debounce').addEventListener(&quot;click&quot;,function(e){
+    debounce(click, 500)(e)
+})
+</code></pre>
+<h4 id="函数节流">函数节流</h4>
+<p>预定一个函数只有在大于等于执行周期时才执行，周期内调用不执行，不管函数触发的多频繁都会保证一个周期执行一次</p>
+<p>使用场景：</p>
+<ul>
+<li>窗口resize</li>
+<li>页面滚动scroll</li>
+</ul>
+<p>实现函数节流：</p>
+<pre><code class="language-js">function throttle(fn, delay){
+    let prev = 0;
+    return function(args){
+        let that = this;
+        let now = Date.now();
+        if(now - prev &gt;= delay){
+            fn.call(that, args);
+            prev = now;
+        }
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[CSS预处理器，sass、less、stylus]]></title>
+        <id>https://liujia12138.github.io/post/css-yu-chu-li-qi-sasslessstylus/</id>
+        <link href="https://liujia12138.github.io/post/css-yu-chu-li-qi-sasslessstylus/">
+        </link>
+        <updated>2018-07-10T12:38:58.000Z</updated>
+        <content type="html"><![CDATA[<p>css预处理器是一种专门用来为css增加编程特性的编程语言，css本身不是编程语言。</p>
+<p>css预处理器的作用：</p>
+<p>css语法不够强大，选择器无法嵌套，导致css中存在较多重复的选择器语句；<br>
+css无法定义变量，没有合理的样式复用机制，css预处理器为css提供样式复用机制，减少css代码冗余，提高css可维护性；<br>
+工作流程（以sass为例）：</p>
+<p>以sass提供的语法规则编写样式；<br>
+编译器把sass代码转换成标准的css代码；<br>
+浏览器加载解析后的css样式；<br>
+主流css预处理器：</p>
+<p>sass：最早最成熟的css预处理器，有两种语法，分别以.sass和.scss为扩展名，scss兼容css3<br>
+less<br>
+stylus：主要用来给node项目进行css预处理，以.styl为扩展名</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[为什么页面写了setTimeout要在页面销毁时清除这个timeout？]]></title>
+        <id>https://liujia12138.github.io/post/wei-shi-me-ye-mian-xie-liao-settimeout-yao-zai-ye-mian-xiao-hui-shi-qing-chu-zhe-ge-timeout/</id>
+        <link href="https://liujia12138.github.io/post/wei-shi-me-ye-mian-xie-liao-settimeout-yao-zai-ye-mian-xiao-hui-shi-qing-chu-zhe-ge-timeout/">
+        </link>
+        <updated>2018-07-06T12:38:05.000Z</updated>
+        <content type="html"><![CDATA[<p>vue、react等创建的单页面应用，切换路由的时候并不会刷新页面，定时器也不会被销毁，所以需要在beforeDestroy中手动清除；</p>
+<p>用setTimeout实现setInterval？</p>
+<pre><code>var t = null;
+var count = 0;
+function time(){
+    clearTimeout(t);
+    count ++;
+    t = setTimeout(time, 1000);
+}
+t = setTimeout(time, 1000);
+var t = null;
+function f(fn, time){
+    var _this = this;
+    var args = [...arguments].slice(2)
+    function setFun(){
+        clearTimeout(t);
+        t = setTimeout(function(){
+            setFun();
+            fn(args);
+        }, time)
+    }
+    setFun();
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[圣杯布局和双飞翼布局]]></title>
+        <id>https://liujia12138.github.io/post/sheng-bei-bu-ju-he-shuang-fei-yi-bu-ju/</id>
+        <link href="https://liujia12138.github.io/post/sheng-bei-bu-ju-he-shuang-fei-yi-bu-ju/">
+        </link>
+        <updated>2018-06-07T13:51:30.000Z</updated>
+        <content type="html"><![CDATA[<p>参考：<a href="https://www.jianshu.com/p/81ef7e7094e8">圣杯布局和双飞翼布局</a></p>
+<p>都是三栏布局，左右两边宽度固定，中间宽度自适应</p>
+<ul>
+<li>圣杯布局：左浮动+定位</li>
+</ul>
+<p>主体部分container内包括center，left、right三个子元素，让这个三个子元素都float：left；container设置padding左右的值为左右元素的 width；然后给左右两侧的元素设置宽度，然后左边的元素margin-left：-100%;position:relative;right:(left的宽度)，右边的元素margin-right：-（width）；</p>
+<p>注意中间元素一定要设置宽度为100%，因为设置了浮动，是行内块，内容太少的话宽度会自己缩到内容的大小</p>
+<ul>
+<li>双飞翼布局：只用了float，没有定位</li>
+</ul>
+<p>与圣杯布局的区别是container只包裹住center</p>
+<p>conatiner和left、right平级，全都左浮动，container宽度为100%来保证宽度自适应，left和right设置宽度，center设置margin-left和margin-right分别为左右元素的宽度，left设置margin-left：-100%，right设置margin-left：-（right的宽度）;<br>
+给外层容器清浮动</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[浏览器兼容问题]]></title>
+        <id>https://liujia12138.github.io/post/liu-lan-qi-jian-rong-wen-ti/</id>
+        <link href="https://liujia12138.github.io/post/liu-lan-qi-jian-rong-wen-ti/">
+        </link>
+        <updated>2018-04-11T12:39:20.000Z</updated>
+        <content type="html"><![CDATA[<p>1.ie8不支持background-size设置背景图大小<br>
+用filter：</p>
+<pre><code>filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled='true', src='背景图url', sizingMethod='scale');
+</code></pre>
+<p>参数:<br>
+1.enabled：设置或检索滤镜是否激活，true/false，默认为true<br>
+2.src：图片地址<br>
+3.sizingMethod：设置或检索滤镜作用的对象的图片在容器边界内的显示方式，crop剪切/image默认值/scale缩放图片</p>
+<p>2.ie8支持的伪类选择器只有:hover,:focus,:first-child<br>
+想实现li:nth-of-type(2)只能用li:first-child+li</p>
+<ol start="4">
+<li>ie8不支持css border-radius, css3的属性基本上都是要求IE9以上的，border-radius，box-shadow都是css3的属性<br>
+解决方法：使用<a href="http://css3pie.com/download/">css3pie</a>，将解压后的PIE.htc文件放在目标html同一路径下，</li>
+</ol>
+<pre><code class="language-css">img{
+    position:relative;
+    z-index:2
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius: 5px;
+    behavior: url(PIC.htc);
+}
+</code></pre>
+<p>注意：</p>
+<ul>
+<li>必须设置position:relative 和 z-index:2</li>
+<li>behavior引入PIE.htc文件，路径为相对与html的路径，不是相对于当前css的路径</li>
+</ul>
+<p>3.sfaire浏览器中input如果设置了高度，输入的时候光标就会跑到上面去了，所以要用padding撑开<br>
+4.ie8不支持placeholder属性，用js实现<br>
+1.先判断浏览器是否支持placeholder属性，如果不支持就模拟placeholder<br>
+2.创建一个label标签：<label>密码：<label/>标签里的内容为placeholder属性值，再讲标签覆盖到对应的input上</p>
+<pre><code>; (function (win) {
+
+    win.isPlaceholer = function () {
+        var input = document.createElement(&quot;input&quot;);
+        return &quot;placeholder&quot; in input;
+    };
+  
+    win.placeholder = function () {
+
+        if (!isPlaceholer()) {
+            var Placeholder =function (obj) {
+                this.input = obj;
+                var te = obj.getAttribute('placeholder');
+                this.label = document.createElement('label');
+                this.label.innerHTML = te;
+                this.label.id = obj.id + 'Label';
+                this.label.style.cssText = 'position:absolute; text-indent:4px;color:#999999; font-size:14px;';
+                if (obj.value !== '') {
+                    this.label.style.display = 'none';
+                }
+                this.init();
+            };
+            Placeholder.prototype = {
+
+                getxy: function (obj) {
+                    var left, top;
+                    if (document.documentElement.getBoundingClientRect) {
+                        var html = document.documentElement,
+                        body = document.body,
+                        pos = obj.getBoundingClientRect(),
+                        st = html.scrollTop || body.scrollTop,
+                        sl = html.scrollLeft || body.scrollLeft,
+                        ct = html.clientTop || body.clientTop,
+                        cl = html.clientLeft || body.clientLeft;
+                        left = pos.left + sl - cl;
+                        top = pos.top + st - ct;
+                    } else {
+                        while (obj) {
+                            left += obj.offsetLeft;
+                            top += obj.offsetTop;
+                            obj = obj.offsetParent;
+                        }
+                    }
+                    return {
+                        left: left,
+                        top: top
+                    };
+                },
+
+                getwh: function (obj) {
+                    return {
+                        w: obj.offsetWidth,
+                        h: obj.offsetHeight
+                    };
+                },
+
+                setStyles: function (obj, styles) {
+                    for (var p in styles) {
+                        obj.style[p] = styles[p] + 'px';
+                    }
+                },
+                init: function () {
+                    var label = this.label,
+                    input = this.input,
+                    getXY = this.getxy,
+                    xy = this.getxy(input),
+                    wh = this.getwh(input);
+                    this.setStyles(label, { 'width': wh.w, 'height': wh.h, 'lineHeight': 40, 'left': xy.left + 8, 'top': xy.top });
+                    document.body.appendChild(label);
+                    label.onclick = function () {
+                        this.style.display = &quot;none&quot;;
+                        input.focus();
+                    };
+                    input.onfocus = function () {
+                        label.style.display = &quot;none&quot;;
+                    };
+                    input.onblur = function () {
+                        if (this.value === &quot;&quot;) {
+                            label.style.display = &quot;block&quot;;
+                        }
+                    };
+                    if (window.attachEvent) {
+                        window.attachEvent(&quot;onresize&quot;, function () {
+                            var xy = getXY(input);
+                            Placeholder.prototype.setStyles(label, { 'left': xy.left + 8, 'top': xy.top });
+                        });
+                    } else {
+                        window.addEventListener(&quot;resize&quot;, function () {
+                            var xy = getXY(input);
+                            Placeholder.prototype.setStyles(label, { 'left': xy.left + 8, 'top': xy.top });
+                        }, false);
+                    }
+                }
+            };
+
+            var inpColl = $(&quot;#Box input:visible&quot;);//这里是页面上要添加placeholder支持的input
+            //var inpColl = document.getElementsByTagName('input'),          
+            var textColl = document.getElementsByTagName('textarea');//这里是页面上要添加placeholder支持的textarea
+            //var lableArr = $(&quot;#Box lable&quot;);
+            var toArray = function (coll) {
+                for (var i = 0, a = [], len = coll.length; i &lt; len; i++) {
+                    a[i] = coll[i];
+                }
+                return a;
+            };
+            var inpArr = toArray(inpColl),
+            textArr = toArray(textColl),
+
+            placeholderArr = inpArr.concat(textArr);
+            for (var i = 0; i &lt; placeholderArr.length; i++) {
+                if (placeholderArr[i].getAttribute('placeholder') !== null) {
+
+                    new Placeholder(placeholderArr[i]);
+                }
+            }
+        }
+
+    };
+}(window));
+</code></pre>
+<p>5.ie8不支持css3动画<br>
+6.element-ui在火狐浏览器下的滚动问题<br>
+用<code>&lt;el-scrollbar&gt;&lt;/el-scrollbar&gt;</code>组件</p>
 ]]></content>
     </entry>
 </feed>
