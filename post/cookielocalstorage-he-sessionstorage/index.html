@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>js | AzhA</title>
+  <title>cookie,localStorage和sessionStorage | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="js | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="cookie,localStorage和sessionStorage | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +25,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="cookie,localStorage和sessionStorage"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/cookielocalstorage-he-sessionstorage/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
   	<!-- Navigation -->
@@ -66,182 +71,75 @@
       </div>
     </div>
   </nav>
-<!-- Page Header -->
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1 class="tag-tl">#js</h1>
+          	<span class="tags">
+          	 
+            <a href="https://liujia12138.github.io/tag/CvMd75xEg/" class="tag">js</a>
+            
+        </span>
+            <h1>cookie,localStorage和sessionStorage</h1>
+            <span class="meta">
+            	Posted on
+              2018-08-09，1 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
+
+  <!-- Post Content -->
+  <article>
     <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/js-hong-ren-wu-wei-ren-wu-he-shi-jian-xun-huan/">
-            <h2 class="post-title">
-              JS宏任务微任务和事件循环
-            </h2>
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <h4 id="共同点">共同点：</h4>
+<p>都保存在浏览器端，并且都是同源的，只有协议、域名、端口都相同才能访问</p>
+<h4 id="不同点">不同点：</h4>
+<ol>
+<li>存储大小：</li>
+</ol>
+<ul>
+<li>cookie的存储空间比较小，只有4k</li>
+<li>localStorage和sessionStorage存储空间有5M</li>
+</ul>
+<ol start="2">
+<li>有效期不同：</li>
+</ol>
+<ul>
+<li>cookie在到达设置的有效期内是有效的，超过有效期就会失效</li>
+<li>localStorage永久有效，除非手动删除</li>
+<li>sessionStorage会话缓存，关闭浏览器或标签页就会删掉</li>
+</ul>
+<ol start="3">
+<li>与服务端通信：</li>
+</ol>
+<ul>
+<li>cookie参与服务端通信，每次请求都会将cookie携带在http请求头中</li>
+<li>localStorage和sessionStorage不参与服务端通信</li>
+</ul>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/css-yu-chu-li-qi-sasslessstylus/">
+              <span class="post-title">
+                CSS预处理器，sass、less、stylus&rarr;
+              </span>
             </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-01-07</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
+          </p>
         
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/liu-lan-qi-shu-ru-yi-ge-url-dao-ye-mian-xuan-ran-chu-lai-du-fa-sheng-liao-shi-me/">
-            <h2 class="post-title">
-              浏览器输入一个url到页面渲染出来都发生了什么？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-05-07</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
+        <div class="comment">
+          
         </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/jie-liu-he-fang-dou/">
-            <h2 class="post-title">
-              节流和防抖
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-03-14</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/bi-bao-shi-shi-me-you-que-dian/">
-            <h2 class="post-title">
-              闭包是什么？优缺点？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-02-21</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/cookielocalstorage-he-sessionstorage/">
-            <h2 class="post-title">
-              cookie,localStorage和sessionStorage
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-08-09</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/wei-shi-me-ye-mian-xie-liao-settimeout-yao-zai-ye-mian-xiao-hui-shi-qing-chu-zhe-ge-timeout/">
-            <h2 class="post-title">
-              为什么页面写了setTimeout要在页面销毁时清除这个timeout？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-07-06</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/ru-he-pan-duan-shu-zu-he-lei-shu-zu-ru-he-jiang-lei-shu-zu-zhuan-cheng-shu-zu/">
-            <h2 class="post-title">
-              如何判断数组和类数组？如何将类数组转成数组？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-07-06</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/qian-duan-liu-da-pai-xu-suan-fa/">
-            <h2 class="post-title">
-              前端六大排序算法
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-04-09</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        
-        
       </div>
     </div>
-  </div>
-
-  
+  </article>
  <!-- Footer -->
   <footer>
     <div class="container">
@@ -349,3 +247,4 @@
   })(this));</script>
   </body>
 </html>
+
