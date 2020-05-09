@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>节流和防抖 | AzhA</title>
+  <title>移动端1px的问题是如何形成的？怎么解决？ | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="节流和防抖 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="移动端1px的问题是如何形成的？怎么解决？ | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,8 +25,8 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-    <meta property="og:description" content="节流和防抖"/>
-    <meta property="og:url" content="https://liujia12138.github.io/post/jie-liu-he-fang-dou/"/>
+    <meta property="og:description" content="移动端1px的问题是如何形成的？怎么解决？"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/yi-dong-duan-1px-de-wen-ti-shi-ru-he-xing-cheng-de-zen-me-jie-jue/"/>
     <meta property="og:locale" content="zh-CN"/>
     <meta property="og:type" content="website"/>
     <meta property="og:site_name" content="AzhA"/>
@@ -80,13 +80,13 @@
           <div class="post-heading">
           	<span class="tags">
           	 
-            <a href="https://liujia12138.github.io/tag/CvMd75xEg/" class="tag">js</a>
+            <a href="https://liujia12138.github.io/tag/yf3fMR6HV/" class="tag">css</a>
             
         </span>
-            <h1>节流和防抖</h1>
+            <h1>移动端1px的问题是如何形成的？怎么解决？</h1>
             <span class="meta">
             	Posted on
-              2019-03-14，2 min read
+              2019-03-09，3 min read
             </span>
           </div>
         </div>
@@ -99,59 +99,35 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <p>一些用户频繁触发的事件操作，对于dom操作，资源加载等消耗性能的处理可能会导致页面卡顿，这时就需要用到函数节流（throttle）和函数防抖（debounce）</p>
-<h4 id="函数防抖">函数防抖</h4>
-<p>事件被触发n秒之后再执行，如果在这个n秒之内被再次触发，就重新计时</p>
-<p>使用场景：</p>
-<ul>
-<li>做输入框自动补全提示（实时搜索），需要监听用户的输入行为，根据输入内容去请求后端接口，如果不做函数防抖的话，每次触发keyup就要请求一次，非常消耗性能</li>
-<li>拖拽</li>
-</ul>
-<p>实现函数防抖：用setTimeout</p>
-<pre><code class="language-js">function debounce(fn, delay){
-    var timer;
-    return function(e){
-        var that =  this;
-        clearTimeout(timer);
-        timer = setTimeout(function(){
-            fn.call(that, e)
-        }, delay)
-    }
-}
-
-function fn(args){
-    console.log(args)
-}
-document.getElementById('debounce').addEventListener(&quot;click&quot;,function(e){
-    debounce(click, 500)(e)
-})
+          <h4 id="dpr设备像素比">dpr，设备像素比</h4>
+<p>首先要知道什么是dpr。</p>
+<p>像素分为物理像素和逻辑像素，物理像素就是设备屏幕上一个个的发光点，个数在设备出厂时就固定了；逻辑像素就是我们平时说的css的单位，是一个绝对单位。</p>
+<p>dpr，全称devicePixelRatio，就是设备每个逻辑像素内拥有的物理像素的个数，即设备像素比。<br>
+用window.devicePixelRatio可以获取dpr。</p>
+<p>以iphone6为例，dpr是2，意思就是每一个css像素内会有两个物理像素，css 的1px会覆盖两个设备物理像素，所以我们设置border-width：1px的时候就会看起来比较粗；</p>
+<h4 id="怎么解决">怎么解决？</h4>
+<p>用js获取设备像素比，然后通过改变meta标签的initial-scale来控制缩放比例，注意这个缩放是相对于viewport的</p>
+<h4 id="viewpoet">viewpoet</h4>
+<p>移动设备的viewport有三个：layout viewport、visual viewport、ideal viewport</p>
+<p>layout viewport：浏览器默认的viewport，如果把浏览器可视区域的宽度设为viewport的话，某些网站就会因为viewport过窄而显示错乱，挤成一团，所以浏览器在默认情况下会将viewport设为一个较宽的值，比如980px（chrome的默认viewport宽度就是980px）。浏览器默认viewport比浏览器可视区域宽，会出现横向滚动条。layout viewport可以通过document.documentElement.clientWidth来获取</p>
+<p>visual viewport：浏览器可视区域的大小，可以通过window.screen.width来获取</p>
+<p>ideal viewport：很多网站都会为了移动端进行单独的设计，所有我们需要有一个能够完美适配移动设备的viewport。所谓的完美适配，是指不需要用户缩放和横向滚动条就能正常查看网站所有内容，文字大小合适。ideal viewport的宽度等于设备的屏幕宽度</p>
+<p>利用meta标签对viewport进行控制：<br>
+移动设备默认的viewport是layout viewport，当我们需要ideal viewport时在head标签中插入meta标签</p>
+<pre><code class="language-html">&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scalable=1.0&quot; /&gt;
 </code></pre>
-<h4 id="函数节流">函数节流</h4>
-<p>预定一个函数只有在大于等于执行周期时才执行，周期内调用不执行，不管函数触发的多频繁都会保证一个周期执行一次</p>
-<p>使用场景：</p>
-<ul>
-<li>窗口resize</li>
-<li>页面滚动scroll</li>
-</ul>
-<p>实现函数节流：</p>
-<pre><code class="language-js">function throttle(fn, delay){
-    let prev = 0;
-    return function(args){
-        let that = this;
-        let now = Date.now();
-        if(now - prev &gt;= delay){
-            fn.call(that, args);
-            prev = now;
-        }
-    }
-}
-</code></pre>
+<p>initial-scale：页面初试缩放值，这个缩放是指相对于ideal viewport来缩放的<br>
+当width和initial-scale大小冲突时，viewport选择两个值中较大的一个。</p>
+<p>关于缩放和默认值：<br>
+缩放是相对于ideal viewport来缩放的，值越大，当前viewport的宽度就越小。<br>
+比如iphone6的ideal viewport是375px，设置initial-scale=0.5，viewport会变成750px，这里的缩小0.5倍，是指原来需要1px填充的宽度，现在需要0.5px就能填充了，所以原来宽度是375px，现在需要750px；</p>
+<p>所以： visual viewport（document.documentElement.clientWidth） = ideal viewport（设备宽度） / 当前缩放值</p>
 
           
           <p class="next-post">下一篇：
-            <a href="https://liujia12138.github.io/post/yi-dong-duan-1px-de-wen-ti-shi-ru-he-xing-cheng-de-zen-me-jie-jue/">
+            <a href="https://liujia12138.github.io/post/bi-bao-shi-shi-me-you-que-dian/">
               <span class="post-title">
-                移动端1px的问题是如何形成的？怎么解决？&rarr;
+                闭包是什么？优缺点？&rarr;
               </span>
             </a>
           </p>

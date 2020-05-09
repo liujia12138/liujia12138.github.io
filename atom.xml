@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2020-05-08T15:09:34.450Z</updated>
+    <updated>2020-05-09T06:17:06.508Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -10,6 +10,56 @@
     <logo>https://liujia12138.github.io/images/avatar.png</logo>
     <icon>https://liujia12138.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, AzhA</rights>
+    <entry>
+        <title type="html"><![CDATA[css position的几个属性值和性能问题]]></title>
+        <id>https://liujia12138.github.io/post/css-position-de-ji-ge-shu-xing-zhi-he-xing-neng-wen-ti/</id>
+        <link href="https://liujia12138.github.io/post/css-position-de-ji-ge-shu-xing-zhi-he-xing-neng-wen-ti/">
+        </link>
+        <updated>2020-05-09T03:52:24.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="position的属性值">position的属性值</h4>
+<ol>
+<li>
+<p>relative 相对定位<br>
+相对该元素的正常位置进行定位<br>
+元素不会脱离标准文档流<br>
+可通过z-index定义层叠关系</p>
+</li>
+<li>
+<p>absolute 绝对定位<br>
+相对于static定位以外的第一个定位的父元素进行绝对定位，如果没有就相对于浏览器窗口定位<br>
+元素脱离标准文档流<br>
+可通过z-index定义层叠关系</p>
+</li>
+<li>
+<p>fixed 固定定位<br>
+相对与浏览器窗口进行定位<br>
+脱离标准文档流<br>
+可通过z-index定义层叠关系</p>
+</li>
+<li>
+<p>static 静态定位<br>
+元素正常在文档流中出现，top、bottom、left、right都不起作用</p>
+</li>
+</ol>
+<h4 id="副作用">副作用</h4>
+<p>实现动画效果的时候，如果用position，我们会发现动画的运行不是很流畅，因为top和left的改变会触发浏览器的回流和重绘，没改变一次位置就回重新渲染一次元素，造成整个动画的过程都在不断触发浏览器的重新渲染，非常影响性能</p>
+<p>如果把position用transform来实现的话，就不会这样，transform位置的改变不会引起浏览器的回流和重绘，因为transform动画是由cpu控制的，支持硬件加速</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[浏览器不同标签页之间传值]]></title>
+        <id>https://liujia12138.github.io/post/liu-lan-qi-bu-tong-biao-qian-ye-zhi-jian-chuan-zhi/</id>
+        <link href="https://liujia12138.github.io/post/liu-lan-qi-bu-tong-biao-qian-ye-zhi-jian-chuan-zhi/">
+        </link>
+        <updated>2020-05-09T01:52:11.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="1-使用localstorage">1. 使用localStorage</h3>
+<p>在一个标签页里面使用 localStorage.setItem(key,value)添加（修改、删除）内容；<br>
+在另一个标签页里面监听 storage 事件。<br>
+即可得到 localstorge 存储的值，实现不同标签页之间的通信。</p>
+<h3 id="2使用setintervalcookie">2.使用setInterval+cookie</h3>
+<p>将要传递的信息存储在cookie中，每隔一定时间读取cookie信息，即可随时获取要传递的信息。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[js总结]]></title>
         <id>https://liujia12138.github.io/post/js-mian-shi-ti-zong-jie/</id>
@@ -376,128 +426,6 @@ document.getElementById('debounce').addEventListener(&quot;click&quot;,function(
     }
 }
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[闭包是什么？优缺点？]]></title>
-        <id>https://liujia12138.github.io/post/bi-bao-shi-shi-me-you-que-dian/</id>
-        <link href="https://liujia12138.github.io/post/bi-bao-shi-shi-me-you-que-dian/">
-        </link>
-        <updated>2019-02-21T15:08:06.000Z</updated>
-        <content type="html"><![CDATA[<p>闭包就是能够访问其他函数内部变量的函数</p>
-<p>闭包的优点：</p>
-<ul>
-<li>保护全局变量不被污染</li>
-<li>可以访问函数内部的变量</li>
-<li>保护变量不被垃圾回收机制回收</li>
-</ul>
-<p>缺点：会造成内存泄漏</p>
-<p>怎么避免？</p>
-<ul>
-<li>1 在退出函数之前，将不使用的局部变量全部删除。可以使变量赋值为null;</li>
-<li>2 避免变量的循环赋值和引用</li>
-<li>3 利用jquery释放自身指定的所有事件处理程序<br>
-由于jquery考虑到了内存泄漏的潜在危害，所以他会手动释放自己指定的所有事件处理程序，只要坚持使用jquery的事件绑定方法，就能在一定程度上避免内存泄漏</li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[vuex的辅助函数和基本属性使用的区别?]]></title>
-        <id>https://liujia12138.github.io/post/vuex-de-fu-zhu-han-shu-he-ji-ben-shu-xing-shi-yong-de-qu-bie/</id>
-        <link href="https://liujia12138.github.io/post/vuex-de-fu-zhu-han-shu-he-ji-ben-shu-xing-shi-yong-de-qu-bie/">
-        </link>
-        <updated>2018-10-17T14:54:05.000Z</updated>
-        <content type="html"><![CDATA[<h5 id="1-state">1. state</h5>
-<p>当我们需要读取state中的一个属性的时候，可以在组件内用computed来读取，这样当state变化的时候，组件就能实时改变<br>
-但是如果组件内需要用到多个state，每个状态都声明为计算属性的话重复代码就太多了，这是就需要用到辅助函数mapState来帮助我们生成计算属性</p>
-<pre><code class="language-js">computed:{
-    count(){
-        //....
-    },
-    ...mapState({//结合展开运算符使用
-        &quot;count&quot;,//等同于  this.count ：store.state.count
-        count: state =&gt; state.count
-    })
-}
-</code></pre>
-<h5 id="2-getter">2. getter</h5>
-<p>当我们需要从store的state中派生出一些状态，比如一个list的长度，过滤掉某个state中的一些数据，可以在getter中定义这个派生状态</p>
-<p>可以理解为getter就是state的计算属性，在组件中使用store.getters.count访问</p>
-<p>getter和计算属性一样，返回值会根据他的依赖被缓存起来，只有当他的依赖值发生变化时才会重新计算<br>
-<strong>（computed和watch的区别？）</strong></p>
-<p>可以通过让getter返回一个函数来实现给getter传参</p>
-<p>mapGetters辅助函数：将store中的getter映射到组件的计算属性中</p>
-<h5 id="3-mutation">3. mutation</h5>
-<p>更改vuex中store中的状态的唯一方法就是提交mutation。</p>
-<p>mutation类似事件，每个mutation都有一个字符串的事件类型type（函数名）和一个回调函数，这个回调函数就是我们实际进行状态更改的地方，他会接受state作为第一个参数。</p>
-<pre><code class="language-js">const mutations = {
-    increment(state){
-        state.count++
-    }
-}
-</code></pre>
-<p>但是我们修改state的时候，不能够直接调用mutation的回调函数increment()，需要使用store.commit(type)来调用相应的方法</p>
-<p>我们也可以向store.commit中传入额外的参数，传递给mutation，即mutation的载荷 <code>store.commit('increment', 10)</code></p>
-<pre><code class="language-js">const mutations = {
-    increment(state, n){
-        state.count += n
-    }
-}
-</code></pre>
-<p>使用常量代替mutation事件类型，在各种Flux中非常常见，可以把这些常量单独放在一个文件中，这样整个app包含的mutation看起来非常清晰</p>
-<pre><code class="language-js">//mutation-types.js
-export const SOME_MUTATION = &quot;SOME_MUTATION&quot;
-</code></pre>
-<pre><code class="language-js">import Vuex from 'vuex'
-import {SOME_MUTATION} from &quot;mutation-types.js&quot;
-
-const store = new Vuex.store({
-    state: {...},
-    mutations: {
-        //可以使用常量来作为函数名
-        [SOME_MUTATION](state){
-            //....
-        }
-    }
-})
-</code></pre>
-<p><strong>mutation必须是同步函数</strong></p>
-<p>在组件中提交mutation，可以使用<code>this.$store.commit('xxx', payload)</code>来提交mutation，或者使用mapMutations辅助函数将组件中的methods映射为store.commit来调用</p>
-<h5 id="4action">4.action</h5>
-<p>action类似于mutation，但是不同的是action修改状态是通过提交mutation，而不是直接修改状态；<strong>action可以进行异步操作</strong></p>
-<pre><code class="language-js">const store = new Vuex.Store({
-  state: {
-    count: 0
-  },
-  mutations: {
-    increment (state) {
-      state.count++
-    }
-  },
-  actions: {
-    increment (context) {
-      context.commit('increment')
-    }
-  }
-})
-</code></pre>
-<p>从上面例子我们可以看出，action函数接收一个和store实例具有相同方法和属性的context对象，因此我们可以调用context.commit()来提交mutation，或者通过context.getters和context.state来获取getters和state。</p>
-<p><strong>注意</strong>：context对象并不是store实例本身。</p>
-<p>分发action，可以通过<code>store.dispatch('increment')</code>来触发<br>
-在组件中分发action，可以使用 <code>this.$store.dispatch('increment')</code>,或者使用mapActions将组件的methods映射为store.dispatch调用（需要在根节点注入store）</p>
-<p>组合action：actions通常是异步的，怎么才能知道action什么时候结束呢？</p>
-<ul>
-<li>可以在action内返回promise，组件内使用<code>this.$store.dispatch('increment').then(()=&gt;{})</code></li>
-<li>利用async/await</li>
-</ul>
-<pre><code class="language-js">actions: {
-    async actionA({commit}){
-        commit('gotData', await getData());//getData返回的是promise
-    }
-}
-</code></pre>
-<h5 id="5module">5.<a href="https://vuex.vuejs.org/zh/guide/modules.html">module</a></h5>
-<p>为了方便模块化开发，vuex允许我们将store分割成module，每个模块拥有自己的state，getter，mutation，action；</p>
 ]]></content>
     </entry>
 </feed>

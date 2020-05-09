@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>节流和防抖 | AzhA</title>
+  <title>浏览器不同标签页之间传值 | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="节流和防抖 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="浏览器不同标签页之间传值 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,8 +25,8 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-    <meta property="og:description" content="节流和防抖"/>
-    <meta property="og:url" content="https://liujia12138.github.io/post/jie-liu-he-fang-dou/"/>
+    <meta property="og:description" content="浏览器不同标签页之间传值"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/liu-lan-qi-bu-tong-biao-qian-ye-zhi-jian-chuan-zhi/"/>
     <meta property="og:locale" content="zh-CN"/>
     <meta property="og:type" content="website"/>
     <meta property="og:site_name" content="AzhA"/>
@@ -80,13 +80,11 @@
           <div class="post-heading">
           	<span class="tags">
           	 
-            <a href="https://liujia12138.github.io/tag/CvMd75xEg/" class="tag">js</a>
-            
         </span>
-            <h1>节流和防抖</h1>
+            <h1>浏览器不同标签页之间传值</h1>
             <span class="meta">
             	Posted on
-              2019-03-14，2 min read
+              2020-05-09，1 min read
             </span>
           </div>
         </div>
@@ -99,59 +97,18 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <p>一些用户频繁触发的事件操作，对于dom操作，资源加载等消耗性能的处理可能会导致页面卡顿，这时就需要用到函数节流（throttle）和函数防抖（debounce）</p>
-<h4 id="函数防抖">函数防抖</h4>
-<p>事件被触发n秒之后再执行，如果在这个n秒之内被再次触发，就重新计时</p>
-<p>使用场景：</p>
-<ul>
-<li>做输入框自动补全提示（实时搜索），需要监听用户的输入行为，根据输入内容去请求后端接口，如果不做函数防抖的话，每次触发keyup就要请求一次，非常消耗性能</li>
-<li>拖拽</li>
-</ul>
-<p>实现函数防抖：用setTimeout</p>
-<pre><code class="language-js">function debounce(fn, delay){
-    var timer;
-    return function(e){
-        var that =  this;
-        clearTimeout(timer);
-        timer = setTimeout(function(){
-            fn.call(that, e)
-        }, delay)
-    }
-}
-
-function fn(args){
-    console.log(args)
-}
-document.getElementById('debounce').addEventListener(&quot;click&quot;,function(e){
-    debounce(click, 500)(e)
-})
-</code></pre>
-<h4 id="函数节流">函数节流</h4>
-<p>预定一个函数只有在大于等于执行周期时才执行，周期内调用不执行，不管函数触发的多频繁都会保证一个周期执行一次</p>
-<p>使用场景：</p>
-<ul>
-<li>窗口resize</li>
-<li>页面滚动scroll</li>
-</ul>
-<p>实现函数节流：</p>
-<pre><code class="language-js">function throttle(fn, delay){
-    let prev = 0;
-    return function(args){
-        let that = this;
-        let now = Date.now();
-        if(now - prev &gt;= delay){
-            fn.call(that, args);
-            prev = now;
-        }
-    }
-}
-</code></pre>
+          <h3 id="1-使用localstorage">1. 使用localStorage</h3>
+<p>在一个标签页里面使用 localStorage.setItem(key,value)添加（修改、删除）内容；<br>
+在另一个标签页里面监听 storage 事件。<br>
+即可得到 localstorge 存储的值，实现不同标签页之间的通信。</p>
+<h3 id="2使用setintervalcookie">2.使用setInterval+cookie</h3>
+<p>将要传递的信息存储在cookie中，每隔一定时间读取cookie信息，即可随时获取要传递的信息。</p>
 
           
           <p class="next-post">下一篇：
-            <a href="https://liujia12138.github.io/post/yi-dong-duan-1px-de-wen-ti-shi-ru-he-xing-cheng-de-zen-me-jie-jue/">
+            <a href="https://liujia12138.github.io/post/js-mian-shi-ti-zong-jie/">
               <span class="post-title">
-                移动端1px的问题是如何形成的？怎么解决？&rarr;
+                js总结&rarr;
               </span>
             </a>
           </p>

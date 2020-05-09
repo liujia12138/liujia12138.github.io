@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
       <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>节流和防抖 | AzhA</title>
+  <title>AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="节流和防抖 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,15 +25,9 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-    <meta property="og:description" content="节流和防抖"/>
-    <meta property="og:url" content="https://liujia12138.github.io/post/jie-liu-he-fang-dou/"/>
-    <meta property="og:locale" content="zh-CN"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
-  	<!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
       <a class="navbar-brand" href="https://liujia12138.github.io">AzhA</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,98 +65,52 @@
       </div>
     </div>
   </nav>
-  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="post-heading">
-          	<span class="tags">
-          	 
-            <a href="https://liujia12138.github.io/tag/CvMd75xEg/" class="tag">js</a>
-            
-        </span>
-            <h1>节流和防抖</h1>
-            <span class="meta">
-            	Posted on
-              2019-03-14，2 min read
-            </span>
+          <div class="site-heading">
+            <h1>AzhA</h1>
+            <span class="subheading">温故而知新</span>
           </div>
         </div>
       </div>
     </div>
   </header>
-
-  <!-- Post Content -->
-  <article>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <p>一些用户频繁触发的事件操作，对于dom操作，资源加载等消耗性能的处理可能会导致页面卡顿，这时就需要用到函数节流（throttle）和函数防抖（debounce）</p>
-<h4 id="函数防抖">函数防抖</h4>
-<p>事件被触发n秒之后再执行，如果在这个n秒之内被再次触发，就重新计时</p>
-<p>使用场景：</p>
-<ul>
-<li>做输入框自动补全提示（实时搜索），需要监听用户的输入行为，根据输入内容去请求后端接口，如果不做函数防抖的话，每次触发keyup就要请求一次，非常消耗性能</li>
-<li>拖拽</li>
-</ul>
-<p>实现函数防抖：用setTimeout</p>
-<pre><code class="language-js">function debounce(fn, delay){
-    var timer;
-    return function(e){
-        var that =  this;
-        clearTimeout(timer);
-        timer = setTimeout(function(){
-            fn.call(that, e)
-        }, delay)
-    }
-}
-
-function fn(args){
-    console.log(args)
-}
-document.getElementById('debounce').addEventListener(&quot;click&quot;,function(e){
-    debounce(click, 500)(e)
-})
-</code></pre>
-<h4 id="函数节流">函数节流</h4>
-<p>预定一个函数只有在大于等于执行周期时才执行，周期内调用不执行，不管函数触发的多频繁都会保证一个周期执行一次</p>
-<p>使用场景：</p>
-<ul>
-<li>窗口resize</li>
-<li>页面滚动scroll</li>
-</ul>
-<p>实现函数节流：</p>
-<pre><code class="language-js">function throttle(fn, delay){
-    let prev = 0;
-    return function(args){
-        let that = this;
-        let now = Date.now();
-        if(now - prev &gt;= delay){
-            fn.call(that, args);
-            prev = now;
-        }
-    }
-}
-</code></pre>
-
-          
-          <p class="next-post">下一篇：
-            <a href="https://liujia12138.github.io/post/yi-dong-duan-1px-de-wen-ti-shi-ru-he-xing-cheng-de-zen-me-jie-jue/">
-              <span class="post-title">
-                移动端1px的问题是如何形成的？怎么解决？&rarr;
-              </span>
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+       
+        <div class="post-preview">
+          <a href="https://liujia12138.github.io/post/he-mo-xing-kuan-gao-zhi-de-ji-suan-fang-shi-bian-jie-ta-xian-fu-zhi-zuo-yong-box-sizing-gai-nian/">
+            <h2 class="post-title">
+              盒模型宽高值的计算方式，边界塌陷，负值作用，box-sizing概念
+            </h2>
             </a>
-          </p>
-        
-        <div class="comment">
-          
+            <h3 class="post-subtitle">
+              
+            </h3>
+          <p class="post-meta">
+             <span class="time">2017-01-06</span>
+             <span>,</span>
+             <span class="post-stats">1 min read</span>
+            </p>
         </div>
+        <hr>
+        <div class="clearfix">
+        </div>
+        
+        
+        <a class="btn btn-primary float-left" href="https://liujia12138.github.io/page/2/">&larr; 上一页</a>
+        
+        
       </div>
     </div>
-  </article>
- <!-- Footer -->
+  </div>
+
+  
+    <!-- Footer -->
   <footer>
     <div class="container">
       <div class="row">
@@ -269,4 +217,3 @@ document.getElementById('debounce').addEventListener(&quot;click&quot;,function(
   })(this));</script>
   </body>
 </html>
-
