@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>vue路由守卫 | AzhA</title>
+  <title>css雪碧图？用雪碧图会有什么问题？ | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="vue路由守卫 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="css雪碧图？用雪碧图会有什么问题？ | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,8 +25,8 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-    <meta property="og:description" content="vue路由守卫"/>
-    <meta property="og:url" content="https://liujia12138.github.io/post/vue-lu-you-shou-wei/"/>
+    <meta property="og:description" content="css雪碧图？用雪碧图会有什么问题？"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/css-xue-bi-tu-yong-xue-bi-tu-hui-you-shi-me-wen-ti/"/>
     <meta property="og:locale" content="zh-CN"/>
     <meta property="og:type" content="website"/>
     <meta property="og:site_name" content="AzhA"/>
@@ -80,13 +80,13 @@
           <div class="post-heading">
           	<span class="tags">
           	 
-            <a href="https://liujia12138.github.io/tag/d8mNIHknn/" class="tag">vue</a>
+            <a href="https://liujia12138.github.io/tag/yf3fMR6HV/" class="tag">css</a>
             
         </span>
-            <h1>vue路由守卫</h1>
+            <h1>css雪碧图？用雪碧图会有什么问题？</h1>
             <span class="meta">
             	Posted on
-              2018-02-07，2 min read
+              2017-07-13，1 min read
             </span>
           </div>
         </div>
@@ -99,47 +99,52 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <p>路由守卫分为全局守卫、组件独享守卫、组件内守卫</p>
-<h4 id="1-全局守卫routerbeforeeachto-from-next-主要用来在路由跳转之前判断该路径是否需要登录权限需要的话就跳转到登录页面">1. 全局守卫：<code>router.beforeEach((to, from, next) =&gt; {})</code>,主要用来在路由跳转之前判断该路径是否需要登录权限，需要的话就跳转到登录页面</h4>
-<pre><code class="language-js">在router用`meta：{requireAuth: true/false}`来配置是否需要登录
-router.beforeEach((to, from, next) =&gt; {
-  console.log(to,from )
-  if(to.matched.some(record =&gt; record.meta.requireAuth)) {//判断该路由是否需要登录权限
-    if(getToken()){//判断token是否存在（登录时存的token）
-      if(to.path == '/login'){
-        removeToken();
-        window.location.reload();
-      }else{
-        next()
-      }
-    }else{
-      next({
-        path: '/login',
-        query: {
-          redirect: to.fullPath,//将跳转的路由作为path参数，登录后跳转到该路由
-        }
-      })
-    }
-  }else{
-    next();
-  }
-})
-</code></pre>
-<h4 id="2-组件内的守卫">2. 组件内的守卫</h4>
-<p>当某个组件有特殊情况时，可以在这两个守卫内处理</p>
-<ul>
-<li>到达组件时：beforeRouterEnter:(to, from, next)=&gt;{}</li>
-<li>离开组件时：beforeRouterLeave:(to, from, next)=&gt;{}</li>
-<li>切换子路由时：beforeRouterUpdate</li>
-</ul>
-<h4 id="3-路由独享的守卫">3. 路由独享的守卫</h4>
-<p>beforeEnter: (to, from, next)=&gt;{}用法和全局守卫一样，区别是这个写在路由对象里，让他只在这个路由下起作用</p>
+          <p>css雪碧图，也叫精灵图，当我们在页面上需要展示很多小图标时，为了减少http请求，把多个小图合并成一个大图，通过css 设置background-position来控制展示图片的位置</p>
+<p><em>缺点：</em></p>
+<ol>
+<li>不利于管理，图片变化时可能需要修改很多</li>
+<li>图片过多时，通过position定位工作量大</li>
+</ol>
+<p><em>总结：</em><br>
+项目中用雪碧图时最好把不怎么可能会变动的图片绘制成精灵图，把同一类型、宽高相同的小图放到一张雪碧图上</p>
+<p><em>雪碧图和字体图标iconfont：</em></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">对比角度</th>
+<th style="text-align:center">雪碧图</th>
+<th style="text-align:right">字体图标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">图标需要换颜色或者其他效果</td>
+<td style="text-align:center">需要换图片，重新做精灵图</td>
+<td style="text-align:right">改变一下color就可以</td>
+</tr>
+<tr>
+<td style="text-align:left">图标上多个颜色</td>
+<td style="text-align:center">直接用图片很好展示</td>
+<td style="text-align:right">多色图标较难实现</td>
+</tr>
+<tr>
+<td style="text-align:left">高分辨率</td>
+<td style="text-align:center">高分辨率下可能会模糊</td>
+<td style="text-align:right">本质上是文字，受分辨率影响小</td>
+</tr>
+<tr>
+<td style="text-align:left">体积</td>
+<td style="text-align:center">图片体积较大</td>
+<td style="text-align:right">文字图标体积小</td>
+</tr>
+</tbody>
+</table>
 
           
           <p class="next-post">下一篇：
-            <a href="https://liujia12138.github.io/post/css-xue-bi-tu-yong-xue-bi-tu-hui-you-shi-me-wen-ti/">
+            <a href="https://liujia12138.github.io/post/ru-he-pan-duan-shu-zu-he-lei-shu-zu-ru-he-jiang-lei-shu-zu-zhuan-cheng-shu-zu/">
               <span class="post-title">
-                css雪碧图？用雪碧图会有什么问题？&rarr;
+                如何判断数组和类数组？如何将类数组转成数组？&rarr;
               </span>
             </a>
           </p>
