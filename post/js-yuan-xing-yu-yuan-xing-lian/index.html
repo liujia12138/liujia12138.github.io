@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta content="yes" name="apple-mobile-web-app-capable" />
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+  <meta name="referrer" content="never">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <meta name="author" content="kveln">
+  <title>JS原型与原型链 | AzhA</title>
+  <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
+  <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
+  <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+  <link rel="alternate" type="application/rss+xml" title="JS原型与原型链 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+  <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/highlight.min.js"></script>
+  <!-- <script src="https://liujia12138.github.io/media/scripts/jquery.min.js"></script> -->
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+
+    <meta property="og:description" content="JS原型与原型链"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/js-yuan-xing-yu-yuan-xing-lian/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
+  </head>
+  <body>
+  	<!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="https://liujia12138.github.io">AzhA</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="https://liujia12138.github.io">Home</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="https://liujia12138.github.io/archives">Archives</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="https://liujia12138.github.io/tags">Tags</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="https://liujia12138.github.io/post/about">About</a>
+              
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+          	<span class="tags">
+          	 
+            <a href="https://liujia12138.github.io/tag/CvMd75xEg/" class="tag">js</a>
+            
+        </span>
+            <h1>JS原型与原型链</h1>
+            <span class="meta">
+            	Posted on
+              2018-10-12，9 min read
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p>原型链是一种机制，指的是JS中每一个对象都有一个内置的__proto__属性，指向创建他的构造函数的原型属性prototype。</p>
+<p>原型链的作用是实现对象的继承，要理解原型链，首先需要了解函数对象、constructor、new、prototype、__proto__这五个概念</p>
+<h4 id="函数对象">函数对象</h4>
+<p>在js中，一切皆对象，对象分为普通对象和函数对象</p>
+<pre><code class="language-js">//普通对象
+const obj1 = {};
+const obj2 = new Object()
+
+//函数对象
+const fn1 = function(){};
+function fn2(){};
+const fn3 = new Function();
+</code></pre>
+<p>凡是使用function关键字或Function构造函数创建的对象都是函数对象，只有函数对象才有prototype原型属性</p>
+<h4 id="constructor构造函数">constructor构造函数</h4>
+<p>函数还有一个用法，就是把他当做构造函数来使用</p>
+<pre><code class="language-js">function Person(name, age){
+    this.name = name;
+    this.age = age;
+    this.say = function(){
+        console.log(`我是${name}`)
+    }
+}
+
+var p1 = new Person(&quot;tom&quot;, 12);
+var p2 = new Person(&quot;tim&quot;, 13)
+</code></pre>
+<p>在上面的例子中，我们自定义了一个Person构造函数，并且用这个构造函数创建了两个实例p1和p2，这两个实例均包含了name、age属性和一个say方法。</p>
+<h4 id="new关键字">new关键字</h4>
+<p>要给构造函数创建一个实例，必须使用new关键字调用构造函数。</p>
+<p>new关键字都做了什么呢？</p>
+<ul>
+<li>创建一个新对象</li>
+<li>将构造函数的this指向这个新对象</li>
+<li>将构造函数中的属性和方法添加到这个对象中</li>
+<li>返回新对象</li>
+</ul>
+<p>将构造函数当做普通函数调用</p>
+<pre><code class="language-js">var p2 = new Person(&quot;tom&quot;, 12);
+p2.say();//我是tom
+
+Person(&quot;jennie&quot;, 12);//没有使用new关键字，此时构造函数内的this指向window，属性和方法都被加到window上
+window.say();//我是jennie
+
+//在另一个对象的作用域中调用，使用call、apply、bind,作用就是改变构造函数内this的指向
+var o = new Object();
+Person.call(o, &quot;obj&quot;, 11);
+o.say();//我是obj
+</code></pre>
+<p>构造函数的问题：<br>
+在使用构造函数创建实例时，构造函数的每个方法都要在创建每个实例时重新创建一遍，比如在下面的例子中，p1和p2都有一个功能相同的say方法，但是这两个方法不是一个函数对象</p>
+<pre><code class="language-js">function Person(name, age){
+    this.name = name;
+    this.age = age;
+    this.say = function(){
+        console.log(`我是${this.name}`)
+    }
+    
+    //改成使用全局方法
+    this.say = say
+}
+
+function say(){
+    console.log(this.name)
+}
+
+var p1 = new Person(&quot;tom&quot;, 12);
+var p2 = new Person(&quot;tim&quot;, 13);
+
+console.log(p1.say == p2.say);//false
+</code></pre>
+<p>当对象需要创建很多实例时会非常消耗内存，这时我们可以选择创建一个全局的say方法，然后在构造函数内将这个方法绑定给构造函数的this。</p>
+<p>但是这样做也会有新的问题，如果对象需要定义很多方法，那么就要定义很多个全局函数，我们这个定义的构造函数也就没有封装性可言了。</p>
+<p>好在，这个问题我们可以通过原型来解决。</p>
+<h4 id="prototype原型">prototype原型</h4>
+<p>我们创建的每个函数都有一个prototype属性---这个函数的原型对象。使用原型的好处是可以让所有对象实例共享他所包含的所有属性和方法。</p>
+<pre><code class="language-js">function Person(){};
+
+Person.prototype.name = &quot;tom&quot;;
+Person.prototype.age = &quot;18&quot;;
+Person.prototype.say = function(){
+    console.log(this.name)
+}
+
+var p1 = new Person();
+var p2 = new Person();
+
+p1.say();//tom
+p2.say();//tom
+
+console.log(p1.say === p2.say);//true
+
+</code></pre>
+<p>上面的例子中，我们将所有的属性和方法都添加到构造函数的prototype属性中，这些属性和方法所有的实例都可以访问到，而且方法全都指向同一个地址。</p>
+<h5 id="原型对象">原型对象</h5>
+<p>在默认情况下，所有原型对象都会自动获得一个constructor属性，这个属性包含一个指向prototype属性所在函数的指针，也就是说Person.prototype.constructor 指向Person，通过这个构造函数，我们可以继续为原型对象添加其他的属性和方法。</p>
+<p>虽然我们可以通过实例来读取原型中的值，但是却不能通过实例对象来重写构造函数原型中的值。如果我们给实例添加了一个和原型中属性同名的属性，那么在这个实例中，这个添加的属性会覆盖原型中的属性</p>
+<pre><code class="language-js">function Person(){};
+
+Person.prototype.name = &quot;tom&quot;;
+Person.prototype.age = &quot;18&quot;;
+Person.prototype.say = function(){
+    console.log(this.name)
+}
+
+var p1 = new Person();
+var p2 = new Person();
+p1.name = &quot;jennie&quot;;
+
+p1.say();//jennie
+p2.say();//tom
+
+</code></pre>
+<p>从上面的例子中我们可以看到，给p1实例的name属性重新赋值，并不会影响p2，也就是不会影响构造函数中的属性，当读取p1.name时，会先寻找实例中有没有这个属性，有的话就直接返回，没有就继续去原型中寻找。</p>
+<p>delete方法可以删除实例属性，<code>delete p1.name</code>删掉了p1的name属性，当我们再次读取pi.name时，返回的就是原型中的属性值了。</p>
+<h5 id="更简单的原型语法">更简单的原型语法</h5>
+<p>上面的例子中，每添加一个原型属性和方法就要敲一遍Person.prototype，为了减少不必要的输入，也为了让我们的代码的可读性更好，我们可以用一个包含所有属性和方法的字面量对象来重写整个原型对象。</p>
+<pre><code class="language-js">function Person(){}
+
+Person.prototype = {
+    name : &quot;Tom&quot;,
+    age : 10,
+    say : function () {
+        console.log(this.name);
+    }
+};
+</code></pre>
+<p>在这个例子中，我们将Person的原型赋值为一个字面量方式创建的对象，和上面单独给prototype设置属性的结果是相同的，但是此时Person.prototype.constructo不再指向Person，而是指向了构造函数Object，因为我们这里完全重写了prototype，因此constructor属性也就变成了新对象的constructor属性，不再指向Person。</p>
+<pre><code class="language-js">var p1 = new Person();
+console.log(p1 instanceof Person);//true
+console.log(p1 instanceof Object);//true
+
+console.log(p1.constructor == Person);//false
+console.log(p1.constructor == Object);//true
+</code></pre>
+<p>上面例子可以看出，已经无法通过constructor来确定构造函数了；但是我们可以通过在prototype中设置constructor的值来使它继续指向Person；但是需要注意，这种重设方法会导致constructor的Enumerable特性被设置为true，默认情况下，原生的constructor属性是不可枚举的。可以用Object.defineProperty()来设置enumerable=false</p>
+<pre><code class="language-js">function Person(){}
+
+Person.prototype = {
+    constructor：Person,
+    name : &quot;Tom&quot;,
+    age : 10,
+    say : function () {
+        console.log(this.name);
+    }
+};
+
+Object.defineProperty(Person.prototype, &quot;constructor&quot;, {
+    enumerable: false,
+    value: Person
+})
+
+</code></pre>
+<h5 id="原型的动态性">原型的动态性</h5>
+<pre><code class="language-js">function Person(){};
+
+Person.prototype.name = &quot;tom&quot;;
+Person.prototype.age = &quot;18&quot;;
+Person.prototype.say = function(){
+    console.log(this.name)
+}
+
+var p1 = new Person();
+p1.say();//tom
+
+Person.prototype.name = &quot;jennie&quot;
+var p2 = new Person();
+
+p1.say();//jennie
+p2.say();//jennie
+
+</code></pre>
+<p>从上面例子中可以看出，我们对原型所做的修改，都能够立即从实例上但应出来，即便是实例在修改原型之前创建的；但是如果我们重写了整个原型，情况就不一样了</p>
+<pre><code class="language-js">function Person(){};
+Person.prototype.name = &quot;tom&quot;;
+var p1 = new Person();
+p1.say();//Uncaught TypeError: p1.say is not a function
+
+Person.prototype = {
+    name : &quot;Tom&quot;,
+    say : function () {
+        console.log(this.name);
+    }
+};
+console.log(p1.name);//tom
+p1.say();//Uncaught TypeError: p1.say is not a function
+</code></pre>
+<p>上面例子中，重写prototype并没有把里面的属性加到实例p1中，因为调用构造函数时，会为实例添加一个指向构造函数原型的指针，这个指针就是实例的__proto__属性，而重写原型，就相当于切断了构造函数和最初的原型之间的联系。</p>
+<h4 id="proto"><strong>proto</strong></h4>
+<p>为什么在构造函数的prototype中定义了属性和方法，实例就能访问到呢？</p>
+<p>因为调用构造函数创建一个实例之后，实例内部会包含一个指针__proto__，指向构造函数的原型</p>
+<p>原型链：每个实例对象都有一个__proto__属性，指向他的构造函数的原型对象prototype，构造函数的这个原型对象也有一个自己的__proto__属性，这样层层向上，直到一个对象的原型对象为null。</p>
+<p>参考：<br>
+https://juejin.im/post/585953a5128fe10069b5f06b#heading-12</p>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/cookielocalstorage-he-sessionstorage/">
+              <span class="post-title">
+                浏览器存储&rarr;
+              </span>
+            </a>
+          </p>
+        
+        <div class="comment">
+          
+        </div>
+      </div>
+    </div>
+  </article>
+ <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://chogath.top/" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <li class="list-inline-item">
+              <a href="https://liujia12138.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li>
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>AzhA</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://liujia12138.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://liujia12138.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  </body>
+</html>
+

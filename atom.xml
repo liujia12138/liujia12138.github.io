@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2020-05-10T14:20:44.792Z</updated>
+    <updated>2020-05-14T12:09:15.372Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -10,6 +10,50 @@
     <logo>https://liujia12138.github.io/images/avatar.png</logo>
     <icon>https://liujia12138.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, AzhA</rights>
+    <entry>
+        <title type="html"><![CDATA[移动端屏幕宽度自适应原理及实现]]></title>
+        <id>https://liujia12138.github.io/post/yi-dong-duan-ping-mu-kuan-du-zi-gua-ying-yuan-li-ji-shi-xian/</id>
+        <link href="https://liujia12138.github.io/post/yi-dong-duan-ping-mu-kuan-du-zi-gua-ying-yuan-li-ji-shi-xian/">
+        </link>
+        <updated>2020-05-09T05:10:42.000Z</updated>
+        <content type="html"><![CDATA[<p>问题：当前市场上手机屏幕宽度不尽相同，常见有320px（ipone5）、375px（ipone678）等等，而为了在不同宽度的手机屏幕上良好现显示网页，让页面能够在不同尺寸的屏幕上完美适配<br>
+https://www.cnblogs.com/chenyoumei/p/10510321.html<br>
+原理：实现屏幕宽度自适应主要有两种方案</p>
+<ol>
+<li>使用百分比长度单位：vh、vw、rem、em、%<br>
+优点：一套css代码就可以适配所有屏幕</li>
+<li>使用固定长度单位px，再用js根据当前设备屏幕宽度计算比例，对网页进行缩放；<br>
+优点：网页宽度恒定，便于计算</li>
+</ol>
+<p>实现：</p>
+<ol>
+<li>rem布局：通过动态修改html font-size的大小来实现，1rem==页面根元素html的font-size大小。<br>
+首先需要在meta标签中设置禁止缩放：<br>
+<code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0&quot;&gt;</code><br>
+然后在页面加载是js动态获取当前视窗的宽度，计算得出相对于设计稿的比例，修改html的font-size大小</li>
+</ol>
+<pre><code class="language-js">function initFontSize(){
+    var html = document.getElementsByTagName(&quot;html&quot;)[0];
+    var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    //假设视窗宽度为375px时，font-size为16px；
+    html.style.fontSize = width/375 * 16 + 'px';
+}
+initFontSize();
+//窗口大小变化时，重新计算font-size
+window.onresize = ()=&gt;{ initFontSize() }
+</code></pre>
+<ol>
+<li>em</li>
+<li>vw</li>
+<li>%</li>
+<li>js控制网页缩放</li>
+</ol>
+<ul>
+<li>window.screen.width获取屏幕宽度</li>
+<li>修改meta标签的initial-scale来改变页面初始缩放值</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[css position的几个属性值和性能问题]]></title>
         <id>https://liujia12138.github.io/post/css-position-de-ji-ge-shu-xing-zhi-he-xing-neng-wen-ti/</id>
@@ -371,61 +415,6 @@ https就是http加上<strong>加密处理+认证+完整性保护</strong></p>
 </ol>
 </li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[节流和防抖]]></title>
-        <id>https://liujia12138.github.io/post/jie-liu-he-fang-dou/</id>
-        <link href="https://liujia12138.github.io/post/jie-liu-he-fang-dou/">
-        </link>
-        <updated>2019-03-14T13:59:36.000Z</updated>
-        <content type="html"><![CDATA[<p>一些用户频繁触发的事件操作，对于dom操作，资源加载等消耗性能的处理可能会导致页面卡顿，这时就需要用到函数节流（throttle）和函数防抖（debounce）</p>
-<h4 id="函数防抖">函数防抖</h4>
-<p>事件被触发n秒之后再执行，如果在这个n秒之内被再次触发，就重新计时</p>
-<p>使用场景：</p>
-<ul>
-<li>做输入框自动补全提示（实时搜索），需要监听用户的输入行为，根据输入内容去请求后端接口，如果不做函数防抖的话，每次触发keyup就要请求一次，非常消耗性能</li>
-<li>拖拽</li>
-</ul>
-<p>实现函数防抖：用setTimeout</p>
-<pre><code class="language-js">function debounce(fn, delay){
-    var timer;
-    return function(e){
-        var that =  this;
-        clearTimeout(timer);
-        timer = setTimeout(function(){
-            fn.call(that, e)
-        }, delay)
-    }
-}
-
-function fn(args){
-    console.log(args)
-}
-document.getElementById('debounce').addEventListener(&quot;click&quot;,function(e){
-    debounce(click, 500)(e)
-})
-</code></pre>
-<h4 id="函数节流">函数节流</h4>
-<p>预定一个函数只有在大于等于执行周期时才执行，周期内调用不执行，不管函数触发的多频繁都会保证一个周期执行一次</p>
-<p>使用场景：</p>
-<ul>
-<li>窗口resize</li>
-<li>页面滚动scroll</li>
-</ul>
-<p>实现函数节流：</p>
-<pre><code class="language-js">function throttle(fn, delay){
-    let prev = 0;
-    return function(args){
-        let that = this;
-        let now = Date.now();
-        if(now - prev &gt;= delay){
-            fn.call(that, args);
-            prev = now;
-        }
-    }
-}
-</code></pre>
 ]]></content>
     </entry>
 </feed>
