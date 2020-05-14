@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
   <head>
       <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>AzhA</title>
+  <title>js中的继承 | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="js中的继承 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,9 +25,15 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="js中的继承"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/js-zhong-de-ji-cheng/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
-     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  	<!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
       <a class="navbar-brand" href="https://liujia12138.github.io">AzhA</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,166 +71,176 @@
       </div>
     </div>
   </nav>
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="site-heading">
-            <h1>AzhA</h1>
-            <span class="subheading">温故而知新</span>
+          <div class="post-heading">
+          	<span class="tags">
+          	 
+            <a href="https://liujia12138.github.io/tag/CvMd75xEg/" class="tag">js</a>
+            
+        </span>
+            <h1>js中的继承</h1>
+            <span class="meta">
+            	Posted on
+              2018-08-22，4 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
-      <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/sheng-bei-bu-ju-he-shuang-fei-yi-bu-ju/">
-            <h2 class="post-title">
-              圣杯布局和双飞翼布局
-            </h2>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <h4 id="继承属性">继承属性</h4>
+<p>JavaScript对象是一个动态的属性“包”，每个对象都有一个指向一个原型对象的链，当我们访问一个对象的属性时，他不仅会在该对象上搜索，还会搜寻该对象的原型，以及该对象的原型的原型，这样依次向上寻找，直到找到一个名字匹配的属性或者到达原型链的末端(null)</p>
+<h3 id="继承的实现方法">继承的实现方法</h3>
+<p>先实现一个父级函数</p>
+<pre><code class="language-js">function Person(name, age){
+    this.name = name || &quot;Person&quot;;
+    this.age = age||'18';
+    //实例方法
+    this.say = function(){
+        console.log(this.name)
+    }
+}
+
+//原型方法
+Person.prototype.eat=function(food){
+    console.log(&quot;我是&quot; + this.name + &quot;,我正在吃：&quot; + food)
+}
+
+</code></pre>
+<h4 id="原型继承">原型继承</h4>
+<p>实现：将父函数的实例赋值给子函数的原型</p>
+<pre><code class="language-js">//创建子类-学生
+function Student(){}
+Student.prototype = new Person();
+
+var stu = new Student();
+console.log(stu.name);//Person
+stu.eat(&quot;apple&quot;);//我是Person,我正在吃：apple
+
+console.log(stu instanceof Student);//true
+console.log(stu instanceof Person);//true
+</code></pre>
+<p>特点：</p>
+<ul>
+<li>父级函数原型发生变化时，子类都能访问到</li>
+<li>简单，易于实现</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>想要为子类新增属性和方法，必须在完成赋值父函数的实例之后再执行</li>
+<li>无法实现多继承（继承多个父类）</li>
+<li>创建子类实例时，无法向父类构造函数传参</li>
+<li>父级函数原型中所有属性都被所有实例共享</li>
+</ul>
+<h4 id="借用构造函数继承">借用构造函数继承</h4>
+<p>原理：使用call、apply改变父函数内this，指向子函数，用父级构造函数来增强子类实例</p>
+<pre><code class="language-js">function Student(name, grade){
+    Person.call(this, name);
+    this.grade = grade;
+    this.say = function(){
+        console.log(`我是${this.name}，现在${this.grade}年级`)
+    }
+}
+var stu = new Student('tom', '3');
+
+console.log(stu.name);//tom
+stu.say();//我是tom，现在3年级
+console.log(stu instanceof Person);//false
+console.log(stu instanceof Student);//true
+</code></pre>
+<p>特点：</p>
+<ul>
+<li>可以向父级函数中传递参数</li>
+<li>可以实现多继承</li>
+<li>解决了1中子类实例共享所有父类原型属性的问题</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>只能继承实例属性和方法，不能继承原型属性方法</li>
+<li>实例只是子类的实例，不是父类的实例</li>
+</ul>
+<h4 id="组合继承">组合继承</h4>
+<p>原理：结合1和2</p>
+<pre><code class="language-js">function Student(name, grade){
+    Person.call(this, name);
+    this.grade = grade;
+    this.say = function(){
+        console.log(`我是${this.name}，现在${this.grade}年级`)
+    }
+}
+
+Student.prototype = new Person();
+
+var stu = new Student('tom', 3);
+
+stu.say();//我是tom，现在3年级
+stu.eat('apple');//我是tom,我正在吃：apple
+
+console.log(stu instanceof Student);//true
+console.log(stu instanceof Person);//true
+</code></pre>
+<p>特点：</p>
+<ul>
+<li>既可以继承实例方法和属性，也可以继承原型方法和属性</li>
+<li>既是子类的实例，也是父类的实例</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>调用了两次父类构造函数,生成了两份父类实例属性，父类实例属性和方法也在子类原型中</li>
+</ul>
+<h4 id="寄生方式继承">寄生方式继承</h4>
+<h4 id="寄生组合继承">寄生组合继承</h4>
+<p>原理：通过寄生方式，去掉父类实例属性，这样就不会初始化两次父类的实例方法/属性，避免了组合方式继承的缺点</p>
+<pre><code class="language-js">function Super(){};
+Super.prototype = Person.prototype;
+
+function Student(name, grade){
+    Person.call(this, name);
+    this.grade = grade;
+    this.say = function(){
+        console.log(`我是${this.name}，现在${this.grade}年级`)
+    }
+}
+
+Student.prototype = new Super();
+
+var stu = new Student('tom', 3);
+
+stu.say();//我是tom，现在3年级
+stu.eat('apple');//我是tom,我正在吃：apple
+
+console.log(stu instanceof Student);//true
+console.log(stu instanceof Person);//true
+
+</code></pre>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/cookielocalstorage-he-sessionstorage/">
+              <span class="post-title">
+                浏览器存储&rarr;
+              </span>
             </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-06-07</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
+          </p>
         
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/liu-lan-qi-jian-rong-wen-ti/">
-            <h2 class="post-title">
-              浏览器兼容问题
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-04-11</span>
-             <span>,</span>
-             <span class="post-stats">4 min read</span>
-            </p>
+        <div class="comment">
+          
         </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/vue-lu-you-shou-wei/">
-            <h2 class="post-title">
-              vue路由守卫
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-02-07</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/css-xue-bi-tu-yong-xue-bi-tu-hui-you-shi-me-wen-ti/">
-            <h2 class="post-title">
-              css雪碧图？用雪碧图会有什么问题？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-07-13</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/ru-he-pan-duan-shu-zu-he-lei-shu-zu-ru-he-jiang-lei-shu-zu-zhuan-cheng-shu-zu/">
-            <h2 class="post-title">
-              如何判断数组和类数组？如何将类数组转成数组？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-07-06</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/qian-duan-liu-da-pai-xu-suan-fa/">
-            <h2 class="post-title">
-              前端六大排序算法
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-04-09</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/he-mo-xing-kuan-gao-zhi-de-ji-suan-fang-shi-bian-jie-ta-xian-fu-zhi-zuo-yong-box-sizing-gai-nian/">
-            <h2 class="post-title">
-              盒模型宽高值的计算方式，边界塌陷，负值作用，box-sizing概念
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-01-06</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        
-        <a class="btn btn-primary float-left" href="https://liujia12138.github.io/page/2/">&larr; 上一页</a>
-        
-        
       </div>
     </div>
-  </div>
-
-  
-    <!-- Footer -->
+  </article>
+ <!-- Footer -->
   <footer>
     <div class="container">
       <div class="row">
@@ -304,3 +320,4 @@
   })(this));</script>
   </body>
 </html>
+

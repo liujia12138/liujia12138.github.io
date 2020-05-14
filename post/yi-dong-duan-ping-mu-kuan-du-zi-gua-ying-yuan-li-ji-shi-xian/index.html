@@ -84,7 +84,7 @@
             <h1>移动端屏幕宽度自适应原理及实现</h1>
             <span class="meta">
             	Posted on
-              2020-05-09，2 min read
+              2020-05-09，3 min read
             </span>
           </div>
         </div>
@@ -123,11 +123,20 @@ initFontSize();
 //窗口大小变化时，重新计算font-size
 window.onresize = ()=&gt;{ initFontSize() }
 </code></pre>
-<ol>
-<li>em</li>
-<li>vw</li>
-<li>%</li>
-<li>js控制网页缩放</li>
+<ol start="2">
+<li>
+<p>em：相对长度单位，相对于当前元素内字体的大小，如果当前元素没有设置字号，就找父元素的。</p>
+</li>
+<li>
+<p>vw：相对于视窗的宽度，1vw为视窗宽度的1%。<br>
+vw可以配合rem来实现屏幕自适应，移动端设计稿通常使用750px宽度，前端开发是通常使用375px的网页宽度，此时1vw=3.75px，4vh=15px；为了方便计算，可以设置html的字体大小为4vw；</p>
+</li>
+<li>
+<p>%：单纯使用%无法确定元素高度，所以基本不用；</p>
+</li>
+<li>
+<p>固定长度单位px，再使用js根据当前屏幕的宽度进行网页缩放</p>
+</li>
 </ol>
 <ul>
 <li>window.screen.width获取屏幕宽度</li>

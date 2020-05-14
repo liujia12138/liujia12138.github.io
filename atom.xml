@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2020-05-14T12:09:15.372Z</updated>
+    <updated>2020-05-14T13:13:37.160Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -10,6 +10,134 @@
     <logo>https://liujia12138.github.io/images/avatar.png</logo>
     <icon>https://liujia12138.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, AzhA</rights>
+    <entry>
+        <title type="html"><![CDATA[JavaScript的隐式类型转换]]></title>
+        <id>https://liujia12138.github.io/post/javascript-de-yin-shi-lei-xing-zhuan-huan/</id>
+        <link href="https://liujia12138.github.io/post/javascript-de-yin-shi-lei-xing-zhuan-huan/">
+        </link>
+        <updated>2020-05-14T13:12:03.000Z</updated>
+        <content type="html"><![CDATA[<ol>
+<li>隐式转换规则</li>
+</ol>
+<ul>
+<li>转成string类型： + （字符串拼接符）</li>
+<li>转成number类型：++、--、+、-、*、/、%、&lt;、&gt;、&lt;=、&gt;=、!=、<mark>、!</mark>、===</li>
+<li>转成boolean类型：!（逻辑非运算符）</li>
+</ul>
+<ol>
+<li>
+<p>字符串连接符+：只要+两边有一边是字符串，会吧其他数据类型调用String()方法转换成字符串然后拼接</p>
+</li>
+<li>
+<p>算数运算符+：+两边都是数字，会把其他数据类型调用Number()方法转换成数字然后进行假发运算</p>
+</li>
+<li>
+<p>关系运算符：会把其他数据类型转换成number之后再作比较：</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>1.当关系运算符两边有一边是字符串的时候，会把字符串转换成number然后比较，比如<code>'a' &gt; 10</code>返回false，<code>'a'&lt;10</code>也返回false，因为Number('a')=NaN</p>
+</li>
+<li>
+<p>2.a. 当关系运算符两边都是字符串的时候，会根据unicode编码来判断，<code>'2' &gt; '10'</code>返回true，因为'2'.charCodeAt()=50, '10'.chaeCodeAt()=49（默认返回第一个字符的编码，如果想要查询第二个字符可以传参下标）； b. 多个字符从左向右依次比较；</p>
+</li>
+<li>
+<p>3.特殊情况，如果数据类型是undefined或者null，得出固定结果</p>
+</li>
+<li>
+<p>4.特殊情况，NaN和任何数据比较都是false，包括NaN；</p>
+</li>
+<li>
+<p>5.复杂数据类型：在隐式转换时会先转成string，然后再转成Number<br>
+<img src="http://p9.pstatp.com/large/pgc-image/1538025621414c490c46b28" alt="image" loading="lazy"></p>
+</li>
+<li>
+<ul>
+<li>a.先使用valueOf()方法获取原始值，如果原始值不是number类型，则使用toString()方法转成string；</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>b.再将string转成number（unicode码）运算</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-js">console.log([1, 2] == '1,2');//true, 先获取数组的原始值，然后转成string，然后通过左右两边的字符串的unicode编码运算
+console.log([1, 2].valueOf());//[1, 2]
+console.log([1, 2].valueOf().toString());//'1,2'
+
+var a = {};
+console.log(a == &quot;[object Object]&quot;);//true
+console.log(a.valueOf().toString());//&quot;[object Object]&quot;
+
+//声明一个变量a，使下面表达式打印1
+var a = {
+    i: 1,//声明一个属性i
+    valueOf: function(){
+        return a.i++;//每调用一次valueOf，让自增1，并且返回i的值
+    }
+}
+if(a == 1 &amp;&amp; a ==2 &amp;&amp; a == 3){
+    console.log(1)
+}
+
+</code></pre>
+<ul>
+<li>
+<p>6.逻辑非隐式转换与关系运算符隐式转换<br>
+**注意：**空数组的toString()方法会得到一个空字符串，而空对象的toString()方法会得到字符串<code>[object Object]</code></p>
+</li>
+<li>
+<ul>
+<li>a.关系运算符：将其他数据类型转成number</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>b.逻辑非!：将其他数据类型使用Boolean()转成布尔值</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>
+<ul>
+<li>1.null，undefined，空字符串，0，-0，NaN，false，document.all()转布尔值都会得到false，除此之外全都是true</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>
+<ul>
+<li>2.逻辑非运算符优先级高于关系运算符，所以要先得到逻辑非运算结果在进行比较</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-js">console.log([] == 0)//true,
+//原理：[].valueOf().toString() =&gt; &quot;&quot;, Number('') == 0
+
+console.log(![] == 0);//true
+//原理：逻辑非优先级高于关系运算符，空数组不在上面八种情况里，所以空数组转成布尔值应该是true，![] =&gt; false，false == 0成立
+
+console.log({} == !{});//false
+console.log({} == {});//false
+//原理：
+//1：本质上是{} 与 !{}这个逻辑非表达式比较，!{} =&gt; false，{}.valueOf().toString() =&gt; '[object Object]', 所以{} == !{}不成立，返回false
+//2：引用数据类型存储在堆中，栈中存储的是引用地址，所以返回false
+
+console.log([] == ![]);//true
+console.log([] == []);//false
+//原理：
+//1：本质上是比较[]和![]逻辑非运算结果，[].valueOf().toString() =&gt; ''，Number('') =&gt; 0，![] =&gt; false, 0 == false成立，返回true；
+//2：引用数据类型，false
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://liujia12138.github.io/post-images/1589461997727.jpeg" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[移动端屏幕宽度自适应原理及实现]]></title>
         <id>https://liujia12138.github.io/post/yi-dong-duan-ping-mu-kuan-du-zi-gua-ying-yuan-li-ji-shi-xian/</id>
@@ -42,11 +170,20 @@ initFontSize();
 //窗口大小变化时，重新计算font-size
 window.onresize = ()=&gt;{ initFontSize() }
 </code></pre>
-<ol>
-<li>em</li>
-<li>vw</li>
-<li>%</li>
-<li>js控制网页缩放</li>
+<ol start="2">
+<li>
+<p>em：相对长度单位，相对于当前元素内字体的大小，如果当前元素没有设置字号，就找父元素的。</p>
+</li>
+<li>
+<p>vw：相对于视窗的宽度，1vw为视窗宽度的1%。<br>
+vw可以配合rem来实现屏幕自适应，移动端设计稿通常使用750px宽度，前端开发是通常使用375px的网页宽度，此时1vw=3.75px，4vh=15px；为了方便计算，可以设置html的字体大小为4vw；</p>
+</li>
+<li>
+<p>%：单纯使用%无法确定元素高度，所以基本不用；</p>
+</li>
+<li>
+<p>固定长度单位px，再使用js根据当前屏幕的宽度进行网页缩放</p>
+</li>
 </ol>
 <ul>
 <li>window.screen.width获取屏幕宽度</li>
@@ -238,61 +375,83 @@ loader: ['style', 'css', 'sass']<br>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[websocket是什么?基于什么实现的？]]></title>
-        <id>https://liujia12138.github.io/post/websocket-shi-shi-me-ji-yu-shi-me-shi-xian-de/</id>
-        <link href="https://liujia12138.github.io/post/websocket-shi-shi-me-ji-yu-shi-me-shi-xian-de/">
+        <title type="html"><![CDATA[WebSocket]]></title>
+        <id>https://liujia12138.github.io/post/websocket/</id>
+        <link href="https://liujia12138.github.io/post/websocket/">
         </link>
-        <updated>2020-02-08T15:03:13.000Z</updated>
-        <content type="html"><![CDATA[<p>WebSocket是html5新增的协议，能在浏览器和服务器之间建立一个不受限制的双向通信的通道，服务器可以主动向浏览器发送消息。</p>
+        <updated>2020-01-08T12:37:41.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="websocket是什么">websocket是什么？</h4>
+<p>是HTML5新增的属性，一种单个TCP连接上进行全双工通讯的网络通讯协议；</p>
+<h4 id="websocket有什么用">websocket有什么用？</h4>
+<p>为什么有了http协议，还需要websocket？因为http协议是单向通信协议，只能由客户端发起请求，无法做到服务端主动向客户端推送消息</p>
+<p>当服务器有持续的变化时，客户端想要获取只能通过轮询的方法，每隔一段时间就发起一次请求，最典型的场景就是聊天发消息。</p>
 <p>传统的http协议不能做到websocket实现的功能，因为http协议是一个请求-响应协议，只能由浏览器发起请求，服务器才能响应这个请求把数据发送给浏览器，服务器不能主动发起请求。</p>
 <p>ajax轮询：每隔一段时间发起一个http请求，询问服务器有没有新消息，没有的话就一直发</p>
 <p>长轮询：采用阻塞的方式，浏览器发起请求后，如果服务器没有新消息，就先拖一段时间一直不返回，直到有消息才返回，返回完之后，浏览器再次建立连接</p>
 <p>ajax轮询和长轮询需要服务器有非常快的处理速度和很高的并发。</p>
-<p>websocket是基于http协议的，或者说是借用http协议来建立连接。<br>
-（http是应用层协议，基于tcp协议，tcp是传输层协议，ip协议是网络层协议）</p>
-<p>websocket连接必须由浏览器发起，因为请求协议是一个标准的http协议</p>
+<p>websocket最大的特点就是服务器可以主动向客户端发送消息。</p>
+<p>其他特点：</p>
 <ul>
-<li>浏览器发起请求</li>
-<li>
-<ul>
-<li>请求地址以ws:开头</li>
+<li>建立在tcp协议之上（tcp本身是双向通信，http协议对他做了限制，所以http协议只能是单向的）</li>
+<li>与http协议有着良好的兼容性。默认端口也是80和443，而且握手阶段采用http协议</li>
+<li>数据格式比较轻量，性能开销小</li>
+<li>可以发送文本，也可以发送二进制文件</li>
+<li>没有同源限制</li>
+<li>协议标识符是ws（如果加密，就是wss）</li>
 </ul>
-</li>
-<li>
-<ul>
-<li>请求头Upgarde：websocket和Connection：Upgrade，表示这个连接将要被转成websocket连接</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>Sec-WebSocket-Key用于标识这个连接</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>Sec-WebSocket-Version指定webSocket协议版本</li>
-</ul>
-</li>
-</ul>
-<pre><code>GET ws://localhost:3000/ws/chat HTTP/1.1
-Host: localhost
-Upgrade: websocket
-Connection: Upgrade
-Origin: http://localhost:3000
-Sec-WebSocket-Key: client-random-string
-Sec-WebSocket-Version: 13
+<h4 id="使用websocket">使用websocket</h4>
+<pre><code class="language-js">//在线运行https://jsbin.com/nobemozido/edit?js,console
+if(!WebSocket){
+    alert('您的浏览器不支持WebSocket')
+}else{
+    var ws = new WebSocket(&quot;url&quot;);
+    ws.onopen = (evt) =&gt; {
+        console.log(&quot;connection open...&quot;);
+        ws.send(&quot;hello&quot;)
+    }
+    ws.onmessage = (evt) =&gt; {
+        console.log(&quot;received message:&quot;+ evt.data);
+        ws.close()
+    }
+    ws.onclose = (evt) =&gt;{
+        console.log(&quot;connection closed&quot;);
+    }
+    ws.onerror = (evt) =&gt;{
+        console.log(&quot;connection error&quot;);
+    }
+}
 </code></pre>
+<h4 id="api">API</h4>
+<h5 id="1websocket构造函数">1.WebSocket构造函数</h5>
+<h5 id="2websocketreadystate">2.WebSocket.readyState</h5>
+<p>WebSocket实例对象的状态，一共有四种</p>
 <ul>
-<li>服务器返回</li>
+<li>0：connecting，正在连接</li>
+<li>1：open，连接成功，可以通信了</li>
+<li>2：closeing，正在关闭</li>
+<li>3：closed，已经关闭，或者打开失败</li>
 </ul>
-<pre><code>HTTP/1.1 101 Switching Protocols//响应代码101表示本次连接的http协议即将被更改，更改后的协议就是Upgrade: websocket指定的websocket协议
-Upgrade: websocket
-Connection: Upgrade
-Sec-WebSocket-Accept: server-random-string
+<h5 id="3websocketonopen">3.WebSocket.onopen</h5>
+<p>用于指定连接成功之后的回调函数</p>
+<p>如果想指定多个回调函数，可以使用addEventListener监听WebSocket实例</p>
+<pre><code class="language-js">ws.addEventListener(&quot;open&quot;, (evt)=&gt;{
+    ws.send(&quot;send message&quot;)
+})
 </code></pre>
-<p>版本号和子协议规定了双方能理解的数据格式，是否支持压缩等</p>
-<p>这样一个websocket连接就建立成功了，浏览器和服务器都可以主动发消息给对方</p>
-<p>为什么http连接不可以实现双向通信呢？http协议是建立在tcp协议上的，tcp协议本身是实现了双向通信的，但是http协议的请求-应答机制限制了双向通信。</p>
+<h5 id="4websocketonclose">4.WebSocket.onclose</h5>
+<p>用于指定连接关闭后的回调函数</p>
+<h5 id="5websocketonmessage">5.WebSocket.onmessage</h5>
+<p>用于接收到服务器数据后的回调函数</p>
+<h5 id="6websocketsend">6.WebSocket.send</h5>
+<p>用于向服务器发送数据</p>
+<pre><code class="language-js">ws.send(&quot;hello&quot;)
+</code></pre>
+<h5 id="7websocketclose">7.WebSocket.close</h5>
+<p>用于关闭连接</p>
+<pre><code class="language-js">ws.close()
+</code></pre>
+<h5 id="8websocketonerror">8.WebSocket.onerror</h5>
+<p>用于指定连接错误时的回调函数</p>
 ]]></content>
     </entry>
     <entry>
@@ -384,36 +543,6 @@ https就是http加上<strong>加密处理+认证+完整性保护</strong></p>
 <li>客户端与服务端根据随机密码串pre-master key以及客户端和服务端的随机数值独立计算出加密和MAC密钥，参考DH密钥交换算法</li>
 <li>客户端将所有握手消息的MAC值发送给服务端</li>
 <li>服务端将所有握手消息的MAC值发送给客户端</li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[浏览器输入一个url到页面渲染出来都发生了什么？]]></title>
-        <id>https://liujia12138.github.io/post/liu-lan-qi-shu-ru-yi-ge-url-dao-ye-mian-xuan-ran-chu-lai-du-fa-sheng-liao-shi-me/</id>
-        <link href="https://liujia12138.github.io/post/liu-lan-qi-shu-ru-yi-ge-url-dao-ye-mian-xuan-ran-chu-lai-du-fa-sheng-liao-shi-me/">
-        </link>
-        <updated>2019-05-07T13:23:32.000Z</updated>
-        <content type="html"><![CDATA[<p>主要分为三个过程：DNS解析，浏览器发起请求和服务器交互，浏览器接收到对应的html进行页面渲染</p>
-<h3 id="1dns解析">1.DNS解析：</h3>
-<p>浏览器向dns服务器发送域名，dns服务器查询到对应的ip地址返回给浏览器，浏览器获取到ip地址和参数一起发送给对应的服务器，发起http请求</p>
-<h3 id="2浏览器发送请求与服务器交互">2.浏览器发送请求与服务器交互</h3>
-<ul>
-<li>1.浏览器通过三次握手与服务器建立连接</li>
-<li>2.浏览器根据解析得到的ip地址和端口号发起http get请求</li>
-<li>3.服务器接收到get请求，查找对应的html文件，使用http返回响应报文</li>
-<li>4.如果状态码是200，响应成功，浏览及接收到对应的页面，开始渲染</li>
-</ul>
-<h3 id="3浏览器渲染页面">3.浏览器渲染页面</h3>
-<ul>
-<li>1.解析html生成dom树</li>
-<li>2.解析css，构建cssom树</li>
-<li>3.加载js</li>
-<li>4.dom树和cssom树结合构成渲染（render）树</li>
-<li>
-<ol start="5">
-<li></li>
-</ol>
-</li>
 </ul>
 ]]></content>
     </entry>
