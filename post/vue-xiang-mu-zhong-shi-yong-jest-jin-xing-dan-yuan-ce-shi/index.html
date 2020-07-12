@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
   <head>
       <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>AzhA</title>
+  <title>vue项目中使用jest进行单元测试 | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="vue项目中使用jest进行单元测试 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,9 +25,15 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="vue项目中使用jest进行单元测试"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/vue-xiang-mu-zhong-shi-yong-jest-jin-xing-dan-yuan-ce-shi/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
-     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  	<!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
       <a class="navbar-brand" href="https://liujia12138.github.io">AzhA</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,204 +71,93 @@
       </div>
     </div>
   </nav>
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="site-heading">
-            <h1>AzhA</h1>
-            <span class="subheading">温故而知新</span>
+          <div class="post-heading">
+          	<span class="tags">
+          	 
+            <a href="https://liujia12138.github.io/tag/d8mNIHknn/" class="tag">vue</a>
+            
+        </span>
+            <h1>vue项目中使用jest进行单元测试</h1>
+            <span class="meta">
+            	Posted on
+              2020-07-12，2 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
-      <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/wei-shi-me-ye-mian-xie-liao-settimeout-yao-zai-ye-mian-xiao-hui-shi-qing-chu-zhe-ge-timeout/">
-            <h2 class="post-title">
-              为什么页面写了setTimeout要在页面销毁时清除这个timeout？
-            </h2>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <h6 id="1vue-cli3创建项目选择配置">1.vue-cli3创建项目，选择配置</h6>
+<p>选中倒数第二项，支持单元测试<br>
+<img src="https://s1.ax1x.com/2020/06/15/N9L6UK.png" alt="image" loading="lazy"></p>
+<p>单元测试类型：选择jest<br>
+<img src="https://s1.ax1x.com/2020/06/15/N9LIbt.png" alt="image" loading="lazy"></p>
+<p>回车，等待生成项目</p>
+<h6 id="2项目装好之后进入项目根目录">2.项目装好之后，进入项目根目录</h6>
+<p>选择了单元测试的项目会多一个tests/unit目录，在这个目录内我们可以对组件进行测试<br>
+<img src="https://s1.ax1x.com/2020/06/15/N9OTy9.png" alt="image" loading="lazy"></p>
+<p>写好测试的js文件之后，运行yarn test:unit 就可以测试了<br>
+<img src="https://s1.ax1x.com/2020/06/15/N9Xg6H.png" alt="image" loading="lazy"></p>
+<h6 id="3jest的配置">3.jest的配置</h6>
+<p>在package.json 中</p>
+<pre><code class="language-json">&quot;jest&quot;: {
+    &quot;preset&quot;: &quot;@vue/cli-plugin-unit-jest&quot;,
+    &quot;moduleFileExtensions&quot;: [
+      &quot;js&quot;,
+      &quot;jsx&quot;,
+      &quot;json&quot;,
+      &quot;vue&quot;
+    ],
+    &quot;transform&quot;: {
+      &quot;^.+\\.vue$&quot;: &quot;vue-jest&quot;,
+      &quot;.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$&quot;: &quot;jest-transform-stub&quot;,
+      &quot;^.+\\.jsx?$&quot;: &quot;babel-jest&quot;
+    },
+    &quot;moduleNameMapper&quot;: {
+      &quot;^@/(.*)$&quot;: &quot;&lt;rootDir&gt;/src/$1&quot;
+    },
+    &quot;snapshotSerializers&quot;: [
+      &quot;jest-serializer-vue&quot;
+    ],
+    &quot;testMatch&quot;: [
+      &quot;**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)&quot;
+    ],
+    &quot;testURL&quot;: &quot;http://localhost/&quot;,
+    &quot;collectCoverage&quot;: true,
+    &quot;collectCoverageFrom&quot;: [&quot;**/src/**.{js,vue}&quot;, &quot;!**/node_modules/**&quot;, &quot;!**src/main.js**&quot;, &quot;!**src/router.js**&quot;]
+  }
+</code></pre>
+<h6 id="4测试结果">4.测试结果</h6>
+<figure data-type="image" tabindex="1"><img src="https://s1.ax1x.com/2020/06/15/NCSJsg.png" alt="image" loading="lazy"></figure>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/javascript-de-yin-shi-lei-xing-zhuan-huan/">
+              <span class="post-title">
+                JavaScript的隐式类型转换&rarr;
+              </span>
             </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-07-06</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
+          </p>
         
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/sheng-bei-bu-ju-he-shuang-fei-yi-bu-ju/">
-            <h2 class="post-title">
-              圣杯布局和双飞翼布局
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-06-07</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
+        <div class="comment">
+          
         </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/git-ji-ben-ming-ling/">
-            <h2 class="post-title">
-              git基本命令
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-05-09</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/liu-lan-qi-jian-rong-wen-ti/">
-            <h2 class="post-title">
-              浏览器兼容问题
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-04-11</span>
-             <span>,</span>
-             <span class="post-stats">4 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/vue-lu-you-shou-wei/">
-            <h2 class="post-title">
-              vue路由守卫
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-02-07</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/css-xue-bi-tu-yong-xue-bi-tu-hui-you-shi-me-wen-ti/">
-            <h2 class="post-title">
-              css雪碧图？用雪碧图会有什么问题？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-07-13</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/ru-he-pan-duan-shu-zu-he-lei-shu-zu-ru-he-jiang-lei-shu-zu-zhuan-cheng-shu-zu/">
-            <h2 class="post-title">
-              如何判断数组和类数组？如何将类数组转成数组？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-07-06</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/qian-duan-liu-da-pai-xu-suan-fa/">
-            <h2 class="post-title">
-              前端六大排序算法
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-04-09</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/he-mo-xing-kuan-gao-zhi-de-ji-suan-fang-shi-bian-jie-ta-xian-fu-zhi-zuo-yong-box-sizing-gai-nian/">
-            <h2 class="post-title">
-              盒模型宽高值的计算方式，边界塌陷，负值作用，box-sizing概念
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-01-06</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        
-        <a class="btn btn-primary float-left" href="https://liujia12138.github.io/page/2/">&larr; 上一页</a>
-        
-        
       </div>
     </div>
-  </div>
-
-  
-    <!-- Footer -->
+  </article>
+ <!-- Footer -->
   <footer>
     <div class="container">
       <div class="row">
@@ -342,3 +237,4 @@
   })(this));</script>
   </body>
 </html>
+

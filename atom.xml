@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2020-05-14T13:13:37.160Z</updated>
+    <updated>2020-07-12T07:04:13.477Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -10,6 +10,56 @@
     <logo>https://liujia12138.github.io/images/avatar.png</logo>
     <icon>https://liujia12138.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, AzhA</rights>
+    <entry>
+        <title type="html"><![CDATA[vue项目中使用jest进行单元测试]]></title>
+        <id>https://liujia12138.github.io/post/vue-xiang-mu-zhong-shi-yong-jest-jin-xing-dan-yuan-ce-shi/</id>
+        <link href="https://liujia12138.github.io/post/vue-xiang-mu-zhong-shi-yong-jest-jin-xing-dan-yuan-ce-shi/">
+        </link>
+        <updated>2020-07-12T06:51:50.000Z</updated>
+        <content type="html"><![CDATA[<h6 id="1vue-cli3创建项目选择配置">1.vue-cli3创建项目，选择配置</h6>
+<p>选中倒数第二项，支持单元测试<br>
+<img src="https://s1.ax1x.com/2020/06/15/N9L6UK.png" alt="image" loading="lazy"></p>
+<p>单元测试类型：选择jest<br>
+<img src="https://s1.ax1x.com/2020/06/15/N9LIbt.png" alt="image" loading="lazy"></p>
+<p>回车，等待生成项目</p>
+<h6 id="2项目装好之后进入项目根目录">2.项目装好之后，进入项目根目录</h6>
+<p>选择了单元测试的项目会多一个tests/unit目录，在这个目录内我们可以对组件进行测试<br>
+<img src="https://s1.ax1x.com/2020/06/15/N9OTy9.png" alt="image" loading="lazy"></p>
+<p>写好测试的js文件之后，运行yarn test:unit 就可以测试了<br>
+<img src="https://s1.ax1x.com/2020/06/15/N9Xg6H.png" alt="image" loading="lazy"></p>
+<h6 id="3jest的配置">3.jest的配置</h6>
+<p>在package.json 中</p>
+<pre><code class="language-json">&quot;jest&quot;: {
+    &quot;preset&quot;: &quot;@vue/cli-plugin-unit-jest&quot;,
+    &quot;moduleFileExtensions&quot;: [
+      &quot;js&quot;,
+      &quot;jsx&quot;,
+      &quot;json&quot;,
+      &quot;vue&quot;
+    ],
+    &quot;transform&quot;: {
+      &quot;^.+\\.vue$&quot;: &quot;vue-jest&quot;,
+      &quot;.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$&quot;: &quot;jest-transform-stub&quot;,
+      &quot;^.+\\.jsx?$&quot;: &quot;babel-jest&quot;
+    },
+    &quot;moduleNameMapper&quot;: {
+      &quot;^@/(.*)$&quot;: &quot;&lt;rootDir&gt;/src/$1&quot;
+    },
+    &quot;snapshotSerializers&quot;: [
+      &quot;jest-serializer-vue&quot;
+    ],
+    &quot;testMatch&quot;: [
+      &quot;**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)&quot;
+    ],
+    &quot;testURL&quot;: &quot;http://localhost/&quot;,
+    &quot;collectCoverage&quot;: true,
+    &quot;collectCoverageFrom&quot;: [&quot;**/src/**.{js,vue}&quot;, &quot;!**/node_modules/**&quot;, &quot;!**src/main.js**&quot;, &quot;!**src/router.js**&quot;]
+  }
+</code></pre>
+<h6 id="4测试结果">4.测试结果</h6>
+<figure data-type="image" tabindex="1"><img src="https://s1.ax1x.com/2020/06/15/NCSJsg.png" alt="image" loading="lazy"></figure>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[JavaScript的隐式类型转换]]></title>
         <id>https://liujia12138.github.io/post/javascript-de-yin-shi-lei-xing-zhuan-huan/</id>
@@ -21,7 +71,7 @@
 </ol>
 <ul>
 <li>转成string类型： + （字符串拼接符）</li>
-<li>转成number类型：++、--、+、-、*、/、%、&lt;、&gt;、&lt;=、&gt;=、!=、<mark>、!</mark>、===</li>
+<li>转成number类型：++、--、+、-、*、/、%、&lt;、&gt;、&lt;=、&gt;=、!= 、== 、!== 、===</li>
 <li>转成boolean类型：!（逻辑非运算符）</li>
 </ul>
 <ol>
@@ -510,40 +560,6 @@ outer.addEventListener('click', onClick);
 </code></pre>
 <p>点击inner会打印什么？</p>
 <p>click事件是宏任务，加入到宏任务队列，setTimeout也是宏任务，promise和MutationObserver是微任务，加入到微任务队列 click promise mutate click promise mutate timeout timeout</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[http和https的区别？]]></title>
-        <id>https://liujia12138.github.io/post/http-he-https-de-qu-bie/</id>
-        <link href="https://liujia12138.github.io/post/http-he-https-de-qu-bie/">
-        </link>
-        <updated>2019-06-08T15:06:11.000Z</updated>
-        <content type="html"><![CDATA[<p>http超文本传输协议，https是安全版的http</p>
-<p>http和https的区别？</p>
-<ol>
-<li>http是超文本传输协议，信息是明文传输，https是具有安全性的ssl加密传输协议</li>
-<li>连接方式不同，端口不同，http是80，https是443</li>
-<li>https需要到CA申请证书</li>
-<li>http连接很简单，是无状态的；https协议是由SSL/TLS+HTTP协议构建的</li>
-</ol>
-<p>http缺点：</p>
-<p>通讯使用明文不加密，内容可能被窃听<br>
-不验证通信方身份，可能遭到伪装<br>
-无法验证报文完整性，可能被篡改<br>
-https就是http加上<strong>加密处理+认证+完整性保护</strong></p>
-<p>https的安全基础是<strong>SSL</strong>，SSL位于tcp/ip协议与各应用层协议之间，为数据通信提供安全支持。</p>
-<p>SSL协议可以分为两层：SSL记录协议，建立在传输层协议（TCP）之上，为高层协议提供数据封装、压缩、加密等基本功能的支持；SSL握手协议，建立在SSL记录协议之上，用于实际的数据传输开始之前，通讯双方进行身份认证，协商加密算法，交换加密密钥等。</p>
-<p>https设计目标：数据保密性、数据完整性、身份校验安全性</p>
-<p>https://blog.csdn.net/qq_35642036/article/details/82788421</p>
-<p>https原理：</p>
-<ul>
-<li>客户端将他支持的算法列表和一个用作产生密钥的随机数发送给服务器</li>
-<li>服务端从算法列表中选择一种加密算法，将它和一份包含服务器公用秘钥的证书发送给客户端，该证书还包含用于认证目的的服务器标识，同时还提供了一个用作产生密钥的随机数</li>
-<li>客户端对服务器证书进行验证，并抽取服务器的公用密钥，然后产生一个随机密码串，并且使用服务器的密钥对其加密，然后将加密后的信息发送给服务端</li>
-<li>客户端与服务端根据随机密码串pre-master key以及客户端和服务端的随机数值独立计算出加密和MAC密钥，参考DH密钥交换算法</li>
-<li>客户端将所有握手消息的MAC值发送给服务端</li>
-<li>服务端将所有握手消息的MAC值发送给客户端</li>
-</ul>
 ]]></content>
     </entry>
 </feed>
