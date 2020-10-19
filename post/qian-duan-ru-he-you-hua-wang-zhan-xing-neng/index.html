@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>css | AzhA</title>
+  <title>前端如何优化网站性能？ | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="css | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="前端如何优化网站性能？ | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +25,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="前端如何优化网站性能？"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/qian-duan-ru-he-you-hua-wang-zhan-xing-neng/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
   	<!-- Navigation -->
@@ -66,144 +71,98 @@
       </div>
     </div>
   </nav>
-<!-- Page Header -->
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1 class="tag-tl">#css</h1>
+          	<span class="tags">
+          	 
+            <a href="https://liujia12138.github.io/tag/Kr-xdE8Yn/" class="tag">前端性能优化</a>
+            
+        </span>
+            <h1>前端如何优化网站性能？</h1>
+            <span class="meta">
+            	Posted on
+              2020-04-07，2 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
+
+  <!-- Post Content -->
+  <article>
     <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/shi-me-shi-foucru-he-bi-mian-fouc/">
-            <h2 class="post-title">
-              什么是FOUC？如何避免FOUC？
-            </h2>
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ol>
+<li>减少http请求<br>
+合并js、css文件，使用精灵图，懒加载</li>
+<li>利用浏览器缓存<br>
+浏览器缓存是将网络资源缓存到本地，下一次请求该资源的时候，如果本地已经有了就不需要再重新星球，直接使用本地缓存的就可以了<br>
+使用浏览器缓存的好处：
+<ul>
+<li>减少用户等待时间，提升用户体验</li>
+<li>减少网络带宽的消耗</li>
+<li>降低服务器压力<br>
+前端如何实现浏览器缓存？<br>
+前端缓存一般是对js、css和图片等进行缓存</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>服务端设置Expirse过期时间，但是可能会有客户端时间和服务器时间不一致的问题</li>
+<li>cache-control：描述一个相对时间，进行缓存命中的时候，都是根据客户端时间进行判断的，相对于expirse，cache-control的缓存更加有效安全。值包含：
+<ul>
+<li>pubilc、</li>
+<li>private、</li>
+<li>no-cache：只是请求和相应的消息不能缓存，并不是不能缓存，需要和服务器确认</li>
+<li>no-store：在请求消息中发送将使得请求和相应消息都不实用缓存，完全不存下来</li>
+<li>max-age：缓存资源的最大生命周期</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-html">&lt;!-- 1. 通过HTTP的meta设置exprise和cache-control --&gt;
+&lt;meta http-equiv=&quot;Cache-Control&quot; content=&quot;max-age=7200&quot;/&gt;
+&lt;meta http-equiv=&quot;Exprise&quot; content=&quot;Sun Oct 15 2017 20:39:53 GMT+0800 (CST)&quot;/&gt;
+&lt;!-- 2、apache服务器配置图片，css，js，flash的缓存 --&gt;
+</code></pre>
+<ol start="3">
+<li>减少重排<br>
+重排是指某些元素发生变化，影响到了元素布局，浏览器抛弃原有属性重新计算。<br>
+重绘：dom元素属性变化时，浏览器会重新render相应的属性<br>
+如何减少重排：
+<ul>
+<li>dom的多个读写操作放到一起</li>
+<li>不要一条一条的改样式，通过class来改样式</li>
+<li>position为absolute或fixed的元素，重排开销会小一点，因为不用考虑对其他元素的影响</li>
+<li>尽量使用代码片</li>
+</ul>
+</li>
+<li>控制文件资源加载的优先级</li>
+<li>减少dom操作</li>
+<li>图标尽量使用iconfont</li>
+</ol>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/websocket/">
+              <span class="post-title">
+                WebSocket&rarr;
+              </span>
             </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-05-04</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
+          </p>
         
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/yi-dong-duan-1px-de-wen-ti-shi-ru-he-xing-cheng-de-zen-me-jie-jue/">
-            <h2 class="post-title">
-              移动端1px的问题是如何形成的？怎么解决？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-03-09</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
+        <div class="comment">
+          
         </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/css-yu-chu-li-qi-sasslessstylus/">
-            <h2 class="post-title">
-              CSS预处理器，sass、less、stylus
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-07-10</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/sheng-bei-bu-ju-he-shuang-fei-yi-bu-ju/">
-            <h2 class="post-title">
-              圣杯布局和双飞翼布局
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-06-07</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/css-xue-bi-tu-yong-xue-bi-tu-hui-you-shi-me-wen-ti/">
-            <h2 class="post-title">
-              css雪碧图？用雪碧图会有什么问题？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-07-13</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/he-mo-xing-kuan-gao-zhi-de-ji-suan-fang-shi-bian-jie-ta-xian-fu-zhi-zuo-yong-box-sizing-gai-nian/">
-            <h2 class="post-title">
-              盒模型宽高值的计算方式，边界塌陷，负值作用，box-sizing概念
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-01-06</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        
-        
       </div>
     </div>
-  </div>
-
-  
+  </article>
  <!-- Footer -->
   <footer>
     <div class="container">
@@ -284,3 +243,4 @@
   })(this));</script>
   </body>
 </html>
+

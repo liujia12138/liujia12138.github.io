@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2020-07-12T07:04:13.477Z</updated>
+    <updated>2020-10-19T08:22:51.264Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -10,6 +10,178 @@
     <logo>https://liujia12138.github.io/images/avatar.png</logo>
     <icon>https://liujia12138.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, AzhA</rights>
+    <entry>
+        <title type="html"><![CDATA[前端实现文件流下载]]></title>
+        <id>https://liujia12138.github.io/post/qian-duan-shi-xian-wen-jian-liu-xia-zai/</id>
+        <link href="https://liujia12138.github.io/post/qian-duan-shi-xian-wen-jian-liu-xia-zai/">
+        </link>
+        <updated>2020-09-09T13:45:47.000Z</updated>
+        <content type="html"><![CDATA[<p>1.封装通用请求函数，注意需要设置axios的responseType为blob</p>
+<pre><code class="language-js">function download(url, params, filename) {
+      let _this = this;
+      _this
+        .$axios({
+          method: &quot;post&quot;,
+          url: url,
+          data: params,
+          responseType: &quot;blob&quot;
+        })
+        .then(res =&gt; {
+          let data = res.data;
+          let fileReader = new FileReader();
+            
+        // 请求成功时服务端返回blob文件流，请求失败时会返回json格式的数据，两种格式需要单独处理
+          fileReader.onload = function() {
+            try {
+              let jsonData = JSON.parse(this.result);
+              if (jsonData.code) {
+                return false;
+              }
+            } catch (err) {
+              // 解析成对象失败，说明是正常的文件流
+              let time = Date.now();
+              downLoadXls(data, `${filename}.xlsx`);
+            }
+          };
+          fileReader.readAsText(data);
+        });
+    }
+</code></pre>
+<p>2.处理文件流</p>
+<pre><code class="language-js"> function downLoadXls(data, filename) {
+  //接收的data是blob，若接收的是文件流，需要转化一下
+  if (typeof window.chrome !== &quot;undefined&quot;) {
+    // Chrome version
+    var link = document.createElement(&quot;a&quot;);
+    link.href = window.URL.createObjectURL(data);
+    link.download = filename;
+    link.click();
+  } else if (typeof window.navigator.msSaveBlob !== &quot;undefined&quot;) {
+    // IE
+    var blob = new Blob([data], {
+      type: &quot;application/force-download&quot;
+    });
+    window.navigator.msSaveBlob(blob, filename);
+  } else {
+    // Firefox
+    var file = new File([data], filename, {
+      type: &quot;application/force-download&quot;
+    });
+    // window.open(URL.createObjectURL(file));
+  }
+}
+</code></pre>
+<pre><code></code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[vue.$nextTick]]></title>
+        <id>https://liujia12138.github.io/post/vuedollarnexttick/</id>
+        <link href="https://liujia12138.github.io/post/vuedollarnexttick/">
+        </link>
+        <updated>2020-09-01T11:55:12.000Z</updated>
+        <content type="html"><![CDATA[<p>定义：在下次dom更新循环结束之后执行延迟回调。<br>
+理解：可以在这个方法中获取更新后的dom。</p>
+<pre><code class="language-html">&lt;template&gt;
+    &lt;button ref=&quot;btn&quot; @click=&quot;add&quot;&gt;count: {{count}}&lt;/button&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+    data(){
+        return {
+            count: 0,
+        }
+    },
+    methods:{
+        add(){
+            this.count ++;
+            console.log(this.count, this.$refs.btn.innerText);// 1 &quot;count: 0&quot;
+            
+            this.$nextTick(()=&gt;{
+                console.log(this.$refs.btn.innerText)// count: 1
+            })
+        }
+    }
+}
+&lt;/script&gt;
+</code></pre>
+<p>上面例子中可以看到，更新count之后立即打印dom中的内容，是更新之前的，而nextTick中可以获取到更新后的dom。</p>
+<p>原理：<br>
+vue是异步执行dom更新的，一旦检测到数据变化，vue就会开启一个队列，然后把在同一事件循环中观察到数据变化的watcher推送进这个队列。如果这个watcher被触发多次，只会被推送到队列一次。这种缓冲行为可以有效去掉重复数据造成的不必要的计算和dom操作，比如</p>
+<pre><code class="language-html">&lt;template&gt;
+    &lt;div&gt;{{count}}&lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+export default{
+    data(){
+        return {
+            count: 0
+        }
+    },
+    created(){
+        for(let i = 0; i &lt; 10000; i++){
+            this.count ++
+        }
+    }
+}
+&lt;/script&gt;
+</code></pre>
+<p>上面例子中，created时count会执行10000次++操作，每次++都会依次触发 setter-dep-watcher-update-patch，如果没有异步更新视图，那么每一次++操作都会更新dom，非常消耗性能。<br>
+所以vue实现了一个queue队列，在下一个事件循环时，会清空队列，并且更新dom。同时，有用相同id的watcher不会被重复添加到队列中，所以不会执行10000次watcher的count</p>
+<p>使用场景：<br>
+需要操作因数据而改变的dom。</p>
+<p>实现下图的对话窗口页时，因为无法提前知道接口返回html片段内容的高度，所以需要在消息列表更新dom之后，根据高度判断是否需要折叠和显示折叠按钮，这时就可以用到vue.nextTick<br>
+<img src="https://i.bmp.ovh/imgs/2020/08/26cdf0671fa966c6.png" alt="image" loading="lazy"></p>
+<pre><code class="language-js">this.$nextTick(()=&gt;{
+    let lastIndex = this.QAlist.length / 2 - 1;
+    let par_msg = document.getElementsByClassName(&quot;service-chat-content&quot;)[
+        this.QAlist.length
+    ];
+    let height = par_msg.getElementsByClassName(&quot;msg-content&quot;)[0]
+        .offsetHeight;
+    if (height &gt; 400) {
+        par_msg.classList.add(&quot;collapse&quot;);
+        let open = document.createElement(&quot;DIV&quot;);
+        open.innerText = &quot;展开&quot;;
+        open.classList.add(&quot;open&quot;);
+        open.addEventListener(&quot;click&quot;, e =&gt; {
+          if (open.innerText === &quot;展开&quot;) {
+            open.innerText = &quot;收起&quot;;
+            par_msg.style.height = &quot;auto&quot;;
+          } else {
+            open.innerText = &quot;展开&quot;;
+            par_msg.style.height = &quot;400px&quot;;
+          }
+        });
+        par_msg.appendChild(open);
+      }
+    }
+});
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[contenteditable实现文本框]]></title>
+        <id>https://liujia12138.github.io/post/contenteditable-shi-xian-wen-ben-kuang/</id>
+        <link href="https://liujia12138.github.io/post/contenteditable-shi-xian-wen-ben-kuang/">
+        </link>
+        <updated>2020-08-24T11:46:24.000Z</updated>
+        <content type="html"><![CDATA[<p>contenteditable是html5新增的属性，它规定了是否可以编辑元素的内容。</p>
+<p><code>&lt;p contenteditable=&quot;true&quot;&gt;这是一个可编辑的p标签&lt;/p&gt;</code></p>
+<ol>
+<li>实现placeholder<br>
+给标签添加placeholder属性，然后通过css控制placeholder的显示和隐藏<br>
+<code>&lt;p contenteditable=&quot;true&quot; placeholder=&quot;请输入...&quot;&gt;&lt;/p&gt;</code><pre><code class="language-css">    p[contenteditable]:empty:not(:focus):before{
+        content: attr(placeholder);
+        color: #000;
+    }
+</code></pre>
+</li>
+<li></li>
+</ol>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[vue项目中使用jest进行单元测试]]></title>
         <id>https://liujia12138.github.io/post/vue-xiang-mu-zhong-shi-yong-jest-jin-xing-dan-yuan-ce-shi/</id>
@@ -406,160 +578,5 @@ var b = {};    // a指向对象的引用次数减1，为2<br>
     left: 0;
     top: 0;
 }]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[vue项目安装sass-loader]]></title>
-        <id>https://liujia12138.github.io/post/vue-xiang-mu-an-zhuang-sass-loader/</id>
-        <link href="https://liujia12138.github.io/post/vue-xiang-mu-an-zhuang-sass-loader/">
-        </link>
-        <updated>2020-05-06T12:36:12.000Z</updated>
-        <content type="html"><![CDATA[<p>安装sass依赖包<br>
-npm install sass-loader --save-dev<br>
-安装node-sass，因为sass-loader依赖于node-sass<br>
-npm install node-sass --save-dev<br>
-在build文件夹下的webpack.base.conf.js的rules里面添加配置<br>
-{<br>
-test: &quot;sass&quot;,<br>
-loader: ['style', 'css', 'sass']<br>
-}</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[WebSocket]]></title>
-        <id>https://liujia12138.github.io/post/websocket/</id>
-        <link href="https://liujia12138.github.io/post/websocket/">
-        </link>
-        <updated>2020-01-08T12:37:41.000Z</updated>
-        <content type="html"><![CDATA[<h4 id="websocket是什么">websocket是什么？</h4>
-<p>是HTML5新增的属性，一种单个TCP连接上进行全双工通讯的网络通讯协议；</p>
-<h4 id="websocket有什么用">websocket有什么用？</h4>
-<p>为什么有了http协议，还需要websocket？因为http协议是单向通信协议，只能由客户端发起请求，无法做到服务端主动向客户端推送消息</p>
-<p>当服务器有持续的变化时，客户端想要获取只能通过轮询的方法，每隔一段时间就发起一次请求，最典型的场景就是聊天发消息。</p>
-<p>传统的http协议不能做到websocket实现的功能，因为http协议是一个请求-响应协议，只能由浏览器发起请求，服务器才能响应这个请求把数据发送给浏览器，服务器不能主动发起请求。</p>
-<p>ajax轮询：每隔一段时间发起一个http请求，询问服务器有没有新消息，没有的话就一直发</p>
-<p>长轮询：采用阻塞的方式，浏览器发起请求后，如果服务器没有新消息，就先拖一段时间一直不返回，直到有消息才返回，返回完之后，浏览器再次建立连接</p>
-<p>ajax轮询和长轮询需要服务器有非常快的处理速度和很高的并发。</p>
-<p>websocket最大的特点就是服务器可以主动向客户端发送消息。</p>
-<p>其他特点：</p>
-<ul>
-<li>建立在tcp协议之上（tcp本身是双向通信，http协议对他做了限制，所以http协议只能是单向的）</li>
-<li>与http协议有着良好的兼容性。默认端口也是80和443，而且握手阶段采用http协议</li>
-<li>数据格式比较轻量，性能开销小</li>
-<li>可以发送文本，也可以发送二进制文件</li>
-<li>没有同源限制</li>
-<li>协议标识符是ws（如果加密，就是wss）</li>
-</ul>
-<h4 id="使用websocket">使用websocket</h4>
-<pre><code class="language-js">//在线运行https://jsbin.com/nobemozido/edit?js,console
-if(!WebSocket){
-    alert('您的浏览器不支持WebSocket')
-}else{
-    var ws = new WebSocket(&quot;url&quot;);
-    ws.onopen = (evt) =&gt; {
-        console.log(&quot;connection open...&quot;);
-        ws.send(&quot;hello&quot;)
-    }
-    ws.onmessage = (evt) =&gt; {
-        console.log(&quot;received message:&quot;+ evt.data);
-        ws.close()
-    }
-    ws.onclose = (evt) =&gt;{
-        console.log(&quot;connection closed&quot;);
-    }
-    ws.onerror = (evt) =&gt;{
-        console.log(&quot;connection error&quot;);
-    }
-}
-</code></pre>
-<h4 id="api">API</h4>
-<h5 id="1websocket构造函数">1.WebSocket构造函数</h5>
-<h5 id="2websocketreadystate">2.WebSocket.readyState</h5>
-<p>WebSocket实例对象的状态，一共有四种</p>
-<ul>
-<li>0：connecting，正在连接</li>
-<li>1：open，连接成功，可以通信了</li>
-<li>2：closeing，正在关闭</li>
-<li>3：closed，已经关闭，或者打开失败</li>
-</ul>
-<h5 id="3websocketonopen">3.WebSocket.onopen</h5>
-<p>用于指定连接成功之后的回调函数</p>
-<p>如果想指定多个回调函数，可以使用addEventListener监听WebSocket实例</p>
-<pre><code class="language-js">ws.addEventListener(&quot;open&quot;, (evt)=&gt;{
-    ws.send(&quot;send message&quot;)
-})
-</code></pre>
-<h5 id="4websocketonclose">4.WebSocket.onclose</h5>
-<p>用于指定连接关闭后的回调函数</p>
-<h5 id="5websocketonmessage">5.WebSocket.onmessage</h5>
-<p>用于接收到服务器数据后的回调函数</p>
-<h5 id="6websocketsend">6.WebSocket.send</h5>
-<p>用于向服务器发送数据</p>
-<pre><code class="language-js">ws.send(&quot;hello&quot;)
-</code></pre>
-<h5 id="7websocketclose">7.WebSocket.close</h5>
-<p>用于关闭连接</p>
-<pre><code class="language-js">ws.close()
-</code></pre>
-<h5 id="8websocketonerror">8.WebSocket.onerror</h5>
-<p>用于指定连接错误时的回调函数</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[JS宏任务微任务和事件循环]]></title>
-        <id>https://liujia12138.github.io/post/js-hong-ren-wu-wei-ren-wu-he-shi-jian-xun-huan/</id>
-        <link href="https://liujia12138.github.io/post/js-hong-ren-wu-wei-ren-wu-he-shi-jian-xun-huan/">
-        </link>
-        <updated>2020-01-07T13:13:21.000Z</updated>
-        <content type="html"><![CDATA[<p>js是一门单线程语言，所有任务都需要排队执行，如果上一个任务要消耗很长的时间，下一个任务都不得不等待很长时间，这时设计者就把任务分为了同步任务和异步任务。同步任务在主线程上一个个执行，异步任务则会加入到任务队列，只有所有同步任务执行完，才会执行异步任务。</p>
-<p>异步任务有：setTimeout，setInterval，dom事件，promise， ajax</p>
-<p>按照这样的话，上面例子的setTimeout和promise是异步任务，加入到任务队列然后依次执行，但并不是这样，任务又分为宏任务和微任务</p>
-<p>宏任务和微任务：宏任务优先于微任务执行， 宏任务包括整体代码script，setTimeout，setInterval； 微任务包括promise，process.nextTick</p>
-<p>所以上面的例子先打印start---然后遇到setTimeout，setTimeout属于异步任务也属于宏任务，放到task（宏任务队列）里面---然后是promise，也是异步任务，但是是微任务，所以放到microtask（微任务队列）里面---然后执行到最后打印end；此时主线程js stack被清空。</p>
-<p>主线程执行完毕之后就会去清空微任务，所以接下来promise.then会被加入到主线程中去执行，执行完毕后，主线程又被清空了</p>
-<p>此时微任务队列里还有刚刚产生的promise.then，又被加入到主线程，打印出promise2</p>
-<p>此时微任务和主线程都被清空，接着从宏任务队列中取出一个宏任务加入到主线程中执行，打印出setTimeout</p>
-<p>此时主线程，微任务队列，宏任务队列都被清空了。</p>
-<p>如果宏任务队列和微任务队列还没清空，就会：主栈全部执行完毕后--&gt;清空微任务--&gt;会取出一个宏任务 --&gt; 执行完毕后--&gt;清空微任务 -&gt; 无线循环，这就是我们所说的事件环（Event Loop），也就是javascript的执行机制。</p>
-<p>看下面的例子</p>
-<pre><code>&lt;div class=&quot;outer&quot;&gt;
-  &lt;div class=&quot;inner&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;script&gt;
-// Let's get hold of those elements
-var outer = document.querySelector('.outer');
-var inner = document.querySelector('.inner');
-
-// Let's listen for attribute changes on the
-// outer element
-//监听element属性变化
-new MutationObserver(function() {
-  console.log('mutate');
-}).observe(outer, {
-  attributes: true
-});
-
-// Here's a click listener…
-function onClick() {
-  console.log('click');
-
-  setTimeout(function() {
-    console.log('timeout');
-  }, 0);
-
-  Promise.resolve().then(function() {
-    console.log('promise');
-  });
-
-  outer.setAttribute('data-random', Math.random());
-}
-
-// …which we'll attach to both elements
-inner.addEventListener('click', onClick);
-outer.addEventListener('click', onClick);
-&lt;/script&gt;
-</code></pre>
-<p>点击inner会打印什么？</p>
-<p>click事件是宏任务，加入到宏任务队列，setTimeout也是宏任务，promise和MutationObserver是微任务，加入到微任务队列 click promise mutate click promise mutate timeout timeout</p>
-]]></content>
     </entry>
 </feed>

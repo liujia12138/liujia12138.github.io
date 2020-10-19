@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>css | AzhA</title>
+  <title>vue.$nextTick | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="css | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="vue.$nextTick | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +25,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="vue.$nextTick"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/vuedollarnexttick/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
   	<!-- Navigation -->
@@ -66,144 +71,129 @@
       </div>
     </div>
   </nav>
-<!-- Page Header -->
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1 class="tag-tl">#css</h1>
+          	<span class="tags">
+          	 
+            <a href="https://liujia12138.github.io/tag/d8mNIHknn/" class="tag">vue</a>
+            
+        </span>
+            <h1>vue.$nextTick</h1>
+            <span class="meta">
+            	Posted on
+              2020-09-01，3 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
+
+  <!-- Post Content -->
+  <article>
     <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/shi-me-shi-foucru-he-bi-mian-fouc/">
-            <h2 class="post-title">
-              什么是FOUC？如何避免FOUC？
-            </h2>
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p>定义：在下次dom更新循环结束之后执行延迟回调。<br>
+理解：可以在这个方法中获取更新后的dom。</p>
+<pre><code class="language-html">&lt;template&gt;
+    &lt;button ref=&quot;btn&quot; @click=&quot;add&quot;&gt;count: {{count}}&lt;/button&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+    data(){
+        return {
+            count: 0,
+        }
+    },
+    methods:{
+        add(){
+            this.count ++;
+            console.log(this.count, this.$refs.btn.innerText);// 1 &quot;count: 0&quot;
+            
+            this.$nextTick(()=&gt;{
+                console.log(this.$refs.btn.innerText)// count: 1
+            })
+        }
+    }
+}
+&lt;/script&gt;
+</code></pre>
+<p>上面例子中可以看到，更新count之后立即打印dom中的内容，是更新之前的，而nextTick中可以获取到更新后的dom。</p>
+<p>原理：<br>
+vue是异步执行dom更新的，一旦检测到数据变化，vue就会开启一个队列，然后把在同一事件循环中观察到数据变化的watcher推送进这个队列。如果这个watcher被触发多次，只会被推送到队列一次。这种缓冲行为可以有效去掉重复数据造成的不必要的计算和dom操作，比如</p>
+<pre><code class="language-html">&lt;template&gt;
+    &lt;div&gt;{{count}}&lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+export default{
+    data(){
+        return {
+            count: 0
+        }
+    },
+    created(){
+        for(let i = 0; i &lt; 10000; i++){
+            this.count ++
+        }
+    }
+}
+&lt;/script&gt;
+</code></pre>
+<p>上面例子中，created时count会执行10000次++操作，每次++都会依次触发 setter-dep-watcher-update-patch，如果没有异步更新视图，那么每一次++操作都会更新dom，非常消耗性能。<br>
+所以vue实现了一个queue队列，在下一个事件循环时，会清空队列，并且更新dom。同时，有用相同id的watcher不会被重复添加到队列中，所以不会执行10000次watcher的count</p>
+<p>使用场景：<br>
+需要操作因数据而改变的dom。</p>
+<p>实现下图的对话窗口页时，因为无法提前知道接口返回html片段内容的高度，所以需要在消息列表更新dom之后，根据高度判断是否需要折叠和显示折叠按钮，这时就可以用到vue.nextTick<br>
+<img src="https://i.bmp.ovh/imgs/2020/08/26cdf0671fa966c6.png" alt="image" loading="lazy"></p>
+<pre><code class="language-js">this.$nextTick(()=&gt;{
+    let lastIndex = this.QAlist.length / 2 - 1;
+    let par_msg = document.getElementsByClassName(&quot;service-chat-content&quot;)[
+        this.QAlist.length
+    ];
+    let height = par_msg.getElementsByClassName(&quot;msg-content&quot;)[0]
+        .offsetHeight;
+    if (height &gt; 400) {
+        par_msg.classList.add(&quot;collapse&quot;);
+        let open = document.createElement(&quot;DIV&quot;);
+        open.innerText = &quot;展开&quot;;
+        open.classList.add(&quot;open&quot;);
+        open.addEventListener(&quot;click&quot;, e =&gt; {
+          if (open.innerText === &quot;展开&quot;) {
+            open.innerText = &quot;收起&quot;;
+            par_msg.style.height = &quot;auto&quot;;
+          } else {
+            open.innerText = &quot;展开&quot;;
+            par_msg.style.height = &quot;400px&quot;;
+          }
+        });
+        par_msg.appendChild(open);
+      }
+    }
+});
+</code></pre>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/contenteditable-shi-xian-wen-ben-kuang/">
+              <span class="post-title">
+                contenteditable实现文本框&rarr;
+              </span>
             </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-05-04</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
+          </p>
         
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/yi-dong-duan-1px-de-wen-ti-shi-ru-he-xing-cheng-de-zen-me-jie-jue/">
-            <h2 class="post-title">
-              移动端1px的问题是如何形成的？怎么解决？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-03-09</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
+        <div class="comment">
+          
         </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/css-yu-chu-li-qi-sasslessstylus/">
-            <h2 class="post-title">
-              CSS预处理器，sass、less、stylus
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-07-10</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/sheng-bei-bu-ju-he-shuang-fei-yi-bu-ju/">
-            <h2 class="post-title">
-              圣杯布局和双飞翼布局
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-06-07</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/css-xue-bi-tu-yong-xue-bi-tu-hui-you-shi-me-wen-ti/">
-            <h2 class="post-title">
-              css雪碧图？用雪碧图会有什么问题？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-07-13</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/he-mo-xing-kuan-gao-zhi-de-ji-suan-fang-shi-bian-jie-ta-xian-fu-zhi-zuo-yong-box-sizing-gai-nian/">
-            <h2 class="post-title">
-              盒模型宽高值的计算方式，边界塌陷，负值作用，box-sizing概念
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-01-06</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        
-        
       </div>
     </div>
-  </div>
-
-  
+  </article>
  <!-- Footer -->
   <footer>
     <div class="container">
@@ -284,3 +274,4 @@
   })(this));</script>
   </body>
 </html>
+
