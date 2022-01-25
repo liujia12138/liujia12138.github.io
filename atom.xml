@@ -2,14 +2,118 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2020-10-19T08:22:51.264Z</updated>
+    <updated>2022-01-25T06:02:43.006Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
     <subtitle>温故而知新</subtitle>
     <logo>https://liujia12138.github.io/images/avatar.png</logo>
     <icon>https://liujia12138.github.io/favicon.ico</icon>
-    <rights>All rights reserved 2020, AzhA</rights>
+    <rights>All rights reserved 2022, AzhA</rights>
+    <entry>
+        <title type="html"><![CDATA[canvas和svg]]></title>
+        <id>https://liujia12138.github.io/post/canvas-he-svg/</id>
+        <link href="https://liujia12138.github.io/post/canvas-he-svg/">
+        </link>
+        <updated>2020-10-22T09:43:24.000Z</updated>
+        <content type="html"><![CDATA[<p>canvas和svg都是html5中新增的属性，都允许在浏览器中创建图形，但他们的实现原理是不同的；</p>
+<h4 id="svg使用xml来描述2d图形">svg使用XML来描述2D图形</h4>
+<p>svg基于XML，这意味着svg中的每个元素都是可用的，可以为某个元素添加JavaScript事件处理器<br>
+在svg中，每个被绘制的图形都被视为一个对象，如果svg对象的属性发生变化，浏览器会自动重现图形</p>
+<h4 id="canvas使用javascript来绘制2d图形">canvas使用JavaScript来绘制2D图形</h4>
+<p>canvas是逐像素进行渲染的，在canvas中，一旦图形被绘制出来，它就不会再继续得到浏览器的关注。</p>
+<figure data-type="image" tabindex="1"><img src="https://liujia12138.github.io/post-images/1603360168164.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[HTTP报文的结构]]></title>
+        <id>https://liujia12138.github.io/post/http-bao-wen-de-jie-gou/</id>
+        <link href="https://liujia12138.github.io/post/http-bao-wen-de-jie-gou/">
+        </link>
+        <updated>2020-10-22T08:12:39.000Z</updated>
+        <content type="html"><![CDATA[<p>http通信过程包括客户端王服务端发送请求以及服务端给客户端返回响应两个过程，在这两个过程中会产生请求报文和响应报文。</p>
+<p>http报文由报文首部和报文主体组成，中间由一个空行分隔。报文首部是客户端或服务端需要处理的请求或响应的内容及属性，可以传递额外的重要信息。报文首部包括请求行和请求头部，报文主体主要包含应被发送的数据。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[prerender-spa-plugin 实现vue预渲染]]></title>
+        <id>https://liujia12138.github.io/post/prerender-spa-plugin-shi-xian-vue-yu-xuan-ran/</id>
+        <link href="https://liujia12138.github.io/post/prerender-spa-plugin-shi-xian-vue-yu-xuan-ran/">
+        </link>
+        <updated>2020-10-22T02:59:31.000Z</updated>
+        <content type="html"><![CDATA[<p>为什么要做预渲染？<br>
+预渲染配置生成多页面，解决首屏白屏问题，提升用户体验。同时配合vue-meta-info可以生成title和meta标签，解决单页面应用seo问题。</p>
+<p>如何使用prerender-spa-plugin？</p>
+<ol>
+<li>
+<p>安装prerender-spa-plugin和vue-meta-info<br>
+<code>cnpm install prerender-spa-plugin vue-meta-info --save</code></p>
+</li>
+<li>
+<p>router.js中，将路由模式改为history</p>
+</li>
+<li>
+<p>vue2.0项目在webpack.prod.conf.js中配置prerender-spa-plugin</p>
+</li>
+</ol>
+<pre><code class="language-js">const PrerenderSpaPlugin = require('prerender-spa-plugin')
+const renderer = PrerenderSpaPlugin.PuppeteerRenderer
+
+//plugins中加入
+new PrerenderSpaPlugin({
+    // 编译后html存放的路径
+    staticDir: path.join(__dirname, '../dist'),
+    // 需要做预渲染的路由
+    routes: ['/about'],
+    // 配置renderer，选择预渲染使用的引擎，否则不会进行预编译
+    renderer: new renderer({
+        // 监听document.dispatchEvent事件，决定什么时候开始渲染，需要在main.js中加入如下配置
+        renderAfterDocumentEvent: 'render-event'
+    })
+})
+</code></pre>
+<pre><code class="language-js">new Vue({
+    ...,
+    mounted(){
+        document.dispatchEvent(new Event('render-event'))
+    }
+})
+</code></pre>
+<ol start="4">
+<li>使用vue-meta-info</li>
+</ol>
+<ul>
+<li>在main.js中引入vue-meta-info并安装</li>
+</ul>
+<pre><code class="language-js">import MetaInfo from 'vue-meta-info'
+Vue.use(MetaInfo)
+</code></pre>
+<ul>
+<li>组件内配置MetaInfo</li>
+</ul>
+<pre><code class="language-html">&lt;template&gt;
+    &lt;div&gt;about page.....&lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+    export default{
+        metaInfo:{
+            title: '关于我们',
+            meta: [
+                {
+                    name: 'keywords',
+                    content: '这个页面是about'
+                }
+            ]
+        }
+    }
+&lt;/script&gt;
+</code></pre>
+<ol start="5">
+<li>配置完成后运行npm run build就可以在dist目录内看到预渲染后的html文件了</li>
+</ol>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[前端实现文件流下载]]></title>
         <id>https://liujia12138.github.io/post/qian-duan-shi-xian-wen-jian-liu-xia-zai/</id>
@@ -448,135 +552,5 @@ vw可以配合rem来实现屏幕自适应，移动端设计稿通常使用750px�
 <p>实现动画效果的时候，如果用position，我们会发现动画的运行不是很流畅，因为top和left的改变会触发浏览器的回流和重绘，没改变一次位置就回重新渲染一次元素，造成整个动画的过程都在不断触发浏览器的重新渲染，非常影响性能</p>
 <p>如果把position用transform来实现的话，就不会这样，transform位置的改变不会引起浏览器的回流和重绘，因为transform动画是由cpu控制的，支持硬件加速</p>
 ]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[浏览器不同标签页之间传值]]></title>
-        <id>https://liujia12138.github.io/post/liu-lan-qi-bu-tong-biao-qian-ye-zhi-jian-chuan-zhi/</id>
-        <link href="https://liujia12138.github.io/post/liu-lan-qi-bu-tong-biao-qian-ye-zhi-jian-chuan-zhi/">
-        </link>
-        <updated>2020-05-09T01:52:11.000Z</updated>
-        <content type="html"><![CDATA[<h3 id="1-使用localstorage">1. 使用localStorage</h3>
-<p>在一个标签页里面使用 localStorage.setItem(key,value)添加（修改、删除）内容；<br>
-在另一个标签页里面监听 storage 事件。<br>
-即可得到 localstorge 存储的值，实现不同标签页之间的通信。</p>
-<h3 id="2使用setintervalcookie">2.使用setInterval+cookie</h3>
-<p>将要传递的信息存储在cookie中，每隔一定时间读取cookie信息，即可随时获取要传递的信息。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[js总结]]></title>
-        <id>https://liujia12138.github.io/post/js-mian-shi-ti-zong-jie/</id>
-        <link href="https://liujia12138.github.io/post/js-mian-shi-ti-zong-jie/">
-        </link>
-        <updated>2020-05-06T12:40:35.000Z</updated>
-        <content type="html"><![CDATA[<p>1.事件冒泡和事件捕获<br>
-事件捕获：事件从最不确定的元素向最准确的元素开始触发，即由外向内<br>
-事件冒泡：事件从最准确的元素开始向最不准确的元素触发，即由内向外</p>
-<p>addEventListener()有三个参数，第一个参数是绑定的事件类型；第二个是触发事件时执行的函数；第三个是 是否在捕获阶段触发事件，默认是false。</p>
-<p>怎么阻止事件冒泡？event.stopPropagation()，vue项目中用stop修饰符</p>
-<p>为什么要阻止事件冒泡？<br>
-我们再多数情况下只使用冒泡监听。在一个列表页中，每一条信息中右下角会有一个删除按钮，同时点击这一条消息又会进入到详情页。当我们点击了删除按钮事件执行完毕之后，由于事件冒泡，会触发外层进入详情页的事件，这时就需要给删除按钮一个阻止事件传递的功能，点击删除按钮之后事件就会结束。</p>
-<p>2.js获取url中的参数<br>
-function getQueryString(name) {<br>
-var reg = new RegExp(&quot;(^|&amp;)&quot; + name + &quot;=([^&amp;]*)(&amp;|$)&quot;, &quot;i&quot;);<br>
-var r = window.location.search.substr(1).match(reg);<br>
-if (r != null) return decodeURI(r[2]);<br>
-return &quot;&quot;;<br>
-}<br>
-3.post请求能否跨域？<br>
-post跨域问题本身是因为请求的域名和用于请求的机器域名不一致造成的，例如本地是127.0.0.1域名，请求的是192.168.50.11，在Network里面可以看到会接受到返回值，但是控制台会报请求头不一致的跨域问题，是因为浏览器对后台返给我结果进行了检测，发现两个环境域名不一致，所以解决的办法就是后台在接受到请求的时候，在返回头信息里面加入指定域名可访问或者所有域名都可以访问就可以，这样后台接收到请求之后的返回头里面就指定了对比的请求头，所以前端就能收到返回值了。</p>
-<p>Access-Control-Allow-Headers: DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,userid,sign<br>
-Access-Control-Allow-Methods: GET, POST, OPTIONS<br>
-Access-Control-Allow-Origin: *<br>
-//加上过滤方法之后的返回头信息，*代表允许所有的域名访问<br>
-4.页面性能优化<br>
-减少http请求，减少http请求次数是缩短响应时间的关键，捆绑文件，将多个脚本文件捆绑成一个，以此来减少http请求次数<br>
-使用css精灵图<br>
-减少事件绑定，使用事件委托<br>
-引用外部的css和js，而不是写在html文件内，有利于浏览器对文件进行缓存<br>
-合理设置 HTTP缓存　　缓存的力量是强大的，恰当的缓存设置可以大大的减少 HTTP请求。以有啊首页为例，当浏览器没有缓存的时候访问一共会发出 78个请求，共 600多 K数据 (如图 1.1)，而当第二次访问即浏览器已缓存之后访问则仅有 10个请求，共 20多 K数据 (如图 1.2)。 (这里需要说明的是，如果直接 F5刷新页面的话效果是不一样的，这种情况下请求数还是一样，不过被缓存资源的请求服务器是 304响应，只有 Header没有Body ，可以节省带宽 )　　怎样才算合理设置 ?原则很简单，能缓存越多越好，能缓存越久越好。例如，很少变化的图片资源可以直接通过 HTTP Header中的Expires设置一个很长的过期头 ;变化不频繁而又可能会变的资源可以使用 Last-Modifed来做请求验证。尽可能的让资源能够在缓存中待得更久。<br>
-减少dom操作<br>
-5.原生ajax<br>
-var xhr = new XMLHttpRequest();<br>
-xhr.onreadystatechange= function(){<br>
-if(xhr.readyState == 4 &amp;&amp; xhr.status == 200){<br>
-console.log(xhr.responseText)<br>
-}<br>
-}<br>
-//发送get请求时，参数直接拼接在url上<br>
-xhr.open(&quot;get&quot;, &quot;url?param1=val1&amp;param2=val2&quot;);<br>
-//发送post请求时，参数用send函数发送，并且需要设置请求头<br>
-xhr.open(&quot;post&quot;, &quot;url&quot;);<br>
-xhr.setRequestHeader('Content-Type', &quot;application/x-www-form-urlencoded&quot;)<br>
-xhr.send(&quot;name=value&amp;age=12&quot;)<br>
-6.js判断数据类型的方法<br>
-typeof 只能对基本数据类型做出准确的判断，引用数据类型都会返回object，typeof的返回结果有：number、string、undefined、boolean、object、function六种，都是小写<br>
-instanceof：判断对象和构造函数在原型链上是否有关联，有返回true，无返回false，基本数据类型无效<br>
-constructor：查看对象对应的构造函数，当我们写一个构造函数的时候程序会自动添加；构造函数名.prototype.constructor=构造函数名；<br>
-str.constructor == String;//true<br>
-object.prototype.toString.call: 不管是什么类型都能检测出来<br>
-7. call和apply,bind的区别？<br>
-call、apply、bind的作用是改变函数运行时this的指向</p>
-<p>2.js垃圾回收与内存泄漏？<br>
-浏览器的JavaScript具有自动垃圾回收机制（GC），即执行环境会负责管理代码执行过程中的内存。原理是：垃圾收集器会定期找出那些不在继续使用的变量，然后将其内存进行释放。</p>
-<p>垃圾回收机制标记无用变量的策略有两种：标记清除和引用计数。标记清除较为常用。</p>
-<p>不在使用的变量就是生命周期结束的变量，只能是局部变量，因为全局变量的生命周期直到浏览器卸载页面是才会结束。局部变量只在函数的执行过程中存在，在这个过程中会在栈或者堆上为这个局部变量分配相应的空间用来存储他们的值，直到函数结束。但是闭包中由于你不函数的原因，外部函数不能算是结束。</p>
-<p>function fn1(){<br>
-var obj = {name: &quot;tom&quot;}<br>
-}<br>
-function fn2(){<br>
-var obj = {name:&quot;tom&quot;};<br>
-return obj;<br>
-}<br>
-var a = fn1();<br>
-var b = fn2();<br>
-上面的例子中，只有fn1中的obj会在调用结束后被垃圾回收机制回收，fn2中的obj不会，因为在fn2的调用过程中，返回的变量被变量b引用，所以不会改块内存不会被释放。</p>
-<p>1.标记清除：当变量进入环境时，就将这个变量标记为“进入环境”，当变量离开环境时，将它标记为“离开环境”</p>
-<p>function test(){<br>
-var a = 10 ;       // 被标记 ，进入环境<br>
-var b = 20 ;       // 被标记 ，进入环境<br>
-}<br>
-test();            // 执行完毕 之后 a、b又被标离开环境，被回收。<br>
-2.引用计数：跟踪每个值被引用的次数，引用一次就将次数加1，如果包含这个值的变量又被赋了另外一个值，引用次数就减1，当引用次数为0时，垃圾回收机制就会释放该值所占用的内存。</p>
-<p>function test() {<br>
-var a = {};    // a指向对象的引用次数为1<br>
-var b = a;     // a指向对象的引用次数加1，为2<br>
-var c = a;     // a指向对象的引用次数再加1，为3<br>
-var b = {};    // a指向对象的引用次数减1，为2<br>
-}</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[css实现宽高比]]></title>
-        <id>https://liujia12138.github.io/post/css-shi-xian-kuan-gao-bi/</id>
-        <link href="https://liujia12138.github.io/post/css-shi-xian-kuan-gao-bi/">
-        </link>
-        <updated>2020-05-06T12:37:43.000Z</updated>
-        <content type="html"><![CDATA[<p>垂直方向的padding+calc<br>
-借助padding-top或者padding-bottom的百分比值来实现容器的宽高比，padding的百分比值是根据外层容器的宽度计算的，我们只需要设置好外层容器的宽度，并将容器的高度设置为0，容器所有子元素都设置绝对定位。</p>
-<!-- html如下 -->
-<div class='container'>
-    <div class='aspectration' data-ratio='4:3'>
-        <div class='content'></div>
-    </div>
-</div>
-.container{
-    width: 300px;
-}
-.aspectration{
-    width: 100%;
-    position: relative;
-    height: 0;
-}
-.aspectration[data-ratio='4:3']{
-    padding-top: calc(100% / 4 * 3);
-}
-.aspectration>*{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-}]]></content>
     </entry>
 </feed>
