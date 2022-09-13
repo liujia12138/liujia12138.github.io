@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
   <head>
       <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>AzhA</title>
+  <title>react 和 vue 中的 key 有什么作用？ | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="react 和 vue 中的 key 有什么作用？ | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,9 +25,15 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="react 和 vue 中的 key 有什么作用？"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
-     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  	<!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
       <a class="navbar-brand" href="https://liujia12138.github.io">AzhA</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,225 +71,125 @@
       </div>
     </div>
   </nav>
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="site-heading">
-            <h1>AzhA</h1>
-            <span class="subheading">温故而知新</span>
+          <div class="post-heading">
+          	<span class="tags">
+          	 
+        </span>
+            <h1>react 和 vue 中的 key 有什么作用？</h1>
+            <span class="meta">
+            	Posted on
+              2022-09-13，3 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
-      <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/css-position-de-ji-ge-shu-xing-zhi-he-xing-neng-wen-ti/">
-            <h2 class="post-title">
-              css position的几个属性值和性能问题
-            </h2>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <h5 id="一-虚拟-dom-中-key-的作用">一. 虚拟 DOM 中 key 的作用：</h5>
+<p>key 是虚拟 DOM 中对象的标识，当数据发生变化时，vue 会根据 新数据 生成 新的虚拟 DOM，随后 Vue 内部会进行 新虚拟 DOM 和 旧的虚拟 DOM 的差异对比（diff 算法）：</p>
+<h6 id="对比规则">对比规则：</h6>
+<ol>
+<li>旧的虚拟 DOM 中找到与新的虚拟 DOM 中具有相同 key 值的 VNode</li>
+</ol>
+<ul>
+<li>若虚拟 DOM 中内容没有发生变化，直接使用 之前的真实DOM，不会改变DOM</li>
+<li>若虚拟 DOM 中内容发生了变化，则生成新的真实 DOM，随后替换掉页面中之前的真实 DOM</li>
+</ul>
+<ol start="2">
+<li>旧的虚拟 DOM 中没有找到与新的虚拟 DOM 具有相同 key 值的 VNode<br>
+创建新的真实 DOM，然后渲染到页面上</li>
+</ol>
+<h5 id="二-用-index-作为-key-值可能会引发的问题">二. 用 index 作为 key 值可能会引发的问题？</h5>
+<ol>
+<li>若对数据进行：逆序添加、逆序删除等破坏原有顺序的操作，会产生没有必要的真实 DOM 更新，页面效果没有问题，但是效率低（因为对数据的顺序进行了改变，导致没有发生变化的数据在渲染时也无法使用之前的真实DOM）</li>
+<li>如果结构中还包含了输入类的 DOM，如 input，会产生错误的 DOM 更新，导致页面有问题，如：</li>
+</ol>
+<pre><code class="language-html">&lt;template&gt;
+  &lt;div&gt;
+    &lt;button @click=&quot;addPerson&quot;&gt;向列表前添加一个人&lt;/button&gt;
+    &lt;ul&gt;
+      &lt;li v-for=&quot;(item,index) in persons&quot; :key=&quot;index&quot;&gt;
+        {{item.name}}---{{index}}
+        &lt;!-- 每人一个输入框 --&gt;
+        &lt;input type=&quot;text&quot; /&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+  export default{
+    data(){
+      return {
+        person: [
+          {
+            name: '张三',
+            id: '001'
+          },{
+            name: '李四',
+            id: '002'
+          },{
+            name: '王五',
+            id: '003'
+          }
+        ]
+      }
+    },
+    methods:{
+      addPerson(){
+        let p = {
+          name: '老刘',
+          id: '004
+        }
+        this.person.upshift(p)
+      }
+    }
+  }
+&lt;/script&gt;
+</code></pre>
+<p>页面渲染出persons列表后在每行的input中输入姓名<br>
+效果图:<br>
+<img src="https://liujia12138.github.io/post-images/1663040035727.jpg" alt="" loading="lazy"></p>
+<p>点击按钮，添加老刘后<br>
+<img src="https://liujia12138.github.io/post-images/1663040050410.jpg" alt="" loading="lazy"></p>
+<p>此时页面上老刘数据添加到persons的第一位，姓名和index都正常渲染，但是input出现了错位的情况。<br>
+这是因为旧的虚拟DOM中张三和新的虚拟DOM中老刘具有相同的key：0，diff算法在进行差异对比时，发现name不同，然后页面渲染时就会渲染上新的name，但是对于input，由于上一步在input中输入姓名的操作是发生在真实DOM中的，没有影响到虚拟DOM，所以，在进行对比时会认为这一部分没有发生变化，这时页面就会继续使用上一次渲染的input，这也就导致了‘老刘’这条数据在页面上的input是张三的。</p>
+<p>对比过程图<br>
+<img src="https://liujia12138.github.io/post-images/1663040060872.jpg" alt="" loading="lazy"></p>
+<h5 id="三开发中如何选择key">三.开发中如何选择key？</h5>
+<ol>
+<li>最好使用每条数据的唯一标识作为key，比如id，手机号，身份证号等唯一值</li>
+<li>如果不存在对数据逆序添加、逆序删除等破坏顺序的操作，仅用于渲染列表展示，使用index作为key是不会有问题的</li>
+</ol>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/canvas-he-svg/">
+              <span class="post-title">
+                canvas和svg&rarr;
+              </span>
             </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-05-09</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
+          </p>
         
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/liu-lan-qi-bu-tong-biao-qian-ye-zhi-jian-chuan-zhi/">
-            <h2 class="post-title">
-              浏览器不同标签页之间传值
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-05-09</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
+        <div class="comment">
+          
         </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/js-mian-shi-ti-zong-jie/">
-            <h2 class="post-title">
-              js总结
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-05-06</span>
-             <span>,</span>
-             <span class="post-stats">7 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/css-shi-xian-kuan-gao-bi/">
-            <h2 class="post-title">
-              css实现宽高比
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-05-06</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/vue-xiang-mu-an-zhuang-sass-loader/">
-            <h2 class="post-title">
-              vue项目安装sass-loader
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-05-06</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/shi-me-shi-foucru-he-bi-mian-fouc/">
-            <h2 class="post-title">
-              什么是FOUC？如何避免FOUC？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-05-04</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/qian-duan-ru-he-you-hua-wang-zhan-xing-neng/">
-            <h2 class="post-title">
-              前端如何优化网站性能？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-04-07</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/websocket/">
-            <h2 class="post-title">
-              WebSocket
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-01-08</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/js-hong-ren-wu-wei-ren-wu-he-shi-jian-xun-huan/">
-            <h2 class="post-title">
-              JS宏任务微任务和事件循环
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-01-07</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/http-he-https-de-qu-bie/">
-            <h2 class="post-title">
-              http和https的区别？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-06-08</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        
-        <a class="btn btn-primary float-left" href="https://liujia12138.github.io/">&larr; 上一页</a>
-        
-        
-        <a class="btn btn-primary float-right" href="https://liujia12138.github.io/page/3/">下一页 &rarr;</a>
-        
       </div>
     </div>
-  </div>
-
-  
-    <!-- Footer -->
+  </article>
+ <!-- Footer -->
   <footer>
     <div class="container">
       <div class="row">
@@ -363,3 +269,4 @@
   })(this));</script>
   </body>
 </html>
+
