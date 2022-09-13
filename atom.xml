@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2022-09-13T03:52:10.101Z</updated>
+    <updated>2022-09-13T07:02:39.963Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -92,6 +92,211 @@
 <li>最好使用每条数据的唯一标识作为key，比如id，手机号，身份证号等唯一值</li>
 <li>如果不存在对数据逆序添加、逆序删除等破坏顺序的操作，仅用于渲染列表展示，使用index作为key是不会有问题的</li>
 </ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[el-table自定义表头内数据不更新的问题]]></title>
+        <id>https://liujia12138.github.io/post/el-table-zi-ding-yi-biao-tou-nei-shu-ju-bu-geng-xin-de-wen-ti/</id>
+        <link href="https://liujia12138.github.io/post/el-table-zi-ding-yi-biao-tou-nei-shu-ju-bu-geng-xin-de-wen-ti/">
+        </link>
+        <updated>2021-09-29T06:56:13.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="el-table自定义表头使用slotheader数据无法更新">el-table自定义表头，使用slot=&quot;header&quot;数据无法更新</h3>
+<p>解决方法：将slot=“header” 改成#header</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ECharts引入外部字体]]></title>
+        <id>https://liujia12138.github.io/post/echarts-yin-ru-wai-bu-zi-ti/</id>
+        <link href="https://liujia12138.github.io/post/echarts-yin-ru-wai-bu-zi-ti/">
+        </link>
+        <updated>2021-09-15T06:50:51.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="问题描述echarts引入外部字体文件时页面渲染异常出现部分文字没有渲染成指定字体的情况"><strong>问题描述</strong>：echarts引入外部字体文件时，页面渲染异常，出现部分文字没有渲染成指定字体的情况</h3>
+<p>如图:<br>
+<img src="https://liujia12138.github.io/post-images/1663052022764.png" alt="" loading="lazy"></p>
+<h3 id="原因字体文件未加载完成就完成了echarts图表部分的代码">原因：字体文件未加载完成就完成了echarts图表部分的代码</h3>
+<h3 id="解决办法等字体下载完再画图或者压缩字体文件">解决办法：等字体下载完再画图或者压缩字体文件</h3>
+<pre><code class="language-js">document.fonts.ready.then(()=&gt;{
+  //执行echarts图
+})
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[uniapp如何在小程序端模拟数据]]></title>
+        <id>https://liujia12138.github.io/post/uniapp-ru-he-zai-xiao-cheng-xu-duan-mo-ni-shu-ju/</id>
+        <link href="https://liujia12138.github.io/post/uniapp-ru-he-zai-xiao-cheng-xu-duan-mo-ni-shu-ju/">
+        </link>
+        <updated>2021-03-09T06:58:01.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="问题描述使用uniapp开发小程序发现运行到微信开发者工具时用mockjs模拟数据接口无法使用">问题描述：使用uniapp开发小程序，发现运行到微信开发者工具时用mockjs模拟数据接口无法使用</h3>
+<h3 id="解决办法">解决办法</h3>
+<p>使用better-mock</p>
+<h4 id="安装better-mock">安装better-mock</h4>
+<p>[官方文档]&lt;!https://lavyun.github.io/better-mock/document/&gt;</p>
+<pre><code>cnpm install better-mock --save-D
+</code></pre>
+<h4 id="引入better-mock">引入better-mock</h4>
+<p>因为better-mock完全兼容mockjs，只需要将mock目录下index.js中</p>
+<pre><code>const Mock = require('mockjs')
+</code></pre>
+<p>改为</p>
+<pre><code>const Mock = require('better-mock/dist/mock.mp.js')
+</code></pre>
+<p>再次运行就可以在微信开发者工具看到模拟的数据啦</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[vue报错You are using the runtime-only build of Vue where the template compiler is not available]]></title>
+        <id>https://liujia12138.github.io/post/vue-bao-cuo-you-are-using-the-runtime-only-build-of-vue-where-the-template-compiler-is-not-available/</id>
+        <link href="https://liujia12138.github.io/post/vue-bao-cuo-you-are-using-the-runtime-only-build-of-vue-where-the-template-compiler-is-not-available/">
+        </link>
+        <updated>2021-03-02T06:59:17.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="问题描述使用vueant-design-vue时因为menu组件在v20之前不支持单文件递归所以使用了函数式组件但是编译时出现了下面的报错">问题描述：使用vue+ant-design-vue时，因为Menu组件在V2.0之前不支持单文件递归，所以使用了函数式组件，但是编译时出现了下面的报错</h3>
+<pre><code>[Vue warn]: You are using the runtime-only build of Vue where the template compiler is not available. Either pre-compile the templates into render functions, or use the compiler-included build.
+</code></pre>
+<p>翻译：您正在使用仅在运行时构建的Vue，其中模板编译器不可用。要么将模板预编译为呈现函数，要么使用包含编译器的构建。</p>
+<h4 id="原因">原因：</h4>
+<p>vue的构建版本分为：UMD， CommonJS，ES Module<br>
+<a href="https://cn.vuejs.org/v2/guide/installation.html">https://cn.vuejs.org/v2/guide/installation.html</a></p>
+<p><img src="https://liujia12138.github.io/post-images/1663052383565.png" alt="构建版本" loading="lazy"><br>
+<img src="https://liujia12138.github.io/post-images/1663052405859.png" alt="术语" loading="lazy"></p>
+<p>vue默认的是运行时的版本，无法处理模板字符串的编译工作，需要使用包含编译器的构建</p>
+<p>当需要客户端编译模板，如向template中传入一个字符串，或者需要将模板中的非DOM挂载到一个元素上时，就需要带有编译器（compiler）的构建版本。</p>
+<p>而.vue文件中的模板会在构建时预编译（pre-compile）为JavaScript，最终生成的bundle中不再需要编译器，因此通常情况下只需要包含运行时（runtime-only）的构建版本</p>
+<h4 id="解决方法">解决方法</h4>
+<p>在项目目录下新建vue.config.js，添加配置，使用包含运行时编译器的构建版本</p>
+<pre><code class="language-js">module.exports = {
+  //Solution For Issue:You are using the runtime-only build of Vue where the template compiler is not available. Either pre-compile the templates into render functions, or use the compiler-included build.
+  runtimeCompiler: true
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[css实现文字渐变色]]></title>
+        <id>https://liujia12138.github.io/post/css-shi-xian-wen-zi-jian-bian-se/</id>
+        <link href="https://liujia12138.github.io/post/css-shi-xian-wen-zi-jian-bian-se/">
+        </link>
+        <updated>2021-02-25T06:47:57.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="实现文字颜色渐变有两种方法">实现文字颜色渐变有两种方法</h4>
+<ol>
+<li>使用 background-clip 属性</li>
+</ol>
+<pre><code class="language-css">.text {
+  background: linear-gradient(90deg, #326be6 0%, #0fcae2 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+</code></pre>
+<h5 id="扩展">扩展</h5>
+<ul>
+<li>background-clip,背景裁剪,作用就是设置背景的填充规则<br>
+和 box-sizing 的取值非常类似，有三个值</li>
+</ul>
+<pre><code class="language-css"> {
+  background-clip: border-box; /*背景延伸到边框外延，但是再边框之下*/
+  background-clip: content-box; /*背景剪裁到内容区外沿*/
+  background-clip: padding-box; /*背景延伸到内边距外沿*/
+}
+</code></pre>
+<ul>
+<li>background-clip: text; 只有 chrome 支持，需要写成 -webkit-background-clip:text<br>
+以区块内的文字作为裁剪区域向外剪裁。文字的背景即为区块的背景，通常需要配合文字颜色设置为 transparent</li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-css">.text {
+  color: transparent;
+  border: 5px solid transparent;
+  background: linear-gradient(120deg, #333 0%, #265fae 30%, red 60%, pink 100%);
+  background-clip: content-box;
+  -webkit-background-clip: text;
+  font-size: 60px;
+}
+</code></pre>
+<p>效果图:<br>
+<img src="https://liujia12138.github.io/post-images/1663051783274.png" alt="" loading="lazy"></p>
+<ol>
+<li>使用 mask-image 属性</li>
+</ol>
+<p>示例</p>
+<pre><code class="language-css">.text {
+  color: red;
+  font-size: 60px;
+  position: relative;
+}
+.text[data-content]::after {
+  content: attr(data-content);
+  display: block;
+  color: yellow;
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-mask-image: linear-gradient(180deg, yellow 0%, transparent 100%);
+  mask-image: linear-gradient(180deg, yellow 0%, transparent 100%);
+}
+</code></pre>
+<pre><code class="language-html">&lt;div class=&quot;text&quot; data-content=&quot;content&quot;&gt;content&lt;/div&gt;
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://liujia12138.github.io/post-images/1663051769813.png" alt="" loading="lazy"></figure>
+<p>其实就是将一个黄色到透明渐变的文字覆盖到本身红色的字上面，mask-image兼容性要高于第一种方法</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[vue项目如何实现版本控制，用以保证用户的浏览器资源为最新]]></title>
+        <id>https://liujia12138.github.io/post/vue-xiang-mu-ru-he-shi-xian-ban-ben-kong-zhi-yong-yi-bao-zheng-yong-hu-de-liu-lan-qi-zi-yuan-wei-zui-xin/</id>
+        <link href="https://liujia12138.github.io/post/vue-xiang-mu-ru-he-shi-xian-ban-ben-kong-zhi-yong-yi-bao-zheng-yong-hu-de-liu-lan-qi-zi-yuan-wei-zui-xin/">
+        </link>
+        <updated>2021-01-29T07:01:03.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="问题描述项目实际使用过程中由于浏览器缓存问题可能会导致使用的版本不是服务器上部署的最新版本需要在项目中写入版本号">问题描述：项目实际使用过程中，由于浏览器缓存问题，可能会导致使用的版本不是服务器上部署的最新版本，需要在项目中写入版本号</h3>
+<h3 id="如何解决问题">如何解决问题？</h3>
+<h4 id="1-在vueconfigjs中加上写入版本号逻辑">1. 在vue.config.js中，加上写入版本号逻辑</h4>
+<pre><code class="language-js">const fs = require('fs')
+const path = require('path')
+
+const resolve = dir =&gt; {
+  return path.join(__dirname, dir)
+}
+
+const TimeStamp = new Date().getTime()
+
+// 写入版本号
+if(process.env.NODE_ENV === 'production'){
+  process.env.VUE_APP_VERSION = TimeStamp;
+
+  // 写入到.env文件中
+  fs.writeFile(resolve('.env'), `VUE_APP_VERSION=${TimeStamp}`, err=&gt;{
+    if(err){
+      return console.log(err)
+    }
+    console.log(`版本号变量写入成功：${TimeStamp}`)
+  })
+
+  // 写入到public的文件
+  fs.writeFile(resolve('public/v.json'), JSON.stringify({version: TimeStamp}), err =&gt; {
+    if(err){
+      return console.log(err)
+    }
+    console.log(`版本号写入成功：${TimeStamp}`)
+  })
+}
+</code></pre>
+<h4 id="2-在routerindexjs中加入判断版本号逻辑">2. 在router/index.js中加入判断版本号逻辑</h4>
+<pre><code class="language-js">router.beforeEach(async(to, from, next)=&gt;{
+  // 获取版本号
+  let version = await http.get(`${location.origin}/v.json`).then(res =&gt; {
+    return res.data.version
+  })
+
+  if(process.env.NODE_ENV === 'production' &amp;&amp; process.env.VUE_APP_VERSION !== version){
+    // 提示存在新版本
+    MessageBox('系统版本有更新，可按【CTRL + F5】或【清除浏览器缓存】获取最新资源', '提示').then(_ =&gt; {
+      window.location.reload()
+    }).catch(_ =&gt; {})
+    return;
+  }
+  // ......
+})
+</code></pre>
 ]]></content>
     </entry>
     <entry>
@@ -196,409 +401,6 @@ Vue.use(MetaInfo)
 <ol start="5">
 <li>配置完成后运行npm run build就可以在dist目录内看到预渲染后的html文件了</li>
 </ol>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[前端实现文件流下载]]></title>
-        <id>https://liujia12138.github.io/post/qian-duan-shi-xian-wen-jian-liu-xia-zai/</id>
-        <link href="https://liujia12138.github.io/post/qian-duan-shi-xian-wen-jian-liu-xia-zai/">
-        </link>
-        <updated>2020-09-09T13:45:47.000Z</updated>
-        <content type="html"><![CDATA[<p>1.封装通用请求函数，注意需要设置axios的responseType为blob</p>
-<pre><code class="language-js">function download(url, params, filename) {
-      let _this = this;
-      _this
-        .$axios({
-          method: &quot;post&quot;,
-          url: url,
-          data: params,
-          responseType: &quot;blob&quot;
-        })
-        .then(res =&gt; {
-          let data = res.data;
-          let fileReader = new FileReader();
-            
-        // 请求成功时服务端返回blob文件流，请求失败时会返回json格式的数据，两种格式需要单独处理
-          fileReader.onload = function() {
-            try {
-              let jsonData = JSON.parse(this.result);
-              if (jsonData.code) {
-                return false;
-              }
-            } catch (err) {
-              // 解析成对象失败，说明是正常的文件流
-              let time = Date.now();
-              downLoadXls(data, `${filename}.xlsx`);
-            }
-          };
-          fileReader.readAsText(data);
-        });
-    }
-</code></pre>
-<p>2.处理文件流</p>
-<pre><code class="language-js"> function downLoadXls(data, filename) {
-  //接收的data是blob，若接收的是文件流，需要转化一下
-  if (typeof window.chrome !== &quot;undefined&quot;) {
-    // Chrome version
-    var link = document.createElement(&quot;a&quot;);
-    link.href = window.URL.createObjectURL(data);
-    link.download = filename;
-    link.click();
-  } else if (typeof window.navigator.msSaveBlob !== &quot;undefined&quot;) {
-    // IE
-    var blob = new Blob([data], {
-      type: &quot;application/force-download&quot;
-    });
-    window.navigator.msSaveBlob(blob, filename);
-  } else {
-    // Firefox
-    var file = new File([data], filename, {
-      type: &quot;application/force-download&quot;
-    });
-    // window.open(URL.createObjectURL(file));
-  }
-}
-</code></pre>
-<pre><code></code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[vue.$nextTick]]></title>
-        <id>https://liujia12138.github.io/post/vuedollarnexttick/</id>
-        <link href="https://liujia12138.github.io/post/vuedollarnexttick/">
-        </link>
-        <updated>2020-09-01T11:55:12.000Z</updated>
-        <content type="html"><![CDATA[<p>定义：在下次dom更新循环结束之后执行延迟回调。<br>
-理解：可以在这个方法中获取更新后的dom。</p>
-<pre><code class="language-html">&lt;template&gt;
-    &lt;button ref=&quot;btn&quot; @click=&quot;add&quot;&gt;count: {{count}}&lt;/button&gt;
-&lt;/template&gt;
-
-&lt;script&gt;
-export default {
-    data(){
-        return {
-            count: 0,
-        }
-    },
-    methods:{
-        add(){
-            this.count ++;
-            console.log(this.count, this.$refs.btn.innerText);// 1 &quot;count: 0&quot;
-            
-            this.$nextTick(()=&gt;{
-                console.log(this.$refs.btn.innerText)// count: 1
-            })
-        }
-    }
-}
-&lt;/script&gt;
-</code></pre>
-<p>上面例子中可以看到，更新count之后立即打印dom中的内容，是更新之前的，而nextTick中可以获取到更新后的dom。</p>
-<p>原理：<br>
-vue是异步执行dom更新的，一旦检测到数据变化，vue就会开启一个队列，然后把在同一事件循环中观察到数据变化的watcher推送进这个队列。如果这个watcher被触发多次，只会被推送到队列一次。这种缓冲行为可以有效去掉重复数据造成的不必要的计算和dom操作，比如</p>
-<pre><code class="language-html">&lt;template&gt;
-    &lt;div&gt;{{count}}&lt;/div&gt;
-&lt;/template&gt;
-&lt;script&gt;
-export default{
-    data(){
-        return {
-            count: 0
-        }
-    },
-    created(){
-        for(let i = 0; i &lt; 10000; i++){
-            this.count ++
-        }
-    }
-}
-&lt;/script&gt;
-</code></pre>
-<p>上面例子中，created时count会执行10000次++操作，每次++都会依次触发 setter-dep-watcher-update-patch，如果没有异步更新视图，那么每一次++操作都会更新dom，非常消耗性能。<br>
-所以vue实现了一个queue队列，在下一个事件循环时，会清空队列，并且更新dom。同时，有用相同id的watcher不会被重复添加到队列中，所以不会执行10000次watcher的count</p>
-<p>使用场景：<br>
-需要操作因数据而改变的dom。</p>
-<p>实现下图的对话窗口页时，因为无法提前知道接口返回html片段内容的高度，所以需要在消息列表更新dom之后，根据高度判断是否需要折叠和显示折叠按钮，这时就可以用到vue.nextTick<br>
-<img src="https://i.bmp.ovh/imgs/2020/08/26cdf0671fa966c6.png" alt="image" loading="lazy"></p>
-<pre><code class="language-js">this.$nextTick(()=&gt;{
-    let lastIndex = this.QAlist.length / 2 - 1;
-    let par_msg = document.getElementsByClassName(&quot;service-chat-content&quot;)[
-        this.QAlist.length
-    ];
-    let height = par_msg.getElementsByClassName(&quot;msg-content&quot;)[0]
-        .offsetHeight;
-    if (height &gt; 400) {
-        par_msg.classList.add(&quot;collapse&quot;);
-        let open = document.createElement(&quot;DIV&quot;);
-        open.innerText = &quot;展开&quot;;
-        open.classList.add(&quot;open&quot;);
-        open.addEventListener(&quot;click&quot;, e =&gt; {
-          if (open.innerText === &quot;展开&quot;) {
-            open.innerText = &quot;收起&quot;;
-            par_msg.style.height = &quot;auto&quot;;
-          } else {
-            open.innerText = &quot;展开&quot;;
-            par_msg.style.height = &quot;400px&quot;;
-          }
-        });
-        par_msg.appendChild(open);
-      }
-    }
-});
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[contenteditable实现文本框]]></title>
-        <id>https://liujia12138.github.io/post/contenteditable-shi-xian-wen-ben-kuang/</id>
-        <link href="https://liujia12138.github.io/post/contenteditable-shi-xian-wen-ben-kuang/">
-        </link>
-        <updated>2020-08-24T11:46:24.000Z</updated>
-        <content type="html"><![CDATA[<p>contenteditable是html5新增的属性，它规定了是否可以编辑元素的内容。</p>
-<p><code>&lt;p contenteditable=&quot;true&quot;&gt;这是一个可编辑的p标签&lt;/p&gt;</code></p>
-<ol>
-<li>实现placeholder<br>
-给标签添加placeholder属性，然后通过css控制placeholder的显示和隐藏<br>
-<code>&lt;p contenteditable=&quot;true&quot; placeholder=&quot;请输入...&quot;&gt;&lt;/p&gt;</code><pre><code class="language-css">    p[contenteditable]:empty:not(:focus):before{
-        content: attr(placeholder);
-        color: #000;
-    }
-</code></pre>
-</li>
-<li></li>
-</ol>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[vue项目中使用jest进行单元测试]]></title>
-        <id>https://liujia12138.github.io/post/vue-xiang-mu-zhong-shi-yong-jest-jin-xing-dan-yuan-ce-shi/</id>
-        <link href="https://liujia12138.github.io/post/vue-xiang-mu-zhong-shi-yong-jest-jin-xing-dan-yuan-ce-shi/">
-        </link>
-        <updated>2020-07-12T06:51:50.000Z</updated>
-        <content type="html"><![CDATA[<h6 id="1vue-cli3创建项目选择配置">1.vue-cli3创建项目，选择配置</h6>
-<p>选中倒数第二项，支持单元测试<br>
-<img src="https://s1.ax1x.com/2020/06/15/N9L6UK.png" alt="image" loading="lazy"></p>
-<p>单元测试类型：选择jest<br>
-<img src="https://s1.ax1x.com/2020/06/15/N9LIbt.png" alt="image" loading="lazy"></p>
-<p>回车，等待生成项目</p>
-<h6 id="2项目装好之后进入项目根目录">2.项目装好之后，进入项目根目录</h6>
-<p>选择了单元测试的项目会多一个tests/unit目录，在这个目录内我们可以对组件进行测试<br>
-<img src="https://s1.ax1x.com/2020/06/15/N9OTy9.png" alt="image" loading="lazy"></p>
-<p>写好测试的js文件之后，运行yarn test:unit 就可以测试了<br>
-<img src="https://s1.ax1x.com/2020/06/15/N9Xg6H.png" alt="image" loading="lazy"></p>
-<h6 id="3jest的配置">3.jest的配置</h6>
-<p>在package.json 中</p>
-<pre><code class="language-json">&quot;jest&quot;: {
-    &quot;preset&quot;: &quot;@vue/cli-plugin-unit-jest&quot;,
-    &quot;moduleFileExtensions&quot;: [
-      &quot;js&quot;,
-      &quot;jsx&quot;,
-      &quot;json&quot;,
-      &quot;vue&quot;
-    ],
-    &quot;transform&quot;: {
-      &quot;^.+\\.vue$&quot;: &quot;vue-jest&quot;,
-      &quot;.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$&quot;: &quot;jest-transform-stub&quot;,
-      &quot;^.+\\.jsx?$&quot;: &quot;babel-jest&quot;
-    },
-    &quot;moduleNameMapper&quot;: {
-      &quot;^@/(.*)$&quot;: &quot;&lt;rootDir&gt;/src/$1&quot;
-    },
-    &quot;snapshotSerializers&quot;: [
-      &quot;jest-serializer-vue&quot;
-    ],
-    &quot;testMatch&quot;: [
-      &quot;**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)&quot;
-    ],
-    &quot;testURL&quot;: &quot;http://localhost/&quot;,
-    &quot;collectCoverage&quot;: true,
-    &quot;collectCoverageFrom&quot;: [&quot;**/src/**.{js,vue}&quot;, &quot;!**/node_modules/**&quot;, &quot;!**src/main.js**&quot;, &quot;!**src/router.js**&quot;]
-  }
-</code></pre>
-<h6 id="4测试结果">4.测试结果</h6>
-<figure data-type="image" tabindex="1"><img src="https://s1.ax1x.com/2020/06/15/NCSJsg.png" alt="image" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[JavaScript的隐式类型转换]]></title>
-        <id>https://liujia12138.github.io/post/javascript-de-yin-shi-lei-xing-zhuan-huan/</id>
-        <link href="https://liujia12138.github.io/post/javascript-de-yin-shi-lei-xing-zhuan-huan/">
-        </link>
-        <updated>2020-05-14T13:12:03.000Z</updated>
-        <content type="html"><![CDATA[<ol>
-<li>隐式转换规则</li>
-</ol>
-<ul>
-<li>转成string类型： + （字符串拼接符）</li>
-<li>转成number类型：++、--、+、-、*、/、%、&lt;、&gt;、&lt;=、&gt;=、!= 、== 、!== 、===</li>
-<li>转成boolean类型：!（逻辑非运算符）</li>
-</ul>
-<ol>
-<li>
-<p>字符串连接符+：只要+两边有一边是字符串，会吧其他数据类型调用String()方法转换成字符串然后拼接</p>
-</li>
-<li>
-<p>算数运算符+：+两边都是数字，会把其他数据类型调用Number()方法转换成数字然后进行假发运算</p>
-</li>
-<li>
-<p>关系运算符：会把其他数据类型转换成number之后再作比较：</p>
-</li>
-</ol>
-<ul>
-<li>
-<p>1.当关系运算符两边有一边是字符串的时候，会把字符串转换成number然后比较，比如<code>'a' &gt; 10</code>返回false，<code>'a'&lt;10</code>也返回false，因为Number('a')=NaN</p>
-</li>
-<li>
-<p>2.a. 当关系运算符两边都是字符串的时候，会根据unicode编码来判断，<code>'2' &gt; '10'</code>返回true，因为'2'.charCodeAt()=50, '10'.chaeCodeAt()=49（默认返回第一个字符的编码，如果想要查询第二个字符可以传参下标）； b. 多个字符从左向右依次比较；</p>
-</li>
-<li>
-<p>3.特殊情况，如果数据类型是undefined或者null，得出固定结果</p>
-</li>
-<li>
-<p>4.特殊情况，NaN和任何数据比较都是false，包括NaN；</p>
-</li>
-<li>
-<p>5.复杂数据类型：在隐式转换时会先转成string，然后再转成Number<br>
-<img src="http://p9.pstatp.com/large/pgc-image/1538025621414c490c46b28" alt="image" loading="lazy"></p>
-</li>
-<li>
-<ul>
-<li>a.先使用valueOf()方法获取原始值，如果原始值不是number类型，则使用toString()方法转成string；</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>b.再将string转成number（unicode码）运算</li>
-</ul>
-</li>
-</ul>
-<pre><code class="language-js">console.log([1, 2] == '1,2');//true, 先获取数组的原始值，然后转成string，然后通过左右两边的字符串的unicode编码运算
-console.log([1, 2].valueOf());//[1, 2]
-console.log([1, 2].valueOf().toString());//'1,2'
-
-var a = {};
-console.log(a == &quot;[object Object]&quot;);//true
-console.log(a.valueOf().toString());//&quot;[object Object]&quot;
-
-//声明一个变量a，使下面表达式打印1
-var a = {
-    i: 1,//声明一个属性i
-    valueOf: function(){
-        return a.i++;//每调用一次valueOf，让自增1，并且返回i的值
-    }
-}
-if(a == 1 &amp;&amp; a ==2 &amp;&amp; a == 3){
-    console.log(1)
-}
-
-</code></pre>
-<ul>
-<li>
-<p>6.逻辑非隐式转换与关系运算符隐式转换<br>
-**注意：**空数组的toString()方法会得到一个空字符串，而空对象的toString()方法会得到字符串<code>[object Object]</code></p>
-</li>
-<li>
-<ul>
-<li>a.关系运算符：将其他数据类型转成number</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>b.逻辑非!：将其他数据类型使用Boolean()转成布尔值</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li>1.null，undefined，空字符串，0，-0，NaN，false，document.all()转布尔值都会得到false，除此之外全都是true</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<ul>
-<li>
-<ul>
-<li>2.逻辑非运算符优先级高于关系运算符，所以要先得到逻辑非运算结果在进行比较</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<pre><code class="language-js">console.log([] == 0)//true,
-//原理：[].valueOf().toString() =&gt; &quot;&quot;, Number('') == 0
-
-console.log(![] == 0);//true
-//原理：逻辑非优先级高于关系运算符，空数组不在上面八种情况里，所以空数组转成布尔值应该是true，![] =&gt; false，false == 0成立
-
-console.log({} == !{});//false
-console.log({} == {});//false
-//原理：
-//1：本质上是{} 与 !{}这个逻辑非表达式比较，!{} =&gt; false，{}.valueOf().toString() =&gt; '[object Object]', 所以{} == !{}不成立，返回false
-//2：引用数据类型存储在堆中，栈中存储的是引用地址，所以返回false
-
-console.log([] == ![]);//true
-console.log([] == []);//false
-//原理：
-//1：本质上是比较[]和![]逻辑非运算结果，[].valueOf().toString() =&gt; ''，Number('') =&gt; 0，![] =&gt; false, 0 == false成立，返回true；
-//2：引用数据类型，false
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://liujia12138.github.io/post-images/1589461997727.jpeg" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[移动端屏幕宽度自适应原理及实现]]></title>
-        <id>https://liujia12138.github.io/post/yi-dong-duan-ping-mu-kuan-du-zi-gua-ying-yuan-li-ji-shi-xian/</id>
-        <link href="https://liujia12138.github.io/post/yi-dong-duan-ping-mu-kuan-du-zi-gua-ying-yuan-li-ji-shi-xian/">
-        </link>
-        <updated>2020-05-09T05:10:42.000Z</updated>
-        <content type="html"><![CDATA[<p>问题：当前市场上手机屏幕宽度不尽相同，常见有320px（ipone5）、375px（ipone678）等等，而为了在不同宽度的手机屏幕上良好现显示网页，让页面能够在不同尺寸的屏幕上完美适配<br>
-https://www.cnblogs.com/chenyoumei/p/10510321.html<br>
-原理：实现屏幕宽度自适应主要有两种方案</p>
-<ol>
-<li>使用百分比长度单位：vh、vw、rem、em、%<br>
-优点：一套css代码就可以适配所有屏幕</li>
-<li>使用固定长度单位px，再用js根据当前设备屏幕宽度计算比例，对网页进行缩放；<br>
-优点：网页宽度恒定，便于计算</li>
-</ol>
-<p>实现：</p>
-<ol>
-<li>rem布局：通过动态修改html font-size的大小来实现，1rem==页面根元素html的font-size大小。<br>
-首先需要在meta标签中设置禁止缩放：<br>
-<code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0&quot;&gt;</code><br>
-然后在页面加载是js动态获取当前视窗的宽度，计算得出相对于设计稿的比例，修改html的font-size大小</li>
-</ol>
-<pre><code class="language-js">function initFontSize(){
-    var html = document.getElementsByTagName(&quot;html&quot;)[0];
-    var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    //假设视窗宽度为375px时，font-size为16px；
-    html.style.fontSize = width/375 * 16 + 'px';
-}
-initFontSize();
-//窗口大小变化时，重新计算font-size
-window.onresize = ()=&gt;{ initFontSize() }
-</code></pre>
-<ol start="2">
-<li>
-<p>em：相对长度单位，相对于当前元素内字体的大小，如果当前元素没有设置字号，就找父元素的。</p>
-</li>
-<li>
-<p>vw：相对于视窗的宽度，1vw为视窗宽度的1%。<br>
-vw可以配合rem来实现屏幕自适应，移动端设计稿通常使用750px宽度，前端开发是通常使用375px的网页宽度，此时1vw=3.75px，4vh=15px；为了方便计算，可以设置html的字体大小为4vw；</p>
-</li>
-<li>
-<p>%：单纯使用%无法确定元素高度，所以基本不用；</p>
-</li>
-<li>
-<p>固定长度单位px，再使用js根据当前屏幕的宽度进行网页缩放</p>
-</li>
-</ol>
-<ul>
-<li>window.screen.width获取屏幕宽度</li>
-<li>修改meta标签的initial-scale来改变页面初始缩放值</li>
-</ul>
 ]]></content>
     </entry>
 </feed>
