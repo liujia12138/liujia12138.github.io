@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>js | AzhA</title>
+  <title>uni-app整包更新 | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="js | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="uni-app整包更新 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +25,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="uni-app整包更新"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/uni-app-zheng-bao-geng-xin/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
   	<!-- Navigation -->
@@ -66,222 +71,107 @@
       </div>
     </div>
   </nav>
-<!-- Page Header -->
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1 class="tag-tl">#js</h1>
+          	<span class="tags">
+          	 
+            <a href="https://liujia12138.github.io/tag/V_zOguk5s/" class="tag">uniapp</a>
+            
+        </span>
+            <h1>uni-app整包更新</h1>
+            <span class="meta">
+            	Posted on
+              2020-08-10，3 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
+
+  <!-- Post Content -->
+  <article>
     <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">
-            <h2 class="post-title">
-              定时任务时间表达式规则
-            </h2>
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p>APP端的升级，可分为整包更新和资源热更新两种</p>
+<ul>
+<li>整包更新：常规的整个app安装包重新下载安装（比较繁琐，每次更新都要重新打包，更新整包）</li>
+<li>资源热更新：无需跳转到应用市场或者浏览器去重新更包，无感更新</li>
+</ul>
+<h6 id="本文主要来记录一下整包更新的流程">本文主要来记录一下整包更新的流程</h6>
+<p>参考:<a href="https://ask.dcloud.net.cn/article/34972">uni-app 整包升级/更新方案</a></p>
+<p>android：APP启动后检查到有新版本，跳转到应用市场或者浏览器直接下载新的apk，只要保证包名和证书不变，就可以覆盖安装</p>
+<p>ios：app启动后有新版本，只能跳转到apptsore，然后用户在appstore详情页进行更新</p>
+<h4 id="一-使用unicloud实现整包更新">一、使用uniCloud实现整包更新</h4>
+<p>为什么用uniCloud？</p>
+<ul>
+<li>可以把apk存放到uniCloud的cnd上，免费试用</li>
+<li>有现成的插件，不用写升级逻辑，配好地址、版本、更新日志等参数就能直接使用。<a href="https://ext.dcloud.net.cn/plugin?id=2226">云函数实现App的升级检查</a></li>
+</ul>
+<h5 id="如何使用unicloud">如何使用uniCloud</h5>
+<h5 id="unicloud云函数-实现app升级检查"># uniCloud云函数 实现app升级检查</h5>
+<p>（注意：hbuilderX，appid，uniCloud必须同一个账号）</p>
+<ol>
+<li>DCloud插件市场中导入插件<a href="https://ext.dcloud.net.cn/plugin?id=2226">云函数实现App的升级检查</a></li>
+<li>导入插件之后右击cloudfunctions目录，绑定服务空间。（没有的话先上uniCloud创建一下）</li>
+<li>绑定云服务空间后右击cloudfunctions目录，上传所有云函数</li>
+<li>如果cloudfunctions目录下有db_init.json，将appid改成自己项目的appid后点击右键，初始化云数据库。</li>
+<li>在App.vue的onLaunch中调用云函数，进行升级检测。</li>
+<li>每次升级打包之前修改manifest.json中的版本号（注意：版本号要高于上一次的），打包之后将uniCloud的云数据库中同步版本号，更新内容和安装包地址</li>
+</ol>
+<p>完成上述操作后，用户启动app时就可以进行检查更新啦</p>
+<h4 id="二-不使用unicloud">二、不使用uniCloud</h4>
+<p>如果不使用uniCloud，自己写升级逻辑也可以。</p>
+<h5 id="约定接口用来检测是否需要升级">约定接口，用来检测是否需要升级</h5>
+<p>在App.vue的onLaunch中，发起升级检测请求</p>
+<pre><code class="language-js">onLaunch:function(){
+    //#ifdef APP-PLUS
+    //app升级检测代码需要使用条件编译，否则在非app环境会报错
+    uni.request({
+        url: &quot;api&quot;,
+        data:{
+            appid: plus.runtime.appid,
+            version: plus.runtime.version
+        },
+        success: (res)=&gt;{
+            if(res.statusCode === 200 &amp;&amp; res.data.status === 1){
+                uni.showModal({//提示用户可更新
+                    title: &quot;更新提示&quot;,
+                    content: res.data.content,
+                    success:(res)=&gt;{
+                        if(res.confirm){//用户确认更新
+                            plus.runtime.openURL(res.data.url);
+                        }
+                    }
+                })
+            }
+        }
+    })
+    //#endif
+}
+</code></pre>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/vue-xiang-mu-zhong-shi-yong-jest-jin-xing-dan-yuan-ce-shi/">
+              <span class="post-title">
+                vue项目中使用jest进行单元测试&rarr;
+              </span>
             </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2022-08-10</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
+          </p>
         
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/zen-yang-shi-xian-yi-ge-kong-zhi-tai-du-shan-bu-diao-de-dombao-hu-shui-yin/">
-            <h2 class="post-title">
-              怎样实现一个控制台都删不掉的 DOM（保护水印）
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2022-04-19</span>
-             <span>,</span>
-             <span class="post-stats">4 min read</span>
-            </p>
+        <div class="comment">
+          
         </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/qian-duan-shi-xian-wen-jian-liu-xia-zai/">
-            <h2 class="post-title">
-              前端实现文件流下载
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-09-09</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/javascript-de-yin-shi-lei-xing-zhuan-huan/">
-            <h2 class="post-title">
-              JavaScript的隐式类型转换
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-05-14</span>
-             <span>,</span>
-             <span class="post-stats">4 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/js-hong-ren-wu-wei-ren-wu-he-shi-jian-xun-huan/">
-            <h2 class="post-title">
-              JS宏任务微任务和事件循环
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-01-07</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/liu-lan-qi-shu-ru-yi-ge-url-dao-ye-mian-xuan-ran-chu-lai-du-fa-sheng-liao-shi-me/">
-            <h2 class="post-title">
-              浏览器输入一个url到页面渲染出来都发生了什么？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-05-07</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/jie-liu-he-fang-dou/">
-            <h2 class="post-title">
-              节流和防抖
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-03-14</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/bi-bao-shi-shi-me-you-que-dian/">
-            <h2 class="post-title">
-              闭包是什么？优缺点？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-02-21</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/js-yuan-xing-yu-yuan-xing-lian/">
-            <h2 class="post-title">
-              JS原型与原型链
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-10-12</span>
-             <span>,</span>
-             <span class="post-stats">9 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/js-zhong-de-ji-cheng/">
-            <h2 class="post-title">
-              js中的继承
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-08-22</span>
-             <span>,</span>
-             <span class="post-stats">4 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        
-        
-        <a class="btn btn-primary float-right" href="https://liujia12138.github.io/tag/CvMd75xEg/page/2">下一页 &rarr;</a>
-        
       </div>
     </div>
-  </div>
-
-  
+  </article>
  <!-- Footer -->
   <footer>
     <div class="container">
@@ -362,3 +252,4 @@
   })(this));</script>
   </body>
 </html>
+

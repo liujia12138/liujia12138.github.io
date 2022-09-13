@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>js | AzhA</title>
+  <title>为什么使用nodejs做中间层 | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="js | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="为什么使用nodejs做中间层 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +25,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="为什么使用nodejs做中间层"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/wei-shi-me-shi-yong-nodejs-zuo-zhong-jian-ceng/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
   	<!-- Navigation -->
@@ -66,222 +71,66 @@
       </div>
     </div>
   </nav>
-<!-- Page Header -->
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1 class="tag-tl">#js</h1>
+          	<span class="tags">
+          	 
+            <a href="https://liujia12138.github.io/tag/_CM5EBSSy/" class="tag">node</a>
+            
+        </span>
+            <h1>为什么使用nodejs做中间层</h1>
+            <span class="meta">
+            	Posted on
+              2020-03-20，3 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
+
+  <!-- Post Content -->
+  <article>
     <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">
-            <h2 class="post-title">
-              定时任务时间表达式规则
-            </h2>
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <h3 id="为什么使用eggjs做中间层">为什么使用egg.js做中间层？</h3>
+<h4 id="1转发接口请求">1.转发接口请求</h4>
+<p>因为自定义报告系统和商业信用中心报告系统都是比较大而且比较核心的项目，后端是分模块交给不同的开发组来做的，返回的数据格式不统一，使用egg做中间层能够方便处理数据而且让前端代码结构清晰，前端代码只需要渲染数据即可</p>
+<h4 id="2session鉴权">2.session鉴权</h4>
+<p>2.用egg做session鉴权，传统的session鉴权是由服务端生成一个token放在客户端的cookie或者request header中，而在egg中，我们可以将登陆之后返回的用户信息存放在服务端的session中，当用户发起请求时，前端请求egg router中的接口，在controller中再获取session中的用户信息加到请求参数中</p>
+<h3 id="session鉴权是怎么做的会有什么问题">session鉴权是怎么做的？会有什么问题？</h3>
+<p>（因为egg中间件是遵循洋葱圈模型的，每一个请求都会经过中间件的一层层处理）<br>
+egg的session保存在服务器上，不同于cookie保存在客户端中，相对于cookie更安全；</p>
+<p>用户登录之后，将user信息放到session中，后端接口需要用户信息时，在中间层中加入到请求体中，不会暴露在浏览器上；</p>
+<h3 id="为什么需要session鉴权">为什么需要session鉴权？</h3>
+<p>因为http协议是一种无状态的协议，当用户提供给我们用户信息进行认证之后，下一次请求时用户还需要再次进行认证，因为http协议的无法取到上一次的用户信息，所以我们并不知道这次请求是哪个用户发出的<br>
+传统session鉴权：所以为了让我们能够识别是哪个用户发起的请求，需要在服务器上存储一段用户信息的token，这个token会在响应时传递给浏览器，并且告诉浏览器保存为cookie，以便于下次请求时发送给服务端，这样我们就能辨别是哪个用户了。</p>
+<h3 id="基于session认证暴露出来的问题">基于session认证暴露出来的问题：</h3>
+<p>1.服务端开销大，因为每个用户经过我们的认证之后，都需要在服务端记录一次，通常都是保存在内存中，随着用户的增多，服务端开销会明显增大；<br>
+2.扩展性：用户认证之后服务端做认证记录，如果认证记录被保存在内存中的话，意味着用户下一次请求还必须在这台服务器上，这样才能拿到认证信息；<br>
+3.csrf：因为是基于cookie来进行用户识别，会暴露在浏览器中，cookie如果被截获，用户就会很容易受到跨站请求伪造的攻击。</p>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/eggvuewebpack-fu-wu-duan-xuan-ran/">
+              <span class="post-title">
+                Egg+Vue+webpack 服务端渲染&rarr;
+              </span>
             </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2022-08-10</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
+          </p>
         
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/zen-yang-shi-xian-yi-ge-kong-zhi-tai-du-shan-bu-diao-de-dombao-hu-shui-yin/">
-            <h2 class="post-title">
-              怎样实现一个控制台都删不掉的 DOM（保护水印）
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2022-04-19</span>
-             <span>,</span>
-             <span class="post-stats">4 min read</span>
-            </p>
+        <div class="comment">
+          
         </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/qian-duan-shi-xian-wen-jian-liu-xia-zai/">
-            <h2 class="post-title">
-              前端实现文件流下载
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-09-09</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/javascript-de-yin-shi-lei-xing-zhuan-huan/">
-            <h2 class="post-title">
-              JavaScript的隐式类型转换
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-05-14</span>
-             <span>,</span>
-             <span class="post-stats">4 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/js-hong-ren-wu-wei-ren-wu-he-shi-jian-xun-huan/">
-            <h2 class="post-title">
-              JS宏任务微任务和事件循环
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-01-07</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/liu-lan-qi-shu-ru-yi-ge-url-dao-ye-mian-xuan-ran-chu-lai-du-fa-sheng-liao-shi-me/">
-            <h2 class="post-title">
-              浏览器输入一个url到页面渲染出来都发生了什么？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-05-07</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/jie-liu-he-fang-dou/">
-            <h2 class="post-title">
-              节流和防抖
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-03-14</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/bi-bao-shi-shi-me-you-que-dian/">
-            <h2 class="post-title">
-              闭包是什么？优缺点？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-02-21</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/js-yuan-xing-yu-yuan-xing-lian/">
-            <h2 class="post-title">
-              JS原型与原型链
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-10-12</span>
-             <span>,</span>
-             <span class="post-stats">9 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/js-zhong-de-ji-cheng/">
-            <h2 class="post-title">
-              js中的继承
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-08-22</span>
-             <span>,</span>
-             <span class="post-stats">4 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        
-        
-        <a class="btn btn-primary float-right" href="https://liujia12138.github.io/tag/CvMd75xEg/page/2">下一页 &rarr;</a>
-        
       </div>
     </div>
-  </div>
-
-  
+  </article>
  <!-- Footer -->
   <footer>
     <div class="container">
@@ -362,3 +211,4 @@
   })(this));</script>
   </body>
 </html>
+

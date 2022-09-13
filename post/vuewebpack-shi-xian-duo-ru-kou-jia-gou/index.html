@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>js | AzhA</title>
+  <title>vue+webpack 实现多入口架构 | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="js | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="vue+webpack 实现多入口架构 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +25,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="vue+webpack 实现多入口架构"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/vuewebpack-shi-xian-duo-ru-kou-jia-gou/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
   	<!-- Navigation -->
@@ -66,222 +71,190 @@
       </div>
     </div>
   </nav>
-<!-- Page Header -->
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1 class="tag-tl">#js</h1>
+          	<span class="tags">
+          	 
+            <a href="https://liujia12138.github.io/tag/Xb1bL-hET/" class="tag">webpack</a>
+            
+            <a href="https://liujia12138.github.io/tag/d8mNIHknn/" class="tag">vue</a>
+            
+        </span>
+            <h1>vue+webpack 实现多入口架构</h1>
+            <span class="meta">
+            	Posted on
+              2022-05-18，3 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
+
+  <!-- Post Content -->
+  <article>
     <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">
-            <h2 class="post-title">
-              定时任务时间表达式规则
-            </h2>
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <h4 id="一-为什么需要多入口多页面项目">一、为什么需要多入口多页面项目？</h4>
+<p>vue 项目大多是单页面项目，即一个 main.js 入口文件，一般情况下使用 webpack 默认配置就可以。但是如果项目很大，有很多个小的分项目，比如一个数据处理平台需要包含数据接入、数据处理、数据输出等分项目，这时把这几个分项目合并到一个项目中管理会方便很多。</p>
+<h4 id="二-多页面可以解决哪些问题">二、多页面可以解决哪些问题？</h4>
+<ul>
+<li>独立维护子系统的权限和缓存数据</li>
+<li>开发一个子系统时，不需要启动另外一个系统</li>
+<li>热更新一个子系统时，不需要编译所有系统</li>
+</ul>
+<h4 id="三-怎样配置一个-vue-多页面应用">三、怎样配置一个 vue 多页面应用</h4>
+<h5 id="1先创建一个-vue-项目">1.先创建一个 vue 项目</h5>
+<pre><code>vue init webpack project-name
+</code></pre>
+<h5 id="2给每个子系统创建-mainjs-appvue-indexhtml-文件最终目录结构如下">2.给每个子系统创建 main.js、App.vue、index.html 文件，最终目录结构如下</h5>
+<pre><code>├─build
+├─config
+├─node_modules
+├─src
+|  ├─api
+|  ├─assets
+|  ├─components
+|  ├─layout
+|  ├─pages
+|  |  ├─system1
+|  |  | ├─views
+|  |  | ├─store
+|  |  | ├─router
+|  |  |  main.js
+|  |  |  index.html
+|  |  ├─system2
+|  |  | ├─views
+|  |  | ├─store
+|  |  | ├─router
+|  |  |  main.js
+|  |  |  index.html
+|    ...
+
+</code></pre>
+<h5 id="3修改-webpack-配置文件">3.修改 webpack 配置文件</h5>
+<p>基础配置 webpack.base.conf.js</p>
+<pre><code class="language-js">const glob = require('glob')
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+function resolve(dir) {
+  return path.join(__dirname, '..', dir)
+}
+
+const entrys = {} //入口文件配置
+const pageDir = resolve('src/pages')
+
+const pages = glob.sync('*/index.html', { cwd: pageDir }).map((p) =&gt; {
+  const name = p.split('/')[0]
+  entrys[name] = `${pageDir}/${name}/main.js`
+  return new HtmlWebpackPlugin({
+    filename: `${name}.html`,
+    template: pageDir + '/' + p,
+    chunks: ['manifest', 'vendor', 'app', name],
+    inject: true,
+    favicon: './static/favicon.ico',
+    minify: {
+      removeComments: true,
+      collapseWhitespace: true,
+      removeAttributeQuotes: true
+    },
+    chunksSortMode: 'dependency'
+  })
+})
+
+module.exports = {
+  context: path.resolve(__dirname, '../'),
+  entry: entrys,
+  output: {
+    path: config.build.assetsRoot,
+    filename: '[name].js',
+    publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath
+  },
+  plugins: [...pages]
+  // 其他。。。。
+}
+</code></pre>
+<p>开发环境配置 webpack.dev.conf.js，HtmlWebpackPlugin 已经在基础配置中修改，dev 环境不需要再修改</p>
+<p>生产环境配置 webpack.prod.conf.js，修改output</p>
+<pre><code class="language-js">modules.exports = {
+  // ....
+  output: {
+    path: config.build.assetsRoot,
+    filename: utils.assetsPath('js/[name].[chunkhash].js'),
+    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'),
+    publicPath: '/'
+  },
+  plugins: [
+    // 公共模块单独打包
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks(module) {
+        return (
+          module.resource &amp;&amp;
+          /\.js$/.test(module.resource) &amp;&amp;
+          module.resource.indexOf(path.join(__dirname, '../node_modules')) === 0
+        )
+      }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+      minChunks: Infinity
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'app',
+      async: 'vendor-async',
+      children: true,
+      minChunks: 3,
+      maxChunks: 10
+    })
+  ]
+}
+</code></pre>
+<h5 id="4运行项目">4.运行项目</h5>
+<pre><code>npm run dev
+</code></pre>
+<p>http://localhost:8080/system1.html#/home  就可以访问啦</p>
+<h5 id="5打包">5.打包</h5>
+<pre><code>npm run build
+</code></pre>
+<p>打包结果</p>
+<pre><code>dist
+├─system1.html
+├─system2.html
+├─static
+| ├─css
+| ├─js
+| ├─fonts
+| ├─img
+| ├─static
+└ ├─js
+</code></pre>
+<h4 id="四-后续优化">四、后续优化</h4>
+<p>1.单独构建、打包某个子系统<br>
+2.子系统特有依赖模块打包策略</p>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/eslintprettier-dai-ma-gui-fan-zi-dong-hua-pei-zhi/">
+              <span class="post-title">
+                eslint+prettier 代码规范自动化配置&rarr;
+              </span>
             </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2022-08-10</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
+          </p>
         
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/zen-yang-shi-xian-yi-ge-kong-zhi-tai-du-shan-bu-diao-de-dombao-hu-shui-yin/">
-            <h2 class="post-title">
-              怎样实现一个控制台都删不掉的 DOM（保护水印）
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2022-04-19</span>
-             <span>,</span>
-             <span class="post-stats">4 min read</span>
-            </p>
+        <div class="comment">
+          
         </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/qian-duan-shi-xian-wen-jian-liu-xia-zai/">
-            <h2 class="post-title">
-              前端实现文件流下载
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-09-09</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/javascript-de-yin-shi-lei-xing-zhuan-huan/">
-            <h2 class="post-title">
-              JavaScript的隐式类型转换
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-05-14</span>
-             <span>,</span>
-             <span class="post-stats">4 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/js-hong-ren-wu-wei-ren-wu-he-shi-jian-xun-huan/">
-            <h2 class="post-title">
-              JS宏任务微任务和事件循环
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-01-07</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/liu-lan-qi-shu-ru-yi-ge-url-dao-ye-mian-xuan-ran-chu-lai-du-fa-sheng-liao-shi-me/">
-            <h2 class="post-title">
-              浏览器输入一个url到页面渲染出来都发生了什么？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-05-07</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/jie-liu-he-fang-dou/">
-            <h2 class="post-title">
-              节流和防抖
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-03-14</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/bi-bao-shi-shi-me-you-que-dian/">
-            <h2 class="post-title">
-              闭包是什么？优缺点？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2019-02-21</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/js-yuan-xing-yu-yuan-xing-lian/">
-            <h2 class="post-title">
-              JS原型与原型链
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-10-12</span>
-             <span>,</span>
-             <span class="post-stats">9 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/js-zhong-de-ji-cheng/">
-            <h2 class="post-title">
-              js中的继承
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-08-22</span>
-             <span>,</span>
-             <span class="post-stats">4 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        
-        
-        <a class="btn btn-primary float-right" href="https://liujia12138.github.io/tag/CvMd75xEg/page/2">下一页 &rarr;</a>
-        
       </div>
     </div>
-  </div>
-
-  
+  </article>
  <!-- Footer -->
   <footer>
     <div class="container">
@@ -362,3 +335,4 @@
   })(this));</script>
   </body>
 </html>
+

@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>contenteditable实现文本框 | AzhA</title>
+  <title>用van-calendar实现展示指定月份并自定义日期文案 | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="contenteditable实现文本框 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="用van-calendar实现展示指定月份并自定义日期文案 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,8 +25,8 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-    <meta property="og:description" content="contenteditable实现文本框"/>
-    <meta property="og:url" content="https://liujia12138.github.io/post/contenteditable-shi-xian-wen-ben-kuang/"/>
+    <meta property="og:description" content="用van-calendar实现展示指定月份并自定义日期文案"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/yong-van-calendar-shi-xian-zhan-shi-zhi-ding-yue-fen-bing-zi-ding-yi-ri-qi-wen-an/"/>
     <meta property="og:locale" content="zh-CN"/>
     <meta property="og:type" content="website"/>
     <meta property="og:site_name" content="AzhA"/>
@@ -80,11 +80,13 @@
           <div class="post-heading">
           	<span class="tags">
           	 
+            <a href="https://liujia12138.github.io/tag/d8mNIHknn/" class="tag">vue</a>
+            
         </span>
-            <h1>contenteditable实现文本框</h1>
+            <h1>用van-calendar实现展示指定月份并自定义日期文案</h1>
             <span class="meta">
             	Posted on
-              2020-08-24，1 min read
+              2022-04-27，4 min read
             </span>
           </div>
         </div>
@@ -97,25 +99,218 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <p>contenteditable是html5新增的属性，它规定了是否可以编辑元素的内容。</p>
-<p><code>&lt;p contenteditable=&quot;true&quot;&gt;这是一个可编辑的p标签&lt;/p&gt;</code></p>
-<ol>
-<li>实现placeholder<br>
-给标签添加placeholder属性，然后通过css控制placeholder的显示和隐藏<br>
-<code>&lt;p contenteditable=&quot;true&quot; placeholder=&quot;请输入...&quot;&gt;&lt;/p&gt;</code><pre><code class="language-css">    p[contenteditable]:empty:not(:focus):before{
-        content: attr(placeholder);
-        color: #000;
+          <p>效果图:<br>
+<img src="https://liujia12138.github.io/post-images/1663053616494.jpg" alt="" loading="lazy"></p>
+<p>代码：</p>
+<pre><code>&lt;template&gt;
+  &lt;div&gt;
+    &lt;van-button icon=&quot;notes-o&quot; round type=&quot;info&quot; plain size=&quot;mini&quot; @click=&quot;showPicker = true&quot;&gt;
+      选择日期&lt;van-icon name=&quot;arrow-down&quot; /&gt;
+    &lt;/van-button&gt;
+
+    &lt;van-popup v-model=&quot;showPicker&quot; position=&quot;bottom&quot;&gt;
+      &lt;van-datetime-picker
+        title=&quot;选择日期&quot;
+        type=&quot;year-month&quot;
+        v-model=&quot;currentDate&quot;
+        :columns-order=&quot;['year', 'month', 'day']&quot;
+        @confirm=&quot;onConfirm&quot;
+        @cancel=&quot;showPicker = false&quot;
+        :formatter=&quot;formatter&quot;
+        :max-date=&quot;maxDate&quot;
+      /&gt;
+    &lt;/van-popup&gt;
+
+    &lt;van-calendar
+      v-if=&quot;this.dataList.length &gt; 0&quot;
+      :poppable=&quot;false&quot;
+      :formatter=&quot;formatterCalendar&quot;
+      :default-date=&quot;defaultDate&quot;
+      :min-date=&quot;minDate&quot;
+      :max-date=&quot;calendarMaxDate&quot;
+      :show-title=&quot;false&quot;
+      :show-subtitle=&quot;false&quot;
+      :show-confirm=&quot;false&quot;
+      @select=&quot;selectDate&quot;
+    /&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+/**
+ * Parse the time to string
+ * @param {(Object|string|number)} time
+ * @param {string} cFormat
+ * @returns {string}
+ */
+function parseTime(time, cFormat) {
+  if (arguments.length === 0) {
+    return null
+  }
+  const format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}'
+  let date
+  if (typeof time === 'object') {
+    date = time
+  } else {
+    if (typeof time === 'string' &amp;&amp; /^[0-9]+$/.test(time)) {
+      time = parseInt(time)
     }
+    if (typeof time === 'number' &amp;&amp; time.toString().length === 10) {
+      time = time * 1000
+    }
+    date = new Date(time)
+  }
+  const formatObj = {
+    y: date.getFullYear(),
+    m: date.getMonth() + 1,
+    d: date.getDate(),
+    h: date.getHours(),
+    i: date.getMinutes(),
+    s: date.getSeconds(),
+    a: date.getDay()
+  }
+  const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) =&gt; {
+    let value = formatObj[key]
+    // Note: getDay() returns 0 on Sunday
+    if (key === 'a') {
+      return ['日', '一', '二', '三', '四', '五', '六'][value]
+    }
+    if (result.length &gt; 0 &amp;&amp; value &lt; 10) {
+      value = '0' + value
+    }
+    return value || 0
+  })
+  return time_str
+}
+
+export default {
+  data() {
+    return {
+      showPicker: false,
+      currentDate: new Date(),
+      maxDate: new Date(),
+      minDate: new Date(),
+      calendarMaxDate: new Date(),
+      defaultDate: new Date(),
+      dataList: [],
+      classList: {}
+    }
+  },
+  computed: {
+    formatDate() {
+      return parseTime(this.currentDate, this.pickerType === 'date' ? '{y}年{m}月{d}日' : '{y}年{m}月')
+    }
+  },
+  created() {
+    this.update()
+  },
+  methods: {
+    formatter(type, val) {
+      if (type === 'year') {
+        return val + '年'
+      }
+      if (type === 'month') {
+        return val + '月'
+      }
+      if (type === 'day') {
+        return val + '日'
+      }
+      return val
+    },
+    onConfirm(value) {
+      this.showPicker = false
+      this.update(value)
+    },
+    formatterCalendar(day) {
+      const date = day.date.getDate()
+      const type = this.dataList[date - 1] || ''
+
+      day.bottomInfo = type
+      day.className =
+        type === '优'
+          ? 'level1'
+          : type === '良'
+          ? 'level2'
+          : type === '轻度'
+          ? 'level3'
+          : type === '中度'
+          ? 'level4'
+          : type === '重度'
+          ? 'level5'
+          : 'level6'
+      return day
+    },
+    update(value) {
+      this.dataList = ['优', '良', '中度', '重度', '严重', '优', '优', '良', '中度', '重度', '严重']
+      this.defaultDate = value || new Date()
+      this.setMinMaxDay()
+    },
+    // 设置显示月份可选择的天数区间
+    setMinMaxDay() {
+      const year = new Date(this.defaultDate).getFullYear()
+      const month = new Date(this.defaultDate).getMonth()
+      const lastDay = new Date(year, month + 1, 0)
+      this.minDate = new Date(year, month, 1)
+      this.calendarMaxDate = lastDay
+    },
+    selectDate(date) {
+      console.log(date)
+    }
+  }
+}
+&lt;/script&gt;
+&lt;style&gt;
+.van-calendar__month-title {
+  display: none;
+}
+.van-calendar__day {
+  font-size: 12px;
+  height: 30px;
+  line-height: 30px;
+  margin-top: 5px;
+}
+.van-calendar__selected-day {
+  background: #cdcbc8;
+  color: #515151;
+  height: 30px;
+  line-height: 30px;
+}
+.van-calendar__bottom-info {
+  border-radius: 5px;
+  font-size: 10px;
+  padding: 1px 3px;
+  color: #fff;
+  position: initial;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+.level1 .van-calendar__bottom-info {
+  background: #b0cb8f;
+}
+.level2 .van-calendar__bottom-info {
+  background: #f2d875;
+}
+.level3 .van-calendar__bottom-info {
+  background: #e5a74c;
+}
+.level4 .van-calendar__bottom-info {
+  background: #cc6065;
+}
+.level5 .van-calendar__bottom-info {
+  background: #ac4176;
+}
+.level6 .van-calendar__bottom-info {
+  background: #7d1f2c;
+}
+&lt;/style&gt;
+
 </code></pre>
-</li>
-<li></li>
-</ol>
 
           
           <p class="next-post">下一篇：
-            <a href="https://liujia12138.github.io/post/uni-app-zheng-bao-geng-xin/">
+            <a href="https://liujia12138.github.io/post/zen-yang-shi-xian-yi-ge-kong-zhi-tai-du-shan-bu-diao-de-dombao-hu-shui-yin/">
               <span class="post-title">
-                uni-app整包更新&rarr;
+                怎样实现一个控制台都删不掉的 DOM（保护水印）&rarr;
               </span>
             </a>
           </p>
