@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>归档 | AzhA</title>
+  <title>BFC是什么？ | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="归档 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="BFC是什么？ | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +25,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="BFC是什么？"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/bfc-shi-shi-me/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
   	<!-- Navigation -->
@@ -73,114 +78,102 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1 class="tag-tl">Archives</h1>
+          	<span class="tags">
+          	 
+            <a href="https://liujia12138.github.io/tag/BL8c3orKf/" class="tag">html</a>
+            
+        </span>
+            <h1>BFC是什么？</h1>
+            <span class="meta">
+            	Posted on
+              2020-08-04，3 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
+
   <!-- Post Content -->
   <article>
     <div class="container">
       <div class="row">
-        
-      
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="post-archives">
-    <h2 class="year">2018</h2>
-    
-                
-        <a href="https://liujia12138.github.io/post/git-ji-ben-ming-ling/" class="post">
-          <h2 class="post-title Archives">
-            git基本命令
-          </h2>
-          <div class="time post-meta">2018-05-09</div>
-        </a>
-  
-                    
-                
-        <a href="https://liujia12138.github.io/post/liu-lan-qi-jian-rong-wen-ti/" class="post">
-          <h2 class="post-title Archives">
-            浏览器兼容问题
-          </h2>
-          <div class="time post-meta">2018-04-11</div>
-        </a>
-  
-                    
-                
-        <a href="https://liujia12138.github.io/post/vue-lu-you-shou-wei/" class="post">
-          <h2 class="post-title Archives">
-            vue路由守卫
-          </h2>
-          <div class="time post-meta">2018-02-07</div>
-        </a>
-  
-                    
-                
-                    
-                
-                    
-                
-                    
-                
-                    
-        </div>
-        </div>
+          <h3 id="1-什么是bfc">1、什么是BFC？</h3>
+<p>Formatting context：格式化上下文，它是页面中的一块渲染区域，并且有一套渲染规则，它决定了它的子元素将如何定位，以及和其他元素的关系和相互作用。</p>
+<p>BFC（block-formatting-context）：块级格式化上下文。他是一个** 独立的渲染区域 **，具有BFC特性的元素可以看做是一块独立的容器，容器里面的元素不会在布局上影响到外面的元素，并且BFC具有普通容器所没有的一些特性。</p>
+<h3 id="2-触发bfc">2、触发BFC</h3>
+<p>主要元素满足以下任一条件即可触发BFC：</p>
+<ol>
+<li>html根元素</li>
+<li>浮动元素：float除none以外的值</li>
+<li>绝对定位的元素：position值为absolute和fixed，即脱离文档流</li>
+<li>display为inline-block、table-cells、flex的元素</li>
+<li>overflow为除了visible以为的值，即hidden、scroll、auto</li>
+</ol>
+<h3 id="3-bfc的特性及应用">3、BFC的特性及应用</h3>
+<ol>
+<li>同一个BFC下外边距会发生折叠</li>
+</ol>
+<div style="display:flex">
+        <img src="file:///Users/liujia/Gridea/post-images/1663406357333.png" style="width: 50%;">
+      <img src="file:///Users/liujia/Gridea/post-images/1663406375656.png" style="width: 50%;">
+</div>
+<p>从效果上看，因为两个div处于同一个BFC容器内，所以box1的下边距和box2的上边距发生了重叠，重叠的规则是取两个值中较大的值。</p>
+<h5 id="如何避免这种情况呢">如何避免这种情况呢？</h5>
+<p>将两个div放在不同的BFC容器中。</p>
+<ol start="2">
+<li>
+<p>BFC可以包含浮动的元素--清除浮动<br>
+清除浮动的方法之一就是给父级元素设置<code>overflow:hidden</code>或者<code>overflow:auto</code>，这个方法的本质就是构建一个BFC容器。</p>
+<h5 id="为什么构建bfc容器可以清除浮动呢">为什么构建BFC容器可以清除浮动呢？</h5>
+<p>因为浮动的元素触发了自身的BFC，使普通布局变成了浮动布局，脱离文档流，而容器因为子元素的浮动产生塌陷，BFC会让容器内部回到普通布局。<br>
+<img src="file:///Users/liujia/Gridea/post-images/1663409867487.png"/><br>
+上图由于子元素浮动，导致父元素只省下边框的高度。此时，给父元素设置<code>overflow:hidden</code>，使其触发BFC，那么容器将会包裹住浮动元素，使浮动元素处于标准文档流中，如下图：<img src="https://liujia12138.github.io/post-images/1663410124002.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>BFC可以阻止元素被浮动元素覆盖</p>
+<pre><code class="language-html">  &lt;div&gt;
+   &lt;div style=&quot;height: 100px; width: 100px; float: left; background: lightblue; opacity: 0.7&quot;&gt;
+     我是一个浮动元素
+   &lt;/div&gt;
+   &lt;div style=&quot;width: 200px; height: 200px; background: red&quot;&gt;
+     我没有设置浮动, 也没有触发 BFC 
+   &lt;/div&gt;
+ &lt;/div&gt;
+</code></pre>
+<p>上面的代码会导致第二个元素被前面浮动的元素遮挡，效果如图：<br>
+<img src="https://liujia12138.github.io/post-images/1663410721389.png" alt="" loading="lazy"><br>
+为了避免这种情况，我们可以给被遮挡的元素设置<code>overflow:hidden</code>，使其触发BFC</p>
+<pre><code class="language-html"></code></pre>
+</li>
+</ol>
+ <div>
+      <div style="height: 100px; width: 100px; float: left; background: lightblue; opacity: 0.7">
+        我是一个浮动元素
+      </div>
+       <div style="width: 200px; height: 200px; background: red;overflow: hidden;">
+        我触发了BFC
+      </div> 
+    </div>
+   ```
+   ![](https://liujia12138.github.io/post-images/1663410931173.png)
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/vue-de-data-wei-shi-me-yao-she-ji-cheng-han-shu-fan-hui-yi-ge-dui-xiang-er-bu-shi-zhi-jie-ding-yi-yi-ge-dui-xiang/">
+              <span class="post-title">
+                vue的data为什么要设计成函数返回一个对象而不是直接定义一个对象？&rarr;
+              </span>
+            </a>
+          </p>
         
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="post-archives">
-    <h2 class="year">2017</h2>
-    
-                
-                    
-                
-                    
-                
-                    
-                
-        <a href="https://liujia12138.github.io/post/css-xue-bi-tu-yong-xue-bi-tu-hui-you-shi-me-wen-ti/" class="post">
-          <h2 class="post-title Archives">
-            css雪碧图？用雪碧图会有什么问题？
-          </h2>
-          <div class="time post-meta">2017-07-13</div>
-        </a>
-  
-                    
-                
-        <a href="https://liujia12138.github.io/post/ru-he-pan-duan-shu-zu-he-lei-shu-zu-ru-he-jiang-lei-shu-zu-zhuan-cheng-shu-zu/" class="post">
-          <h2 class="post-title Archives">
-            如何判断数组和类数组？如何将类数组转成数组？
-          </h2>
-          <div class="time post-meta">2017-07-06</div>
-        </a>
-  
-                    
-                
-        <a href="https://liujia12138.github.io/post/qian-duan-liu-da-pai-xu-suan-fa/" class="post">
-          <h2 class="post-title Archives">
-            前端六大排序算法
-          </h2>
-          <div class="time post-meta">2017-04-09</div>
-        </a>
-  
-                    
-                
-        <a href="https://liujia12138.github.io/post/he-mo-xing-kuan-gao-zhi-de-ji-suan-fang-shi-bian-jie-ta-xian-fu-zhi-zuo-yong-box-sizing-gai-nian/" class="post">
-          <h2 class="post-title Archives">
-            盒模型宽高值的计算方式，边界塌陷，负值作用，box-sizing概念
-          </h2>
-          <div class="time post-meta">2017-01-06</div>
-        </a>
-  
-                    
+        <div class="comment">
+          
         </div>
-        </div>
-        
       </div>
     </div>
   </article>
-
-
  <!-- Footer -->
   <footer>
     <div class="container">
@@ -261,3 +254,4 @@
   })(this));</script>
   </body>
 </html>
+
