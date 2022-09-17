@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
   <head>
       <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>AzhA</title>
+  <title>vue的data为什么要设计成函数返回一个对象而不是直接定义一个对象？ | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="vue的data为什么要设计成函数返回一个对象而不是直接定义一个对象？ | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,9 +25,15 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="vue的data为什么要设计成函数返回一个对象而不是直接定义一个对象？"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/vue-de-data-wei-shi-me-yao-she-ji-cheng-han-shu-fan-hui-yi-ge-dui-xiang-er-bu-shi-zhi-jie-ding-yi-yi-ge-dui-xiang/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
-     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  	<!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
       <a class="navbar-brand" href="https://liujia12138.github.io">AzhA</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,128 +71,52 @@
       </div>
     </div>
   </nav>
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="site-heading">
-            <h1>AzhA</h1>
-            <span class="subheading">温故而知新</span>
+          <div class="post-heading">
+          	<span class="tags">
+          	 
+            <a href="https://liujia12138.github.io/tag/d8mNIHknn/" class="tag">vue</a>
+            
+        </span>
+            <h1>vue的data为什么要设计成函数返回一个对象而不是直接定义一个对象？</h1>
+            <span class="meta">
+            	Posted on
+              2020-07-14，1 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
-      <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/vue-lu-you-shou-wei/">
-            <h2 class="post-title">
-              vue路由守卫
-            </h2>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p>组件可能会被多次实例化，如果data是一个对象的话，所有的实例都会使用同一个数据对象，从而导致数据的混乱。而是用函数返回一个对象可以保证每个实例都拥有独立的数据对象，避免数据混乱。</p>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/vue-xiang-mu-zhong-shi-yong-jest-jin-xing-dan-yuan-ce-shi/">
+              <span class="post-title">
+                vue项目中使用jest进行单元测试&rarr;
+              </span>
             </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2018-02-07</span>
-             <span>,</span>
-             <span class="post-stats">2 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
+          </p>
         
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/css-xue-bi-tu-yong-xue-bi-tu-hui-you-shi-me-wen-ti/">
-            <h2 class="post-title">
-              css雪碧图？用雪碧图会有什么问题？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-07-13</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
+        <div class="comment">
+          
         </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/ru-he-pan-duan-shu-zu-he-lei-shu-zu-ru-he-jiang-lei-shu-zu-zhuan-cheng-shu-zu/">
-            <h2 class="post-title">
-              如何判断数组和类数组？如何将类数组转成数组？
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-07-06</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/qian-duan-liu-da-pai-xu-suan-fa/">
-            <h2 class="post-title">
-              前端六大排序算法
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-04-09</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/he-mo-xing-kuan-gao-zhi-de-ji-suan-fang-shi-bian-jie-ta-xian-fu-zhi-zuo-yong-box-sizing-gai-nian/">
-            <h2 class="post-title">
-              盒模型宽高值的计算方式，边界塌陷，负值作用，box-sizing概念
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2017-01-06</span>
-             <span>,</span>
-             <span class="post-stats">1 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        
-        <a class="btn btn-primary float-left" href="https://liujia12138.github.io/page/5/">&larr; 上一页</a>
-        
-        
       </div>
     </div>
-  </div>
-
-  
-    <!-- Footer -->
+  </article>
+ <!-- Footer -->
   <footer>
     <div class="container">
       <div class="row">
@@ -266,3 +196,4 @@
   })(this));</script>
   </body>
 </html>
+
