@@ -113,16 +113,14 @@
 </ol>
 <h3 id="3-bfc的特性及应用">3、BFC的特性及应用</h3>
 <ol>
-<li>同一个BFC下外边距会发生折叠</li>
-</ol>
-<div style="display:flex">
-        <img src="file:///Users/liujia/Gridea/post-images/1663406357333.png" style="width: 50%;">
-      <img src="file:///Users/liujia/Gridea/post-images/1663406375656.png" style="width: 50%;">
-</div>
+<li>
+<p>同一个BFC下外边距会发生折叠<br>
+<img src="https://liujia12138.github.io/post-images/1663465518437.png" alt="" loading="lazy"><br>
+<img src="https://liujia12138.github.io/post-images/1663465528063.png" alt="" loading="lazy"></p>
 <p>从效果上看，因为两个div处于同一个BFC容器内，所以box1的下边距和box2的上边距发生了重叠，重叠的规则是取两个值中较大的值。</p>
 <h5 id="如何避免这种情况呢">如何避免这种情况呢？</h5>
 <p>将两个div放在不同的BFC容器中。</p>
-<ol start="2">
+</li>
 <li>
 <p>BFC可以包含浮动的元素--清除浮动<br>
 清除浮动的方法之一就是给父级元素设置<code>overflow:hidden</code>或者<code>overflow:auto</code>，这个方法的本质就是构建一个BFC容器。</p>
