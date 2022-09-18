@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2022-09-18T02:33:45.349Z</updated>
+    <updated>2022-09-18T06:38:48.988Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -10,6 +10,67 @@
     <logo>https://liujia12138.github.io/images/avatar.png</logo>
     <icon>https://liujia12138.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, AzhA</rights>
+    <entry>
+        <title type="html"><![CDATA[js中如何判断两个对象是否相等]]></title>
+        <id>https://liujia12138.github.io/post/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/</id>
+        <link href="https://liujia12138.github.io/post/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">
+        </link>
+        <updated>2022-09-18T03:30:26.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="1-判断两个对象的引用地址">1、判断两个对象的引用地址</h4>
+<p>ES6中，提供了一个方法可以用来判断两个对象的引用地址是否一致：<code>Object.is(value1, value2)</code>。返回值为一个布尔值，如果两个对象引用地址一致则返回值为true，反之则为false</p>
+<p>####2、判断两个对象内容一致<br>
+想要比较两个对象的内容是否一致，需要遍历对象所有的键名和键值，判断是否完全一致。<br>
+实现思路：<br>
+1. 先判断两个对象引用地址是否一致<br>
+2. 获取对象所有键名的数组，并且判断长度是否一致<br>
+3. 遍历键名数组，判断键值是否都相等</p>
+<pre><code class="language-js">function isObjectValueEqual(obj1, obj2){
+    // 1.判断引用地址是否一致，一致则直接返回true
+    if(Object.is(obj1, obj2)) return true
+    const props1 = Object.getOwnPropertyNames(obj1)
+    const props2 = Object.getOwnPropertyNames(obj2)
+    // 2.判断键名数组长度是否一致，不一致则直接返回false
+    if(props1.length !== props2.length) return false;
+    // 3.键名数组长度一致，遍历键名数组，判断所有值是否一致
+    for(let prop in obj1){
+        // 3.1判断obj1的键值在obj2中是否存在，存在则进一步判断值，不存在直接返回false
+        if(obj2.hasOwnProperty(prop)){
+            // 3.2判断obj1的键值是否为对象，是则递归判断，否则直接判断值是否相等
+            if(typeof obj1[prop] === 'object'){
+                if(!isObjectValueEqual(obj1[prop],obj2[prop])) return false
+            }else{
+                if(obj1[prop] !== obj2[prop]) return false
+            }
+        }else{
+            return false
+        }
+    }
+    return true
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[JavaScript的内置对象、原生对象、宿主对象分别指的是什么？]]></title>
+        <id>https://liujia12138.github.io/post/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/</id>
+        <link href="https://liujia12138.github.io/post/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">
+        </link>
+        <updated>2022-09-18T02:48:46.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="1-内置对象">1、内置对象</h3>
+<p>由ECMAScript实现提供的、独立于宿主环境的所有对象。<br>
+内置对象在引擎初始化阶段就已经被创建好。<br>
+ECMA-262只定义了两个内置对象，即Global和Math。他们也是本地对象，即内置对象其实是本地对象的一种。</p>
+<h3 id="2-原生对象">2、原生对象</h3>
+<p>ECMA-262将本地对象定义为独立于宿主环境的ECMAScript实现提供对象。<br>
+除了内置对象外，原生对象还包括了一些在运行过程中创建的对象。<br>
+本地对象包括：Object、Function、Array、String、Number、Boolean、Date、RegExp、Error、EvalError、RangeError、ReferenceError、SyntaxError、TypeError、URLError<br>
+由此可以看出，本地对象就是ECMA定义的类。</p>
+<h3 id="3-宿主对象">3、宿主对象</h3>
+<p>ECMAScript中的宿主就是我们网页所运行的环境，即浏览器和操作系统。<br>
+所有的非本地对象都是宿主对象，即由ECMAScript实现的宿主环境提供的对象。<br>
+所有的DOM和BOM都是宿主对象。因为其对于不同的宿主环境所展示的内容是不一样的。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[react 和 vue 中的 key 有什么作用？]]></title>
         <id>https://liujia12138.github.io/post/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/</id>
@@ -975,56 +1036,6 @@ function sjs(leng) {
 <pre><code class="language-js">document.fonts.ready.then(()=&gt;{
   //执行echarts图
 })
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[uniapp如何在小程序端模拟数据]]></title>
-        <id>https://liujia12138.github.io/post/uniapp-ru-he-zai-xiao-cheng-xu-duan-mo-ni-shu-ju/</id>
-        <link href="https://liujia12138.github.io/post/uniapp-ru-he-zai-xiao-cheng-xu-duan-mo-ni-shu-ju/">
-        </link>
-        <updated>2021-03-09T06:58:01.000Z</updated>
-        <content type="html"><![CDATA[<h3 id="问题描述使用uniapp开发小程序发现运行到微信开发者工具时用mockjs模拟数据接口无法使用">问题描述：使用uniapp开发小程序，发现运行到微信开发者工具时用mockjs模拟数据接口无法使用</h3>
-<h3 id="解决办法">解决办法</h3>
-<p>使用better-mock</p>
-<h4 id="安装better-mock">安装better-mock</h4>
-<p>[官方文档]&lt;!https://lavyun.github.io/better-mock/document/&gt;</p>
-<pre><code>cnpm install better-mock --save-D
-</code></pre>
-<h4 id="引入better-mock">引入better-mock</h4>
-<p>因为better-mock完全兼容mockjs，只需要将mock目录下index.js中</p>
-<pre><code>const Mock = require('mockjs')
-</code></pre>
-<p>改为</p>
-<pre><code>const Mock = require('better-mock/dist/mock.mp.js')
-</code></pre>
-<p>再次运行就可以在微信开发者工具看到模拟的数据啦</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[vue报错You are using the runtime-only build of Vue where the template compiler is not available]]></title>
-        <id>https://liujia12138.github.io/post/vue-bao-cuo-you-are-using-the-runtime-only-build-of-vue-where-the-template-compiler-is-not-available/</id>
-        <link href="https://liujia12138.github.io/post/vue-bao-cuo-you-are-using-the-runtime-only-build-of-vue-where-the-template-compiler-is-not-available/">
-        </link>
-        <updated>2021-03-02T06:59:17.000Z</updated>
-        <content type="html"><![CDATA[<h3 id="问题描述使用vueant-design-vue时因为menu组件在v20之前不支持单文件递归所以使用了函数式组件但是编译时出现了下面的报错">问题描述：使用vue+ant-design-vue时，因为Menu组件在V2.0之前不支持单文件递归，所以使用了函数式组件，但是编译时出现了下面的报错</h3>
-<pre><code>[Vue warn]: You are using the runtime-only build of Vue where the template compiler is not available. Either pre-compile the templates into render functions, or use the compiler-included build.
-</code></pre>
-<p>翻译：您正在使用仅在运行时构建的Vue，其中模板编译器不可用。要么将模板预编译为呈现函数，要么使用包含编译器的构建。</p>
-<h4 id="原因">原因：</h4>
-<p>vue的构建版本分为：UMD， CommonJS，ES Module<br>
-<a href="https://cn.vuejs.org/v2/guide/installation.html">https://cn.vuejs.org/v2/guide/installation.html</a></p>
-<p><img src="https://liujia12138.github.io/post-images/1663052383565.png" alt="构建版本" loading="lazy"><br>
-<img src="https://liujia12138.github.io/post-images/1663052405859.png" alt="术语" loading="lazy"></p>
-<p>vue默认的是运行时的版本，无法处理模板字符串的编译工作，需要使用包含编译器的构建</p>
-<p>当需要客户端编译模板，如向template中传入一个字符串，或者需要将模板中的非DOM挂载到一个元素上时，就需要带有编译器（compiler）的构建版本。</p>
-<p>而.vue文件中的模板会在构建时预编译（pre-compile）为JavaScript，最终生成的bundle中不再需要编译器，因此通常情况下只需要包含运行时（runtime-only）的构建版本</p>
-<h4 id="解决方法">解决方法</h4>
-<p>在项目目录下新建vue.config.js，添加配置，使用包含运行时编译器的构建版本</p>
-<pre><code class="language-js">module.exports = {
-  //Solution For Issue:You are using the runtime-only build of Vue where the template compiler is not available. Either pre-compile the templates into render functions, or use the compiler-included build.
-  runtimeCompiler: true
-}
 </code></pre>
 ]]></content>
     </entry>
