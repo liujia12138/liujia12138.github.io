@@ -126,7 +126,7 @@
 清除浮动的方法之一就是给父级元素设置<code>overflow:hidden</code>或者<code>overflow:auto</code>，这个方法的本质就是构建一个BFC容器。</p>
 <h5 id="为什么构建bfc容器可以清除浮动呢">为什么构建BFC容器可以清除浮动呢？</h5>
 <p>因为浮动的元素触发了自身的BFC，使普通布局变成了浮动布局，脱离文档流，而容器因为子元素的浮动产生塌陷，BFC会让容器内部回到普通布局。<br>
-<img src="file:///Users/liujia/Gridea/post-images/1663409867487.png"/><br>
+<img src="https://liujia12138.github.io/post-images/1663409867487.png" alt="" loading="lazy"><br>
 上图由于子元素浮动，导致父元素只省下边框的高度。此时，给父元素设置<code>overflow:hidden</code>，使其触发BFC，那么容器将会包裹住浮动元素，使浮动元素处于标准文档流中，如下图：<img src="https://liujia12138.github.io/post-images/1663410124002.png" alt="" loading="lazy"></p>
 </li>
 <li>
@@ -143,19 +143,18 @@
 <p>上面的代码会导致第二个元素被前面浮动的元素遮挡，效果如图：<br>
 <img src="https://liujia12138.github.io/post-images/1663410721389.png" alt="" loading="lazy"><br>
 为了避免这种情况，我们可以给被遮挡的元素设置<code>overflow:hidden</code>，使其触发BFC</p>
-<pre><code class="language-html"></code></pre>
+<pre><code class="language-html"> &lt;div&gt;
+     &lt;div style=&quot;height: 100px; width: 100px; float: left; background: lightblue; opacity: 0.7&quot;&gt;
+         我是一个浮动元素
+     &lt;/div&gt;
+     &lt;div style=&quot;width: 200px; height: 200px; background: red;overflow: hidden;&quot;&gt;
+         我触发了BFC
+     &lt;/div&gt; 
+     &lt;/div&gt;
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://liujia12138.github.io/post-images/1663410931173.png" alt="" loading="lazy"></figure>
 </li>
 </ol>
- <div>
-      <div style="height: 100px; width: 100px; float: left; background: lightblue; opacity: 0.7">
-        我是一个浮动元素
-      </div>
-       <div style="width: 200px; height: 200px; background: red;overflow: hidden;">
-        我触发了BFC
-      </div> 
-    </div>
-   ```
-   ![](https://liujia12138.github.io/post-images/1663410931173.png)
 
           
           <p class="next-post">下一篇：
