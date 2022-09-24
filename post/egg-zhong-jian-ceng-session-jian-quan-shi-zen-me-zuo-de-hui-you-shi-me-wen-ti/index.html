@@ -141,14 +141,6 @@ token认证的流程：</p>
 - 2. 性能，jwt太长，由于jwt是无状态的，所有的数据都放在了JWT里面，经过编码之后的jwt会非常长，而cookie限制数据大小为4kb，很可能会存不下，所以token一般放在localstorage中。而且每次请求都会携带token，可能会导致http的请求头比请求体还要大，而sessionId只是一个很短的字符串，因此使用jwt认证的http请求要比session认证的开销大。</p>
 
           
-          <p class="next-post">下一篇：
-            <a href="https://liujia12138.github.io/post/vue-de-data-wei-shi-me-yao-she-ji-cheng-han-shu-fan-hui-yi-ge-dui-xiang-er-bu-shi-zhi-jie-ding-yi-yi-ge-dui-xiang/">
-              <span class="post-title">
-                vue的data为什么要设计成函数返回一个对象而不是直接定义一个对象？&rarr;
-              </span>
-            </a>
-          </p>
-        
         <div class="comment">
           
         </div>

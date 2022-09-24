@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>JS宏任务微任务和事件循环 | AzhA</title>
+  <title>JS宏任务微任务和事件循环（js的执行机制） | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="JS宏任务微任务和事件循环 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="JS宏任务微任务和事件循环（js的执行机制） | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,7 +25,7 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-    <meta property="og:description" content="JS宏任务微任务和事件循环"/>
+    <meta property="og:description" content="JS宏任务微任务和事件循环（js的执行机制）"/>
     <meta property="og:url" content="https://liujia12138.github.io/post/js-hong-ren-wu-wei-ren-wu-he-shi-jian-xun-huan/"/>
     <meta property="og:locale" content="zh-CN"/>
     <meta property="og:type" content="website"/>
@@ -83,10 +83,10 @@
             <a href="https://liujia12138.github.io/tag/CvMd75xEg/" class="tag">js</a>
             
         </span>
-            <h1>JS宏任务微任务和事件循环</h1>
+            <h1>JS宏任务微任务和事件循环（js的执行机制）</h1>
             <span class="meta">
             	Posted on
-              2020-01-07，3 min read
+              2020-01-07，4 min read
             </span>
           </div>
         </div>
@@ -99,12 +99,47 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <p>js是一门单线程语言，所有任务都需要排队执行，如果上一个任务要消耗很长的时间，下一个任务都不得不等待很长时间，这时设计者就把任务分为了同步任务和异步任务。同步任务在主线程上一个个执行，异步任务则会加入到任务队列，只有所有同步任务执行完，才会执行异步任务。</p>
+          <p>先猜一下下面代码是输出顺序是什么？</p>
+<pre><code class="language-js">console.log('---------- start --------------');
+setTimeout(() =&gt; {
+    console.log('setTimeout');
+}, 0)
+
+new Promise((resolve, reject) =&gt; {
+    for(var i = 0; i &lt; 5; i++) {
+        console.log(i);
+    }
+    resolve(); 
+    console.log('333')
+}).then(() =&gt; {
+    console.log('promise实例成功回调执行！');
+}).then(()=&gt;{
+    console.log('promise2')
+})
+console.log('------------- end ----------------');
+
+
+
+//输出结果
+/*
+---------- start --------------
+0
+1
+2
+3
+4
+------------- end ----------------
+promise实例成功回调执行
+promise2
+setTimeout
+*/
+</code></pre>
+<p>js是一门单线程语言，所有任务都需要排队执行，如果上一个任务要消耗很长的时间，下一个任务都不得不等待很长时间，这时设计者就把任务分为了同步任务和异步任务。同步任务在主线程上一个个执行，异步任务则会加入到任务队列，只有所有同步任务执行完，才会执行异步任务。</p>
 <p>异步任务有：setTimeout，setInterval，dom事件，promise， ajax</p>
-<p>按照这样的话，上面例子的setTimeout和promise是异步任务，加入到任务队列然后依次执行，但并不是这样，任务又分为宏任务和微任务</p>
-<p>宏任务和微任务：宏任务优先于微任务执行， 宏任务包括整体代码script，setTimeout，setInterval； 微任务包括promise，process.nextTick</p>
-<p>所以上面的例子先打印start---然后遇到setTimeout，setTimeout属于异步任务也属于宏任务，放到task（宏任务队列）里面---然后是promise，也是异步任务，但是是微任务，所以放到microtask（微任务队列）里面---然后执行到最后打印end；此时主线程js stack被清空。</p>
-<p>主线程执行完毕之后就会去清空微任务，所以接下来promise.then会被加入到主线程中去执行，执行完毕后，主线程又被清空了</p>
+<p>按照这样的话，上面例子的setTimeout和promise.then是异步任务，加入到任务队列然后依次执行，但并不是这样，异步任务又分为宏任务和微任务</p>
+<p>宏任务和微任务：宏任务优先于微任务执行， 宏任务包括整体代码script，setTimeout，setInterval，dom事件； 微任务包括promise，process.nextTick，MutationObserver（监听dom变化，具体用法可见《如何实现一个控制台删不掉的水印》）</p>
+<p>所以上面的例子中script整体为宏任务，依次执行同步任务，先打印start---&gt;然后遇到setTimeout，setTimeout属于异步任务也属于宏任务，放到task（宏任务队列）里面---&gt;然后是promise，创建promise实例的代码属于同步任务，直接执行（执行后会resolve会生成promise.then ，微任务，放到microtask（微任务队列）里面）---&gt;然后执行到最后打印end；此时主线程js stack被清空。</p>
+<p>主线程执行完毕之后就会去清空微任务，所以接下来promise.then会被加入到主线程中去执行，执行完毕后（又有一个新的promise.then），主线程又被清空了</p>
 <p>此时微任务队列里还有刚刚产生的promise.then，又被加入到主线程，打印出promise2</p>
 <p>此时微任务和主线程都被清空，接着从宏任务队列中取出一个宏任务加入到主线程中执行，打印出setTimeout</p>
 <p>此时主线程，微任务队列，宏任务队列都被清空了。</p>
@@ -114,12 +149,10 @@
   &lt;div class=&quot;inner&quot;&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;script&gt;
-// Let's get hold of those elements
+// 获取dom节点
 var outer = document.querySelector('.outer');
 var inner = document.querySelector('.inner');
 
-// Let's listen for attribute changes on the
-// outer element
 //监听element属性变化
 new MutationObserver(function() {
   console.log('mutate');
@@ -148,7 +181,19 @@ outer.addEventListener('click', onClick);
 &lt;/script&gt;
 </code></pre>
 <p>点击inner会打印什么？</p>
-<p>click事件是宏任务，加入到宏任务队列，setTimeout也是宏任务，promise和MutationObserver是微任务，加入到微任务队列 click promise mutate click promise mutate timeout timeout</p>
+<ol>
+<li>执行script标签</li>
+<li>dom事件是宏任务，加入到macrotask，此时macrotask内有两个onclick函数</li>
+<li>点击inner，执行第一个onclick，</li>
+<li>先打印click-&gt;setTimeout为宏任务，加到macrotask-&gt;promise.then和mutationObserver属于微任务，加入microtask，此时onclick函数体执行完成</li>
+<li>执行微任务，依次打印promise和mutate，微任务队列清空</li>
+<li>从macrotask中取出宏任务第二个onlick并执行</li>
+<li>重复步骤4，打印click</li>
+<li>重复步骤5，打印promise和mutate，微任务队列清空</li>
+<li>此时宏任务队列还有两个setTimeout</li>
+<li>依次执行Timeout</li>
+</ol>
+<p>所以打印顺序为<code>click-promise-mutate-click-promise-mutate-timeout-timeout</code></p>
 
           
           <p class="next-post">下一篇：
