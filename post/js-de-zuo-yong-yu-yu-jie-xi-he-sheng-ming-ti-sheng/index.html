@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>BFC是什么？ | AzhA</title>
+  <title>JS的作用域、预解析和声明提升 | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="BFC是什么？ | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="JS的作用域、预解析和声明提升 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,8 +25,8 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-    <meta property="og:description" content="BFC是什么？"/>
-    <meta property="og:url" content="https://liujia12138.github.io/post/bfc-shi-shi-me/"/>
+    <meta property="og:description" content="JS的作用域、预解析和声明提升"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/"/>
     <meta property="og:locale" content="zh-CN"/>
     <meta property="og:type" content="website"/>
     <meta property="og:site_name" content="AzhA"/>
@@ -80,13 +80,11 @@
           <div class="post-heading">
           	<span class="tags">
           	 
-            <a href="https://liujia12138.github.io/tag/BL8c3orKf/" class="tag">html</a>
-            
         </span>
-            <h1>BFC是什么？</h1>
+            <h1>JS的作用域、预解析和声明提升</h1>
             <span class="meta">
             	Posted on
-              2020-08-04，3 min read
+              2022-09-18，3 min read
             </span>
           </div>
         </div>
@@ -99,68 +97,50 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <h3 id="1-什么是bfc">1、什么是BFC？</h3>
-<p>Formatting context：格式化上下文，它是页面中的一块渲染区域，并且有一套渲染规则，它决定了它的子元素将如何定位，以及和其他元素的关系和相互作用。</p>
-<p>BFC（block-formatting-context）：块级格式化上下文。他是一个** 独立的渲染区域 **，具有BFC特性的元素可以看做是一块独立的容器，容器里面的元素不会在布局上影响到外面的元素，并且BFC具有普通容器所没有的一些特性。</p>
-<h3 id="2-触发bfc">2、触发BFC</h3>
-<p>主要元素满足以下任一条件即可触发BFC：</p>
+          <h3 id="作用域">作用域</h3>
+<p>作用域就是变量的有效范围。 在一定的空间里可以对数据进行读写操作，这个空间就是数据的作用域</p>
+<h4 id="1-全局作用域">1、全局作用域：</h4>
+<p>最外层函数定义的变量拥有全局作用域，即对任何内部函数来说，都是 可以访问的；</p>
+<h4 id="2-局部作用域">2、局部作用域：</h4>
+<p>局部作用域一般只在固定的代码片段内可访问到，而对于函数外部是无 法访问的，最常见的例如函数内部。在 ES6 之前，只有函数可以划分变量的作用域，所以 在函数的外面无法访问函数内的变量</p>
+<h4 id="3-块级作用域">3、块级作用域：</h4>
+<p>凡是代码块就可以划分变量的作用域，这种作用域的规则就叫块级作用域</p>
+<h4 id="块级作用域-函数作用域-词法作用域之间的区别">块级作用域 函数作用域 词法作用域之间的区别：</h4>
+<p>3.1）块级作用域和函数作用域描述的是，什么东西可以划分变量的作用域<br>
+3.2）词法作用域描述的是，变量的查找规则<br>
+之间的关系：<br>
+1、 块级作用域 包含 函数作用域<br>
+2、 词法作用域 与 块级作用域、函数作用域之间没有任何交集， 他们从两个角度描述了作用域的规则<br>
+ES6 之前 JavaScript 采用的是函数作用域+词法作用域，ES6 js 采用的是块级作用域+词法作用域</p>
+<h3 id="预解析">预解析</h3>
+<p>JavaScript 代码的执行是由浏览器中的 JavaScript 解析器来执行的。JavaScript 解析器执行 JavaScript 代码的时候，分为两个过程：预解析过程和代码执行过程</p>
+<h4 id="预解析过程都发生了什么">预解析过程都发生了什么？</h4>
 <ol>
-<li>html根元素</li>
-<li>浮动元素：float除none以外的值</li>
-<li>绝对定位的元素：position值为absolute和fixed，即脱离文档流</li>
-<li>display为inline-block、table-cells、flex的元素</li>
-<li>overflow为除了visible以为的值，即hidden、scroll、auto</li>
+<li>将变量的声明提升到作用域的最前面，只会提升声明，不会提升赋值。</li>
+<li>将函数的声明提升到作用域的最前面，只会提升声明，不会提升调用。</li>
+<li>函数提升的优先级大于变量提升的优先级</li>
 </ol>
-<h3 id="3-bfc的特性及应用">3、BFC的特性及应用</h3>
-<ol>
-<li>
-<p>同一个BFC下外边距会发生折叠<br>
-<img src="https://liujia12138.github.io/post-images/1663465518437.png" alt="" loading="lazy"><br>
-<img src="https://liujia12138.github.io/post-images/1663465528063.png" alt="" loading="lazy"></p>
-<p>从效果上看，因为两个div处于同一个BFC容器内，所以box1的下边距和box2的上边距发生了重叠，重叠的规则是取两个值中较大的值。</p>
-<h5 id="如何避免这种情况呢">如何避免这种情况呢？</h5>
-<p>将两个div放在不同的BFC容器中。</p>
-</li>
-<li>
-<p>BFC可以包含浮动的元素--清除浮动<br>
-清除浮动的方法之一就是给父级元素设置<code>overflow:hidden</code>或者<code>overflow:auto</code>，这个方法的本质就是构建一个BFC容器。</p>
-<h5 id="为什么构建bfc容器可以清除浮动呢">为什么构建BFC容器可以清除浮动呢？</h5>
-<p>因为浮动的元素触发了自身的BFC，使普通布局变成了浮动布局，脱离文档流，而容器因为子元素的浮动产生塌陷，BFC会让容器内部回到普通布局。<br>
-<img src="https://liujia12138.github.io/post-images/1663409867487.png" alt="" loading="lazy"><br>
-上图由于子元素浮动，导致父元素只省下边框的高度。此时，给父元素设置<code>overflow:hidden</code>，使其触发BFC，那么容器将会包裹住浮动元素，使浮动元素处于标准文档流中，如下图：<img src="https://liujia12138.github.io/post-images/1663410124002.png" alt="" loading="lazy"></p>
-</li>
-<li>
-<p>BFC可以阻止元素被浮动元素覆盖</p>
-<pre><code class="language-html">  &lt;div&gt;
-   &lt;div style=&quot;height: 100px; width: 100px; float: left; background: lightblue; opacity: 0.7&quot;&gt;
-     我是一个浮动元素
-   &lt;/div&gt;
-   &lt;div style=&quot;width: 200px; height: 200px; background: red&quot;&gt;
-     我没有设置浮动, 也没有触发 BFC 
-   &lt;/div&gt;
- &lt;/div&gt;
+<pre><code class="language-js">// 因为var先提升，所以此处的fn是函数fn
+console.log(fn);// [Function: fn]
+function fn (){
+  return 'fn'
+}
+var fn = 'aaa'
 </code></pre>
-<p>上面的代码会导致第二个元素被前面浮动的元素遮挡，效果如图：<br>
-<img src="https://liujia12138.github.io/post-images/1663410721389.png" alt="" loading="lazy"><br>
-为了避免这种情况，我们可以给被遮挡的元素设置<code>overflow:hidden</code>，使其触发BFC</p>
-<pre><code class="language-html"> &lt;div&gt;
-     &lt;div style=&quot;height: 100px; width: 100px; float: left; background: lightblue; opacity: 0.7&quot;&gt;
-         我是一个浮动元素
-     &lt;/div&gt;
-     &lt;div style=&quot;width: 200px; height: 200px; background: red;overflow: hidden;&quot;&gt;
-         我触发了BFC
-     &lt;/div&gt; 
-     &lt;/div&gt;
+<h3 id="声明提升">声明提升</h3>
+<p>如上面代码，使用var关键字声明的变量，或者使用函数声明创建的函数，可以先使用后声明。<br>
+需要注意的是，使用函数表达式的写法创建的函数，不会存在声明提升</p>
+<pre><code class="language-js">// 函数表达式
+var fn = function(){
+    return 'fn'
+}
 </code></pre>
-<figure data-type="image" tabindex="1"><img src="https://liujia12138.github.io/post-images/1663410931173.png" alt="" loading="lazy"></figure>
-</li>
-</ol>
 
           
           <p class="next-post">下一篇：
-            <a href="https://liujia12138.github.io/post/egg-zhong-jian-ceng-session-jian-quan-shi-zen-me-zuo-de-hui-you-shi-me-wen-ti/">
+            <a href="https://liujia12138.github.io/post/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">
               <span class="post-title">
-                egg中间层session鉴权是怎么做的？会有什么问题？&rarr;
+                js中如何判断两个对象是否相等&rarr;
               </span>
             </a>
           </p>

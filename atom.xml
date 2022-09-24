@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2022-09-18T06:38:48.988Z</updated>
+    <updated>2022-09-24T13:24:43.743Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -10,6 +10,52 @@
     <logo>https://liujia12138.github.io/images/avatar.png</logo>
     <icon>https://liujia12138.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, AzhA</rights>
+    <entry>
+        <title type="html"><![CDATA[JS的作用域、预解析和声明提升]]></title>
+        <id>https://liujia12138.github.io/post/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/</id>
+        <link href="https://liujia12138.github.io/post/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">
+        </link>
+        <updated>2022-09-18T07:28:18.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="作用域">作用域</h3>
+<p>作用域就是变量的有效范围。 在一定的空间里可以对数据进行读写操作，这个空间就是数据的作用域</p>
+<h4 id="1-全局作用域">1、全局作用域：</h4>
+<p>最外层函数定义的变量拥有全局作用域，即对任何内部函数来说，都是 可以访问的；</p>
+<h4 id="2-局部作用域">2、局部作用域：</h4>
+<p>局部作用域一般只在固定的代码片段内可访问到，而对于函数外部是无 法访问的，最常见的例如函数内部。在 ES6 之前，只有函数可以划分变量的作用域，所以 在函数的外面无法访问函数内的变量</p>
+<h4 id="3-块级作用域">3、块级作用域：</h4>
+<p>凡是代码块就可以划分变量的作用域，这种作用域的规则就叫块级作用域</p>
+<h4 id="块级作用域-函数作用域-词法作用域之间的区别">块级作用域 函数作用域 词法作用域之间的区别：</h4>
+<p>3.1）块级作用域和函数作用域描述的是，什么东西可以划分变量的作用域<br>
+3.2）词法作用域描述的是，变量的查找规则<br>
+之间的关系：<br>
+1、 块级作用域 包含 函数作用域<br>
+2、 词法作用域 与 块级作用域、函数作用域之间没有任何交集， 他们从两个角度描述了作用域的规则<br>
+ES6 之前 JavaScript 采用的是函数作用域+词法作用域，ES6 js 采用的是块级作用域+词法作用域</p>
+<h3 id="预解析">预解析</h3>
+<p>JavaScript 代码的执行是由浏览器中的 JavaScript 解析器来执行的。JavaScript 解析器执行 JavaScript 代码的时候，分为两个过程：预解析过程和代码执行过程</p>
+<h4 id="预解析过程都发生了什么">预解析过程都发生了什么？</h4>
+<ol>
+<li>将变量的声明提升到作用域的最前面，只会提升声明，不会提升赋值。</li>
+<li>将函数的声明提升到作用域的最前面，只会提升声明，不会提升调用。</li>
+<li>函数提升的优先级大于变量提升的优先级</li>
+</ol>
+<pre><code class="language-js">// 因为var先提升，所以此处的fn是函数fn
+console.log(fn);// [Function: fn]
+function fn (){
+  return 'fn'
+}
+var fn = 'aaa'
+</code></pre>
+<h3 id="声明提升">声明提升</h3>
+<p>如上面代码，使用var关键字声明的变量，或者使用函数声明创建的函数，可以先使用后声明。<br>
+需要注意的是，使用函数表达式的写法创建的函数，不会存在声明提升</p>
+<pre><code class="language-js">// 函数表达式
+var fn = function(){
+    return 'fn'
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[js中如何判断两个对象是否相等]]></title>
         <id>https://liujia12138.github.io/post/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/</id>
@@ -1020,23 +1066,6 @@ function sjs(leng) {
         <updated>2021-09-29T06:56:13.000Z</updated>
         <content type="html"><![CDATA[<h3 id="el-table自定义表头使用slotheader数据无法更新">el-table自定义表头，使用slot=&quot;header&quot;数据无法更新</h3>
 <p>解决方法：将slot=“header” 改成#header</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[ECharts引入外部字体]]></title>
-        <id>https://liujia12138.github.io/post/echarts-yin-ru-wai-bu-zi-ti/</id>
-        <link href="https://liujia12138.github.io/post/echarts-yin-ru-wai-bu-zi-ti/">
-        </link>
-        <updated>2021-09-15T06:50:51.000Z</updated>
-        <content type="html"><![CDATA[<h3 id="问题描述echarts引入外部字体文件时页面渲染异常出现部分文字没有渲染成指定字体的情况"><strong>问题描述</strong>：echarts引入外部字体文件时，页面渲染异常，出现部分文字没有渲染成指定字体的情况</h3>
-<p>如图:<br>
-<img src="https://liujia12138.github.io/post-images/1663052022764.png" alt="" loading="lazy"></p>
-<h3 id="原因字体文件未加载完成就完成了echarts图表部分的代码">原因：字体文件未加载完成就完成了echarts图表部分的代码</h3>
-<h3 id="解决办法等字体下载完再画图或者压缩字体文件">解决办法：等字体下载完再画图或者压缩字体文件</h3>
-<pre><code class="language-js">document.fonts.ready.then(()=&gt;{
-  //执行echarts图
-})
-</code></pre>
 ]]></content>
     </entry>
 </feed>

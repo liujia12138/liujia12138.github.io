@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>BFC是什么？ | AzhA</title>
+  <title>egg中间层session鉴权是怎么做的？会有什么问题？ | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="BFC是什么？ | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="egg中间层session鉴权是怎么做的？会有什么问题？ | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,8 +25,8 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
-    <meta property="og:description" content="BFC是什么？"/>
-    <meta property="og:url" content="https://liujia12138.github.io/post/bfc-shi-shi-me/"/>
+    <meta property="og:description" content="egg中间层session鉴权是怎么做的？会有什么问题？"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/egg-zhong-jian-ceng-session-jian-quan-shi-zen-me-zuo-de-hui-you-shi-me-wen-ti/"/>
     <meta property="og:locale" content="zh-CN"/>
     <meta property="og:type" content="website"/>
     <meta property="og:site_name" content="AzhA"/>
@@ -80,13 +80,15 @@
           <div class="post-heading">
           	<span class="tags">
           	 
-            <a href="https://liujia12138.github.io/tag/BL8c3orKf/" class="tag">html</a>
+            <a href="https://liujia12138.github.io/tag/AqJbgMDWp/" class="tag">服务端</a>
+            
+            <a href="https://liujia12138.github.io/tag/_CM5EBSSy/" class="tag">node</a>
             
         </span>
-            <h1>BFC是什么？</h1>
+            <h1>egg中间层session鉴权是怎么做的？会有什么问题？</h1>
             <span class="meta">
             	Posted on
-              2020-08-04，3 min read
+              2020-07-21，5 min read
             </span>
           </div>
         </div>
@@ -99,68 +101,50 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <h3 id="1-什么是bfc">1、什么是BFC？</h3>
-<p>Formatting context：格式化上下文，它是页面中的一块渲染区域，并且有一套渲染规则，它决定了它的子元素将如何定位，以及和其他元素的关系和相互作用。</p>
-<p>BFC（block-formatting-context）：块级格式化上下文。他是一个** 独立的渲染区域 **，具有BFC特性的元素可以看做是一块独立的容器，容器里面的元素不会在布局上影响到外面的元素，并且BFC具有普通容器所没有的一些特性。</p>
-<h3 id="2-触发bfc">2、触发BFC</h3>
-<p>主要元素满足以下任一条件即可触发BFC：</p>
+          <p>因为egg中间件是遵循洋葱圈模型的，每一个请求都会经过中间件的一层层处理。<br>
+egg的session基于session，但是和cookie不同的是cookie保存在客户端中，session保存在服务端，相对于cookie更安全；</p>
+<p>用户登录之后，将user信息放到session中，后端接口需要用户信息时，在中间层中加入到请求体中，不会暴露在浏览器上；</p>
+<p>2020-10-18补充：为什么需要session鉴权？<br>
+因为http协议是一种无状态的协议，当用户提供给我们用户信息进行认证之后，下一次请求时用户还需要再次进行认证，因为http协议的无法取到上一次的用户信息，所以我们并不知道这次请求是哪个用户发出的，（传统session鉴权：）所以为了让我们能够识别是哪个用户发起的请求，需要在服务器上存储一段用户信息的token，这个token会在响应时传递给浏览器，并且告诉浏览器保存为cookie，以便于下次请求时发送给服务端，这样我们就能辨别是哪个用户了。</p>
+<p>基于session认证暴露出来的问题：1.服务端开销大，因为每个用户经过我们的认证之后，都需要在服务端记录一次，通常都是保存在内存中，随着用户的增多，服务端开销会明显增大；2.扩展性：用户认证之后服务端做认证记录，如果认证记录被保存在内存中的话，意味着用户下一次请求还必须在这台服务器上，这样才能拿到认证信息；3.csrf：因为是基于cookie来进行用户识别，会暴露在浏览器中，cookie如果被截获，用户就会很容易受到跨站请求伪造的攻击。</p>
+<p>2022-09-24补充：<br>
+用户认证和授权？<br>
+用户认证，指的是认证用户的身份，比如用户登录某个系统，系统需要用户输入用户名和密码来确认你真的是用户本人。<br>
+授权，指的是认证用户之后，提供给用户的对系统的某些操作权限，比如某些用户权限只能查看数据，而某些用户可以查看并且修改数据。（权限控制，RBAC模型，用户-角色-权限）</p>
+<p>目前的主流用户认证方式有基于session和基于token两种方式。</p>
+<p>这两种认证方式有什么区别？优缺点？<br>
+session认证的流程：</p>
 <ol>
-<li>html根元素</li>
-<li>浮动元素：float除none以外的值</li>
-<li>绝对定位的元素：position值为absolute和fixed，即脱离文档流</li>
-<li>display为inline-block、table-cells、flex的元素</li>
-<li>overflow为除了visible以为的值，即hidden、scroll、auto</li>
+<li>用户登录，并提交登录信息</li>
+<li>服务端验证信息是否正确，正确则创建一个session，并存储在数据库中</li>
+<li>服务端为用户生成一个sessionId，将含有sessionId的cookie存在客户端中</li>
+<li>后续请求中，服务端接收到请求后会先去验证sessionId，如果有效，则接受请求</li>
+<li>用户登出，服务端和客户端都会销毁session</li>
 </ol>
-<h3 id="3-bfc的特性及应用">3、BFC的特性及应用</h3>
+<p>token认证，jwt（JSON Web Token），是基于token的用户认证<br>
+token认证的流程：</p>
 <ol>
-<li>
-<p>同一个BFC下外边距会发生折叠<br>
-<img src="https://liujia12138.github.io/post-images/1663465518437.png" alt="" loading="lazy"><br>
-<img src="https://liujia12138.github.io/post-images/1663465528063.png" alt="" loading="lazy"></p>
-<p>从效果上看，因为两个div处于同一个BFC容器内，所以box1的下边距和box2的上边距发生了重叠，重叠的规则是取两个值中较大的值。</p>
-<h5 id="如何避免这种情况呢">如何避免这种情况呢？</h5>
-<p>将两个div放在不同的BFC容器中。</p>
-</li>
-<li>
-<p>BFC可以包含浮动的元素--清除浮动<br>
-清除浮动的方法之一就是给父级元素设置<code>overflow:hidden</code>或者<code>overflow:auto</code>，这个方法的本质就是构建一个BFC容器。</p>
-<h5 id="为什么构建bfc容器可以清除浮动呢">为什么构建BFC容器可以清除浮动呢？</h5>
-<p>因为浮动的元素触发了自身的BFC，使普通布局变成了浮动布局，脱离文档流，而容器因为子元素的浮动产生塌陷，BFC会让容器内部回到普通布局。<br>
-<img src="https://liujia12138.github.io/post-images/1663409867487.png" alt="" loading="lazy"><br>
-上图由于子元素浮动，导致父元素只省下边框的高度。此时，给父元素设置<code>overflow:hidden</code>，使其触发BFC，那么容器将会包裹住浮动元素，使浮动元素处于标准文档流中，如下图：<img src="https://liujia12138.github.io/post-images/1663410124002.png" alt="" loading="lazy"></p>
-</li>
-<li>
-<p>BFC可以阻止元素被浮动元素覆盖</p>
-<pre><code class="language-html">  &lt;div&gt;
-   &lt;div style=&quot;height: 100px; width: 100px; float: left; background: lightblue; opacity: 0.7&quot;&gt;
-     我是一个浮动元素
-   &lt;/div&gt;
-   &lt;div style=&quot;width: 200px; height: 200px; background: red&quot;&gt;
-     我没有设置浮动, 也没有触发 BFC 
-   &lt;/div&gt;
- &lt;/div&gt;
-</code></pre>
-<p>上面的代码会导致第二个元素被前面浮动的元素遮挡，效果如图：<br>
-<img src="https://liujia12138.github.io/post-images/1663410721389.png" alt="" loading="lazy"><br>
-为了避免这种情况，我们可以给被遮挡的元素设置<code>overflow:hidden</code>，使其触发BFC</p>
-<pre><code class="language-html"> &lt;div&gt;
-     &lt;div style=&quot;height: 100px; width: 100px; float: left; background: lightblue; opacity: 0.7&quot;&gt;
-         我是一个浮动元素
-     &lt;/div&gt;
-     &lt;div style=&quot;width: 200px; height: 200px; background: red;overflow: hidden;&quot;&gt;
-         我触发了BFC
-     &lt;/div&gt; 
-     &lt;/div&gt;
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://liujia12138.github.io/post-images/1663410931173.png" alt="" loading="lazy"></figure>
-</li>
+<li>用户登录，并提交登录信息</li>
+<li>服务端认证信息是否正确，正确则返回已签名的token</li>
+<li>客户端拿到token并将token存在客户端，如localStorage或Cookie中，并且之后的每次请求都将token放在请求头中</li>
+<li>后续请求中，服务端拿到token进行解析，如果有效则接受请求</li>
+<li>若token失效或者token错误，jwt解析会抛出错误</li>
+<li>用户登出，客户端销毁token，可以不与服务端进行交互，因为服务端不会保存token</li>
 </ol>
+<p>session认证和token认证的区别？<br>
+主要区别就是用户认证信息的保存位置，session是保存在服务端的，token是保存在客户端的。</p>
+<p>jwt的优点：<br>
+- 1. 扩展性好，在分布式部署的情况下，session需要做多机数据共享，通常可以存在数据库或者redis中。而jwt不需要客户端存储<br>
+- 2. 无状态，jwt不在服务端中存储，RESTful API的原则之一就是无状态，发出请求时，总会返回带有参数的响应，不会产生附加影响，不会产生附加影响。</p>
+<p>jwt的缺点：<br>
+- 1. 安全性，由于jwt的载荷使用的base64编码，没有加密，因为jwt中不能存储敏感信息，比如用户的密码等。而session是存在服务端的，相对来说更加安全<br>
+- 2. 性能，jwt太长，由于jwt是无状态的，所有的数据都放在了JWT里面，经过编码之后的jwt会非常长，而cookie限制数据大小为4kb，很可能会存不下，所以token一般放在localstorage中。而且每次请求都会携带token，可能会导致http的请求头比请求体还要大，而sessionId只是一个很短的字符串，因此使用jwt认证的http请求要比session认证的开销大。</p>
 
           
           <p class="next-post">下一篇：
-            <a href="https://liujia12138.github.io/post/egg-zhong-jian-ceng-session-jian-quan-shi-zen-me-zuo-de-hui-you-shi-me-wen-ti/">
+            <a href="https://liujia12138.github.io/post/vue-de-data-wei-shi-me-yao-she-ji-cheng-han-shu-fan-hui-yi-ge-dui-xiang-er-bu-shi-zhi-jie-ding-yi-yi-ge-dui-xiang/">
               <span class="post-title">
-                egg中间层session鉴权是怎么做的？会有什么问题？&rarr;
+                vue的data为什么要设计成函数返回一个对象而不是直接定义一个对象？&rarr;
               </span>
             </a>
           </p>
