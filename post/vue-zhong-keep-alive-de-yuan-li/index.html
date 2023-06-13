@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>webpack | AzhA</title>
+  <title>vue中keep-alive的原理 | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="webpack | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="vue中keep-alive的原理 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +25,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="vue中keep-alive的原理"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/vue-zhong-keep-alive-de-yuan-li/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
   	<!-- Navigation -->
@@ -66,87 +71,134 @@
       </div>
     </div>
   </nav>
-<!-- Page Header -->
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1 class="tag-tl">#webpack</h1>
+          	<span class="tags">
+          	 
+        </span>
+            <h1>vue中keep-alive的原理</h1>
+            <span class="meta">
+            	Posted on
+              2022-09-26，3 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
+
+  <!-- Post Content -->
+  <article>
     <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/vue2vue-cli4da-bao-xing-neng-you-hua/">
-            <h2 class="post-title">
-              vue打包性能优化
-            </h2>
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <h3 id="1-keep-alive是什么">1. keep-alive是什么？</h3>
+<p>keep-alive是一个抽象组件，他本身不会渲染成一个dom元素，也不会出现在父组件的链式调用中。<br>
+keep-alive可以在切换组件时，保存他所包裹的组件的状态，使其不被销毁。</p>
+<p>使用场景：<br>
+通常在项目中使用标签页切换路由组件这种情况下，我们从列表页点击【修改】某个数据项时，通过系统内打开标签页的方式打开编辑页，进行一些操作后，我们又切回了列表页，我们希望可以保留编辑页内刚刚的操作，这时使用keep-alive就可以解决这种场景。<br>
+keep-alive除了可以保存组件状态，还可以避免组件被反复创建和渲染，可以有效提升系统性能。</p>
+<h3 id="2-keep-alive的用法">2. keep-alive的用法</h3>
+<p>keep-alive对外提供了三个属性，include/exclude/max 。两个生命周期，activated/deactivated。<br>
+include：对哪些进行缓存<br>
+exclude：对哪些不进行缓存<br>
+max：最多缓存多少个</p>
+<h3 id="3-源码解析">3. 源码解析</h3>
+<pre><code class="language-js">export default{
+	name:'keep-alive',
+
+	abstract:true, //判断当前组件虚拟dom是否渲染成真实dom的关键
+
+	props:{
+		include:patternTypes, //缓存白名单
+		exclude：patternTypes, //缓存黑名单
+		max:[string,number], //混存的组件实例数量上限
+	},
+
+	created(){
+		this.cache = Object.create(null) //缓存虚拟dom
+		this.keys = [] //缓存的虚拟dom的键集合
+	},
+
+	destroyed(){
+		for(const key in this.cache){ //删除所有缓存
+			pruneCachEntry(this.cache,key,this.keys)
+		}
+	},
+
+	mounted(){
+		// &lt;!-- 实时监听黑白名单的变动 --&gt;
+		this.$watch('include',val =&gt; {
+			pruneCache(this,name =&gt; matches(val,name))
+		})
+
+		this.$watch('exclude',val =&gt; {
+			pruneCache(this,name =&gt; matches(val,name))
+		})
+	},
+
+	render(){
+		const slot = this.$slots.default
+		const vnode:VNode = getFirstComponentChild(slot); //找到第一个子组件对象
+		const componentOptions:?VNodeComponentOptions = vnode &amp;&amp; vnode.componentOptions
+
+		if(componentOptions){ //存在组件参数
+			&lt;!-- check pattern --&gt;
+			const name:?string = getComponent(componentOptions) //组件名称
+			const {include,exclude} = this;
+
+			&lt;!-- 条件匹配 --&gt;
+			if((include &amp;&amp; (!name || !matches(include,name))) || (exclude &amp;&amp; name &amp;&amp; matches(exclude,name))){
+				return vnode
+			}
+
+
+			const {cache ,keys} = this;
+
+			&lt;!-- 定义组件的缓存key --&gt;
+			const key:?string = vnode.key == null  ？ componentOptions.Ctor.cid + (componentOptions.tag ? `::${componentOptions.tag}`) : vnode.key
+
+			&lt;!-- 已经缓存过的组件 --&gt;
+			if(cache[key]){
+				vnode.componentInstance = cache[key].componentInstance
+				remove(keys,key)
+				keys.push(key) //调整key排序
+			}else{
+				cache[key] = vnode //缓存组件对象
+				keys.push(key)
+
+				if(this.max &amp;&amp; keys.length &gt; parseInt(this.max)){ //超过缓存数限制，将第一个删除
+					pruneCacheEntry(cache,keys[0],keys,this._vnode)
+				}
+			}
+		}
+	vnode.data.keepAlive = true //渲染和执行被包裹组件的钩子函数需要用到
+	}
+
+	return vnode || (slot &amp;&amp; slot[0])
+}
+</code></pre>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">
+              <span class="post-title">
+                如何做到执行JS 而不影响页面的css加载？&rarr;
+              </span>
             </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2022-09-26</span>
-             <span>,</span>
-             <span class="post-stats">4 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
+          </p>
         
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/vuewebpack-shi-xian-duo-ru-kou-jia-gou/">
-            <h2 class="post-title">
-              vue+webpack 实现多入口架构
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2022-05-18</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
+        <div class="comment">
+          
         </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/eggvuewebpack-fu-wu-duan-xuan-ran/">
-            <h2 class="post-title">
-              Egg+Vue+webpack 服务端渲染
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-03-17</span>
-             <span>,</span>
-             <span class="post-stats">11 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        
-        
       </div>
     </div>
-  </div>
-
-  
+  </article>
  <!-- Footer -->
   <footer>
     <div class="container">
@@ -227,3 +279,4 @@
   })(this));</script>
   </body>
 </html>
+

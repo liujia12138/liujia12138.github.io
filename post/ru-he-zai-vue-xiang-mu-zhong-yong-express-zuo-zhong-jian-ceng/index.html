@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta content="yes" name="apple-mobile-web-app-capable" />
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+  <meta name="referrer" content="never">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <meta name="author" content="kveln">
+  <title>如何在vue项目中用Express做中间层 | AzhA</title>
+  <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
+  <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
+  <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+  <link rel="alternate" type="application/rss+xml" title="如何在vue项目中用Express做中间层 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+  <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/highlight.min.js"></script>
+  <!-- <script src="https://liujia12138.github.io/media/scripts/jquery.min.js"></script> -->
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+
+    <meta property="og:description" content="如何在vue项目中用Express做中间层"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
+  </head>
+  <body>
+  	<!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="https://liujia12138.github.io">AzhA</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="https://liujia12138.github.io">Home</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="https://liujia12138.github.io/archives">Archives</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="https://liujia12138.github.io/tags">Tags</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="https://liujia12138.github.io/post/about">About</a>
+              
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+          	<span class="tags">
+          	 
+        </span>
+            <h1>如何在vue项目中用Express做中间层</h1>
+            <span class="meta">
+            	Posted on
+              2022-10-24，6 min read
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p>背景：在已有的vue2项目中，需要进行BFF开发，进行数据聚合和接口转发。为便于代码管理，将Express项目和前端放在一个代码仓库内，不进行拆分。</p>
+<h3 id="一-在项目根目录下新建server目录并进入到server目录内">一、在项目根目录下新建server目录，并进入到server目录内</h3>
+<h3 id="二-初始化项目">二、初始化项目</h3>
+<h4 id="1初始化">1.初始化</h4>
+<p><code>npm init</code><br>
+为了避免依赖会有版本冲突，Express单独维护自己的node_modules</p>
+<h4 id="2安装express">2.安装express</h4>
+<p><code>npm i express --save</code></p>
+<h4 id="3安装typescript">3.安装typescript</h4>
+<p>安装typescript、ts-node（用来监听ts文件的变化并更新服务），node和express的声明文件@types/node @types/express<br>
+<code>npm i typescript ts-node @types/express @types/node -D</code></p>
+<h4 id="4-ts环境配置">4. ts环境配置</h4>
+<p>新建tsconfig.json文件</p>
+<pre><code class="language-json">{
+        // 指定需要编译文件 否则默认当前目录下除了exclude之外的所有.ts, .d.ts,.tsx 文件
+        &quot;include&quot;:[&quot;app.ts&quot;],
+        &quot;compilerOptions&quot;: {
+            // 指定使用的模块 ：commonjs amd system cmd  or es2015
+            &quot;module&quot;: &quot;commonjs&quot;,
+              /* 注意：如果未指定--lib，则会注入默认的librares列表。注入的默认库为：
+                对于 --target ES5: DOM,ES5,ScriptHost
+                对于 --target ES6: DOM,ES6,DOM.Iterable,ScriptHost
+                TS 绝不会在您的代码中注入polyfill,所以需要你自己制定编译lib */
+            &quot;lib&quot;: [&quot;ESNext&quot;],
+             // 指定 ECMAScript 目标版本: 'ES3' (default), 'ES5', 'ES2015', 'ES2016'，'ES2017', or 'ESNEXT'
+            &quot;target&quot;: &quot;ES6&quot;,
+            // 编译输入文件存放的目录
+            &quot;outDir&quot;: &quot;build&quot;,
+            // 是否生成.map文件
+            &quot;sourceMap&quot;: true,
+            &quot;esModuleInterop&quot;: true,
+            &quot;forceConsistentCasingInFileNames&quot;: true,
+            &quot;strict&quot;: true,
+            /* Strict Type-Checking Options */
+            // 严格模式将会打开下面的几个选项
+            &quot;strict&quot;: false, 
+            /* 不允许变量或函数参数具有隐式any类型,例如
+            function(name) {
+                return name;
+            } */
+            &quot;noImplicitAny&quot;: true,
+            // null类型检测,const teacher: string = null;会报错
+            &quot;strictNullChecks&quot;: true,
+            // 对函数参数进行严格逆变比较
+            &quot;strictFunctionTypes&quot;: true,
+            // 严格检查bind call apply
+            &quot;strictBindCallApply&quot;: true,
+            // 此规则将验证构造函数内部初始化前后已定义的属性。
+            &quot;strictPropertyInitialization&quot;: true,
+            // 检测this是否隐式指定
+            &quot;noImplicitThis&quot;: true,
+            // 使用js的严格模式,在每一个文件上部声明 use strict
+            &quot;alwaysStrict&quot;: true,
+            /* Additional Checks */
+            // 默认false,是否检测定义了但是没使用的变量
+            &quot;noUnusedLocals&quot;: true,
+            // 用于检查是否有在函数体中没有使用的参数
+            &quot;noUnusedParameters&quot;: true,
+            // 用于检查函数是否有返回值，设为true后，如果函数没有返回值则会提示
+            &quot;noImplicitReturns&quot;: true,
+            // 用于检查switch中是否有case没有使用break跳出switch
+            &quot;noFallthroughCasesInSwitch&quot;: true,
+        }
+}
+</code></pre>
+<h3 id="5-新建controller目录用来管理路由">5. 新建controller目录，用来管理路由</h3>
+<p>创建article.ts文件，定义文章相关的路由</p>
+<pre><code class="language-js">import express from 'express'
+import {Response, Request} from 'express'
+
+const router = express.Router()
+
+// 文章分类列表
+// 路由处理函数一般会有读写数据库的操作，一般会抽离出来，单独在service目录下管理
+router.get('/cates/list', function(req:Request, res:Response)=&gt;{
+    // do something
+    res.send({
+        code: 0,
+        msg: 'success',
+        data:[]
+    })
+})
+
+export default router
+</code></pre>
+<h4 id="6-server目录下新建入口文件-appts">6. server目录下新建入口文件 app.ts</h4>
+<pre><code class="language-js">import express from 'express'
+import articleRouter from './controller/artcate''
+import mw from './middleware'
+
+const app = express()
+
+app.use('/article', articleRouter)
+
+// 错误级别中间件
+app.use(mw.errorHandler)
+
+app.listen(3007, () =&gt; {
+  console.log('api server is running at http://127.0.0.1:3007')
+})
+</code></pre>
+<h4 id="7packagejson中新增启动脚本">7.package.json中新增启动脚本</h4>
+<pre><code class="language-js">&quot;script&quot;:{
+    &quot;dev&quot;: &quot;nodemon app.ts&quot;
+}
+</code></pre>
+<p>此时运行<code>npm run dev</code>，在postman中就可以正常请求/article/cates/list 接口了</p>
+<h3 id="三-公共配置">三、公共配置</h3>
+<h4 id="1-日志输出">1. 日志输出</h4>
+<p>安装pino和dayjs<br>
+<code>npm i pino pino-pretty dayjs --save</code><br>
+<code>npm i @types/pino -D</code></p>
+<p>异常监控 Sentry</p>
+<h4 id="2-统一响应参数">2. 统一响应参数</h4>
+<p>新建const目录，用于存放常量。在const目录下新建code.ts用于存放相应参数，包括status、code和message</p>
+<pre><code class="language-js">export enum HTTP_CODE {
+  SUCCESS = 0,
+  BAD_REQUEST = 400,
+  UNAUTHORIZED = 401,
+  NOT_FOUND = 404,
+  BAD_SERVER = 500,
+  NOT_IMPLEMENTED = 501,
+  BAD_GATEWAY = 502,
+  UNAVAILABLE = 503
+}
+
+export enum CODE_MESSAGE {
+  SUCCESS = 'success',
+  BAD_REQUEST = 'BAD_REQUEST',
+  UNAUTHORIZED = '未授权',
+  NOT_FOUND = '404',
+  BAD_SERVER = '请求异常',
+  NOT_IMPLEMENTED = 'NOT_IMPLEMENTED',
+  BAD_GATEWAY = 'BAD_GATEWAY',
+  UNAVAILABLE = 'UNAVAILABLE'
+}
+
+// 状态类型 只能是Code中所枚举的状态
+export type CODE_TYPE = keyof typeof HTTP_CODE
+</code></pre>
+<p>utils目录下新建commonRes.ts ，对响应进行统一处理</p>
+<pre><code class="language-js">import { Console } from 'console'
+import { Response } from 'express'
+import { HTTP_CODE, CODE_MESSAGE, CODE_TYPE } from '../common/const/code'
+import logger from './logger'
+
+interface ResOption {
+  type?: CODE_TYPE
+  message?: string
+  status?: number
+}
+
+// 默认成功响应
+function commonRes(res: Response, data: any, options?: ResOption) {
+  options = Object.assign({ type: HTTP_CODE[0] }, options || {}) // 默认success
+
+  const { type, status, message } = options
+
+  let resStatus = status
+
+  if (resStatus === undefined) {
+    // 根据状态设置状态码
+    resStatus = type === HTTP_CODE[3000] ? 200 : 409
+  }
+
+  // 响应参数
+  const sendRes: { code: number; data: any; message?: string } = {
+    code: HTTP_CODE[type as CODE_TYPE],
+    data
+  }
+
+  // 响应描述
+  message &amp;&amp; (sendRes.message = message)
+
+  return res.status(resStatus).send(sendRes)
+}
+
+// 错误响应
+commonRes.error = function (
+  res: Response,
+  data: unknown,
+  status: number,
+  message?: unknown
+) {
+  const type = HTTP_CODE[status]
+  const msg = message || (CODE_MESSAGE[type] as string)
+
+  logger.error(msg)
+
+  this(res, data, {
+    type: type,
+    message: msg,
+    status: status
+  })
+}
+
+// 无权限响应
+commonRes.denied = function (res: Response, data: unknown) {
+  this(res, data, {
+    type: 'UNAUTHORIZED',
+    message: CODE_MESSAGE['UNAUTHORIZED'],
+    status: 401
+  })
+}
+
+export default commonRes
+
+</code></pre>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/ru-he-you-hua-webpack-pei-zhi/">
+              <span class="post-title">
+                如何优化webpack配置&rarr;
+              </span>
+            </a>
+          </p>
+        
+        <div class="comment">
+          
+        </div>
+      </div>
+    </div>
+  </article>
+ <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+            <li class="list-inline-item">
+              <a href="https://chogath.top/" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <li class="list-inline-item">
+              <a href="https://liujia12138.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li>
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>AzhA</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://liujia12138.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://liujia12138.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  </body>
+</html>
+

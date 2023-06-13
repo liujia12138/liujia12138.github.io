@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>webpack | AzhA</title>
+  <title>如何优化webpack配置 | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="webpack | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="如何优化webpack配置 | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +25,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="如何优化webpack配置"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/ru-he-you-hua-webpack-pei-zhi/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
   	<!-- Navigation -->
@@ -66,87 +71,119 @@
       </div>
     </div>
   </nav>
-<!-- Page Header -->
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1 class="tag-tl">#webpack</h1>
+          	<span class="tags">
+          	 
+        </span>
+            <h1>如何优化webpack配置</h1>
+            <span class="meta">
+            	Posted on
+              2022-10-18，3 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
+
+  <!-- Post Content -->
+  <article>
     <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/vue2vue-cli4da-bao-xing-neng-you-hua/">
-            <h2 class="post-title">
-              vue打包性能优化
-            </h2>
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p>优化webpack配置可以从两个角度着手，构建速度和构建物体积</p>
+<h2 id="一-优化构建速度">一、优化构建速度</h2>
+<h3 id="1-安装speed-measure-webpack-plugin插件">1. 安装speed-measure-webpack-plugin插件</h3>
+<p>通过speed-measure-webpack-plugin插件来分析每个loader、plugin消耗的打包时间</p>
+<pre><code class="language-js">const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+const smp = new SpeedMeasurePlugin()
+</code></pre>
+<p>然后用<code>smp.wrap()</code>包裹webpack配置<br>
+注意，如果是用vue-cli构建的项目，要在vue.config.js文件中的configureWebpack用<code>smp.wrap()</code>包裹住webpack配置<br>
+<img src="https://liujia12138.github.io/post-images/1666320566092.jpg" alt="" loading="lazy"></p>
+<h3 id="2-配置happypack">2. 配置happyPack</h3>
+<p>在webpack构建过程中，实际上耗费的时间大多是在loader的解析转换及代码的压缩中。日常开发中我们需要用loader对css、图片、文字等文件做转换和解析的操作，并且转换的文件数据量也非常大。但是由于js天生是单线程的，不能够并发处理这些文件。<br>
+<em>happyPack</em> 的作用就是将这些任务分解到多个子进程中去并行处理，子进程处理完后把结果发送到主进程，从而减少总的构建时间</p>
+<ol>
+<li>安装happypack <code>npm i happypack -D</code></li>
+<li>配置</li>
+</ol>
+<pre><code class="language-js">const HappyPack = require('happypack')
+module.exports = {
+    // ....
+    chainWebpack:(config)=&gt;{
+        // 配置loader
+        const hRule = config.module.rule('js')
+        hRule
+        .test(/\.js$/)
+        .include.add(resolve('src'))
+        .end()
+        .uses.clear().end()
+        .use('happypack/loader?id=js')
+        .loader('happypack/loader?id=js')
+        .end()
+    },
+    configureWebpack:()=&gt;{
+        return {
+            plugins:[
+                // 添加plugin，并开启缓存
+                new HappyPack({
+                    id: 'js',
+                    loaders: ['babel-loader?cacheDirectory=true']
+                }),
+            ]
+        }
+    }
+}
+</code></pre>
+<p>通过使用happypack，构建时间由原来的23s降到了11s<br>
+<img src="https://liujia12138.github.io/post-images/1666333560180.jpg" alt="" loading="lazy"></p>
+<h3 id="3-通过设置路径别名来缩小文件的搜索范围">3. 通过设置路径别名来缩小文件的搜索范围</h3>
+<h3 id="4-设置loaders的include和exclude-缩小loader编译的范围">4. 设置loaders的include和exclude 缩小loader编译的范围</h3>
+<h3 id="5-extenals结合cdn">5. extenals结合cdn</h3>
+<p>用cdn的方式来引入一些依赖，并且设置externals来让webpack在打包的时候忽略掉这些依赖。</p>
+<h2 id="二-优化构建物体积">二、优化构建物体积</h2>
+<h3 id="1-通过配置webpack-bundle-analyzer-来分析打包后的文件">1. 通过配置webpack-bundle-analyzer 来分析打包后的文件</h3>
+<p>webpack-bundle-analyzer会将打包后的内容树展示为树状图，让我们能够方便直观的看到打包后的文件内容和体积大小</p>
+<pre><code class="language-js">const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+
+module.exports = {
+    plugins: [
+        new BundleAnalyzerPlugin({
+            analyzerHost: '127.0.0.1',
+            analyzerPort: 8899
+        })
+    ]
+}
+</code></pre>
+<p>package.json中加入scripts<code>&quot;analyzer&quot;: &quot;NODE_ENV=production npm_config_report=true npm run build&quot;</code></p>
+<h3 id="2-tree-shaking-去掉项目中的无用代码">2. tree-shaking 去掉项目中的无用代码</h3>
+<p>目前webpack4.x开始，就已经在mode为production时默认开启了tree-shaking，但是如果想要生效，生成的代码必须是es6模块，不能使用其他类型的模块，如commonjs<br>
+修正方法，在.babelrc文件或者webpack.config.js设置module:false<br>
+vue-cli构建的项目默认开启了tree-shaking，无需单独配置</p>
+<h3 id="3">3.</h3>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/vue-zhong-keep-alive-de-yuan-li/">
+              <span class="post-title">
+                vue中keep-alive的原理&rarr;
+              </span>
             </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2022-09-26</span>
-             <span>,</span>
-             <span class="post-stats">4 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
+          </p>
         
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/vuewebpack-shi-xian-duo-ru-kou-jia-gou/">
-            <h2 class="post-title">
-              vue+webpack 实现多入口架构
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2022-05-18</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
+        <div class="comment">
+          
         </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/eggvuewebpack-fu-wu-duan-xuan-ran/">
-            <h2 class="post-title">
-              Egg+Vue+webpack 服务端渲染
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-03-17</span>
-             <span>,</span>
-             <span class="post-stats">11 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        
-        
       </div>
     </div>
-  </div>
-
-  
+  </article>
  <!-- Footer -->
   <footer>
     <div class="container">
@@ -227,3 +264,4 @@
   })(this));</script>
   </body>
 </html>
+

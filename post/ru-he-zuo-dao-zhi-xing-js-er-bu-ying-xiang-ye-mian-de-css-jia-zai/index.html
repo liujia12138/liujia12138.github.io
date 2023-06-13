@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>webpack | AzhA</title>
+  <title>如何做到执行JS 而不影响页面的css加载？ | AzhA</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="webpack | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="如何做到执行JS 而不影响页面的css加载？ | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +25,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="如何做到执行JS 而不影响页面的css加载？"/>
+    <meta property="og:url" content="https://liujia12138.github.io/post/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="AzhA"/>
   </head>
   <body>
   	<!-- Navigation -->
@@ -66,87 +71,100 @@
       </div>
     </div>
   </nav>
-<!-- Page Header -->
+  <!-- Page Header -->
   <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1 class="tag-tl">#webpack</h1>
+          	<span class="tags">
+          	 
+        </span>
+            <h1>如何做到执行JS 而不影响页面的css加载？</h1>
+            <span class="meta">
+            	Posted on
+              2022-09-26，3 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
+
+  <!-- Post Content -->
+  <article>
     <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-       
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/vue2vue-cli4da-bao-xing-neng-you-hua/">
-            <h2 class="post-title">
-              vue打包性能优化
-            </h2>
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <h4 id="加载js为什么会影响css的加载">加载JS为什么会影响CSS的加载？</h4>
+<p>因为js是单线程的，所以当js的加载在css前时，会导致css加载被阻塞，造成UI渲染的卡顿。</p>
+<h4 id="什么是web-worker">什么是Web Worker</h4>
+<p>web worker的作用就是为JavaScript创造一个多线程的环境，允许主线程创建worker线程，将一个任务分配给worker线程运行。在主线程运行的同时，worker线程在后台运行，两者互不干扰。</p>
+<h4 id="如何使用web-worker">如何使用Web Worker</h4>
+<h5 id="1-使用web-worker需要注意的点">1. 使用web worker需要注意的点：</h5>
+<pre><code>1. 同源限制：分配给Worker线程运行的脚本文件，必须与主线程的脚本文件同源
+2. DOM限制：Worker线程所在的全局对象无法读取主线程所在网页的DOM对象，也无法使用DOM的相关API，但是Worker线程可以使用navigator和location对象
+3. 通信联系：Worker线程和主线程不在同一个上下文环境，所以无法直接通信，需要使用postMessage
+4.  脚本限制：Worker线程不能执行alert方法和confirm方法，但是可以使用XMLHttpRequest发起请求
+5.  文件限制：worker无法读取本地文件，他所加载的文件必须来自网络
+</code></pre>
+<h5 id="2-基本用法">2. 基本用法</h5>
+<ol>
+<li>
+<p>创建一个Worker线程，主线程使用new关键字调用Worker构造函数<br>
+<code>var worker = new Worker('work.js')</code><br>
+Worker构造函数的参数是一个脚本文件，该文件的内容就是Worker线程要执行的任务。由于worker不能读取本地文件，所以这个文件必须来自网络。</p>
+</li>
+<li>
+<p>主线程向worker线程发消息<br>
+主线程调用worker.postMessage方法，向Worker发消息</p>
+<pre><code class="language-js">worker.postMessage({method:'echo', args:['work']})
+</code></pre>
+</li>
+<li>
+<p>worker线程内 接收/发送 消息<br>
+通过监听message事件和postMessage方法</p>
+<pre><code class="language-js">// self代表worker子线程自身
+self.addEventListener('message', function(e){
+   // e.data 可以获取到主线程发送的数据
+
+   self.postMessage('send some message')
+})
+</code></pre>
+</li>
+<li>
+<p>主线程接收worker线程的消息<br>
+调用worker的onmessage方法</p>
+</li>
+</ol>
+<pre><code class="language-js">  worker.onmessage = function(event){
+      // event.data可以获取到worker发来的数据
+      console.log(event.data)
+      // do something
+  }
+</code></pre>
+<ol start="5">
+<li>关闭worker线程<br>
+主线程： <code>worker.terminate()</code><br>
+worker线程： <code>self.close()</code></li>
+</ol>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://liujia12138.github.io/post/vue2vue-cli4da-bao-xing-neng-you-hua/">
+              <span class="post-title">
+                vue打包性能优化&rarr;
+              </span>
             </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2022-09-26</span>
-             <span>,</span>
-             <span class="post-stats">4 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
+          </p>
         
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/vuewebpack-shi-xian-duo-ru-kou-jia-gou/">
-            <h2 class="post-title">
-              vue+webpack 实现多入口架构
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2022-05-18</span>
-             <span>,</span>
-             <span class="post-stats">3 min read</span>
-            </p>
+        <div class="comment">
+          
         </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        <div class="post-preview">
-          <a href="https://liujia12138.github.io/post/eggvuewebpack-fu-wu-duan-xuan-ran/">
-            <h2 class="post-title">
-              Egg+Vue+webpack 服务端渲染
-            </h2>
-            </a>
-            <h3 class="post-subtitle">
-              
-            </h3>
-          <p class="post-meta">
-             <span class="time">2020-03-17</span>
-             <span>,</span>
-             <span class="post-stats">11 min read</span>
-            </p>
-        </div>
-        <hr>
-        <div class="clearfix">
-        </div>
-        
-        
-        
       </div>
     </div>
-  </div>
-
-  
+  </article>
  <!-- Footer -->
   <footer>
     <div class="container">
@@ -227,3 +245,4 @@
   })(this));</script>
   </body>
 </html>
+
