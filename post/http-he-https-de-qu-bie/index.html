@@ -1,105 +1,98 @@
 <!DOCTYPE html>
 <html>
   <head>
-      <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta content="yes" name="apple-mobile-web-app-capable" />
-  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
-  <meta name="referrer" content="never">
-  <meta name="keywords" content="">
-  <meta name="description" content="">
-  <meta name="author" content="kveln">
-  <title>http和https的区别？ | AzhA</title>
-  <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-  <!-- <link href="https://liujia12138.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
-  <!--  <link href="https://liujia12138.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
-  <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
-  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="http和https的区别？ | AzhA » Feed" href="https://liujia12138.github.io/atom.xml">
-  <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
-  <link href="https://liujia12138.github.io/styles/main.css" rel="stylesheet">
-  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/highlight.min.js"></script>
-  <!-- <script src="https://liujia12138.github.io/media/scripts/jquery.min.js"></script> -->
-  <script>hljs.initHighlightingOnLoad();</script>
-  
+    <meta charset="utf-8" >
 
-    <meta property="og:description" content="http和https的区别？"/>
-    <meta property="og:url" content="https://liujia12138.github.io/post/http-he-https-de-qu-bie/"/>
-    <meta property="og:locale" content="zh-CN"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:site_name" content="AzhA"/>
+<title>http和https的区别？ | AzhA</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697523528793">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
   </head>
   <body>
-  	<!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-    <div class="container">
-      <a class="navbar-brand" href="https://liujia12138.github.io">AzhA</a>
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        Menu
-        <i class="fas fa-bars"></i>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          
-          <li class="nav-item">
-              
-              <a class="nav-link" href="https://liujia12138.github.io">Home</a>
-              
-          </li>
-          
-          <li class="nav-item">
-              
-              <a class="nav-link" href="https://liujia12138.github.io/archives">Archives</a>
-              
-          </li>
-          
-          <li class="nav-item">
-              
-              <a class="nav-link" href="https://liujia12138.github.io/tags">Tags</a>
-              
-          </li>
-          
-          <li class="nav-item">
-              
-              <a class="nav-link" href="https://liujia12138.github.io/post/about">About</a>
-              
-          </li>
-          
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <!-- Page Header -->
-  <header class="masthead" style="background-image: url('https://liujia12138.github.io/media/images/home-bg.jpg')">
-    <div class="overlay"></div>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="post-heading">
-          	<span class="tags">
-          	 
-            <a href="https://liujia12138.github.io/tag/uJlN5zVW5/" class="tag">网络协议</a>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
             
-        </span>
-            <h1>http和https的区别？</h1>
-            <span class="meta">
-            	Posted on
-              2019-06-08，3 min read
-            </span>
-          </div>
-        </div>
-      </div>
+              <a href="https://liujia12138.github.io" class="menu">
+                Home
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/archives" class="menu">
+                Archives
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/tags" class="menu">
+                Tags
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/post/about" class="menu">
+                About
+              </a>
+            
+          </li>
+        
+      </ul>
     </div>
-  </header>
+  </div>
+</nav>
 
-  <!-- Post Content -->
-  <article>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <p>http超文本传输协议，https是安全版的http</p>
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>http和https的区别？</h1>
+            <p class="article-meta">
+              2019-06-08
+              
+                <a href="https://liujia12138.github.io/tag/uJlN5zVW5/" class="badge secondary">
+                  网络协议
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <p>http超文本传输协议，https是安全版的http</p>
 <p>http和https的区别？</p>
 <ol>
 <li>http是超文本传输协议，信息是明文传输，https是具有安全性的ssl加密传输协议</li>
@@ -126,99 +119,318 @@ https就是http加上<strong>加密处理+认证+完整性保护</strong></p>
 <li>服务端将所有握手消息的MAC值发送给客户端</li>
 </ul>
 
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
           
-          <p class="next-post">下一篇：
-            <a href="https://liujia12138.github.io/post/liu-lan-qi-shu-ru-yi-ge-url-dao-ye-mian-xuan-ran-chu-lai-du-fa-sheng-liao-shi-me/">
-              <span class="post-title">
-                浏览器输入一个url到页面渲染出来都发生了什么？&rarr;
-              </span>
-            </a>
-          </p>
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/post/liu-lan-qi-shu-ru-yi-ge-url-dao-ye-mian-xuan-ran-chu-lai-du-fa-sheng-liao-shi-me/">
+                <h3 class="post-title">
+                  浏览器输入一个url到页面渲染出来都发生了什么？
+                </h3>
+              </a>
+            </div>
+          
+        </div>
         
-        <div class="comment">
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://liujia12138.github.io/images/avatar.png?v=1697523528793" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
           
-        </div>
-      </div>
-    </div>
-  </article>
- <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <ul class="list-inline text-center">
-            
-            
-            <li class="list-inline-item">
-              <a href="https://chogath.top/" target="_blank">
-                <span class="fa-stack fa-lg">
-                  <i class="fas fa-circle fa-stack-2x"></i>
-                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
-                </span>
-              </a>
+            <li>
+              <a href="https://liujia12138.github.io/post/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
             </li>
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-              <li class="list-inline-item">
-              <a href="https://liujia12138.github.io/atom.xml" target="_blank">
-                <span class="fa-stack fa-lg">
-                  <i class="fas fa-circle fa-stack-2x"></i>
-                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
-                </span>
-              </a>
-              </li>
-          </ul>
-          <p class="copyright text-muted">Copyright &copy;<span>AzhA</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
-        </div>
-      </div>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/post/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/post/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/post/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/post/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/post/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/post/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/post/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/post/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/post/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">定时任务时间表达式规则</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
     </div>
-   </footer>
-  <!-- Bootstrap core JavaScript -->
-  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-  <!-- <script src="https://liujia12138.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
-  <!-- Bootstrap core JavaScript -->
-  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
-  <!-- <script src="https://liujia12138.github.io/media/scripts/clean-blog.min.js"></script> -->
-  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
-  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
-<a id="back_to_top" href="#" class="back_to_top">
-  <span>▲</span></a>
-<script>$(document).ready((function(_this) {
-    return function() {
-      var bt;
-      bt = $('#back_to_top');
-      if ($(document).width() > 480) {
-        $(window).scroll(function() {
-          var st;
-          st = $(window).scrollTop();
-          if (st > 30) {
-            return bt.css('display', 'block')
-          } else {
-            return bt.css('display', 'none')
-          }
-        });
-        return bt.click(function() {
-          $('body,html').animate({
-            scrollTop: 0
-          },
-          800);
-          return false
-        })
-      }
-    }
-  })(this));</script>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://liujia12138.github.io/tag/Xb1bL-hET/" class="badge secondary">
+          webpack
+        </a>
+      
+        <a href="https://liujia12138.github.io/tag/Kr-xdE8Yn/" class="badge warning">
+          前端性能优化
+        </a>
+      
+        <a href="https://liujia12138.github.io/tag/d8mNIHknn/" class="badge secondary">
+          vue
+        </a>
+      
+        <a href="https://liujia12138.github.io/tag/CvMd75xEg/" class="badge success">
+          js
+        </a>
+      
+        <a href="https://liujia12138.github.io/tag/BL8c3orKf/" class="badge secondary">
+          html
+        </a>
+      
+        <a href="https://liujia12138.github.io/tag/Vt5WBKoYy/" class="badge warning">
+          echarts
+        </a>
+      
+        <a href="https://liujia12138.github.io/tag/V_zOguk5s/" class="badge warning">
+          uniapp
+        </a>
+      
+        <a href="https://liujia12138.github.io/tag/D88IhnDGV/" class="badge ">
+          小程序
+        </a>
+      
+        <a href="https://liujia12138.github.io/tag/yf3fMR6HV/" class="badge ">
+          css
+        </a>
+      
+        <a href="https://liujia12138.github.io/tag/uJlN5zVW5/" class="badge ">
+          网络协议
+        </a>
+      
+        <a href="https://liujia12138.github.io/tag/AqJbgMDWp/" class="badge ">
+          服务端
+        </a>
+      
+        <a href="https://liujia12138.github.io/tag/_CM5EBSSy/" class="badge warning">
+          node
+        </a>
+      
+        <a href="https://liujia12138.github.io/tag/7pa3gWqBF/" class="badge ">
+          兼容
+        </a>
+      
+        <a href="https://liujia12138.github.io/tag/NaR04YJjP/" class="badge success">
+          es6
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
   </body>
 </html>
-
