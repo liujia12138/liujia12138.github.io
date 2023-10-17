@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2023-10-17T03:52:44.093Z</updated>
+    <updated>2023-10-17T06:15:58.046Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -855,6 +855,999 @@ ECMA-262只定义了两个内置对象，即Global和Math。他们也是本地�
 # : 表示该月第n个星期x(x#n)，仅用星期域。如：星期：6#3，表示该月的第三个星期五。<br>
 L : 表示最后，是单词&quot;last&quot;的缩写（最后一天或最后一个星期几）；仅出现在日和星期的域中。用在日则表示该月的最后一天，用在星期则表示该月的最后一个星期。如：星期域上的值为5L，则表示该月最后一个星期的星期四。在使用'L'时，不要指定列表','或范围'-'，否则易导致出现意料之外的结果。<br>
 W: 仅用在日的域中，表示距离当月给定日期最近的工作日（周一到周五），是单词&quot;weekday&quot;的缩写。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[vue+webpack 实现多入口架构]]></title>
+        <id>https://liujia12138.github.io/post/vuewebpack-shi-xian-duo-ru-kou-jia-gou/</id>
+        <link href="https://liujia12138.github.io/post/vuewebpack-shi-xian-duo-ru-kou-jia-gou/">
+        </link>
+        <updated>2022-05-18T07:12:30.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="一-为什么需要多入口多页面项目">一、为什么需要多入口多页面项目？</h4>
+<p>vue 项目大多是单页面项目，即一个 main.js 入口文件，一般情况下使用 webpack 默认配置就可以。但是如果项目很大，有很多个小的分项目，比如一个数据处理平台需要包含数据接入、数据处理、数据输出等分项目，这时把这几个分项目合并到一个项目中管理会方便很多。</p>
+<h4 id="二-多页面可以解决哪些问题">二、多页面可以解决哪些问题？</h4>
+<ul>
+<li>独立维护子系统的权限和缓存数据</li>
+<li>开发一个子系统时，不需要启动另外一个系统</li>
+<li>热更新一个子系统时，不需要编译所有系统</li>
+</ul>
+<h4 id="三-怎样配置一个-vue-多页面应用">三、怎样配置一个 vue 多页面应用</h4>
+<h5 id="1先创建一个-vue-项目">1.先创建一个 vue 项目</h5>
+<pre><code>vue init webpack project-name
+</code></pre>
+<h5 id="2给每个子系统创建-mainjs-appvue-indexhtml-文件最终目录结构如下">2.给每个子系统创建 main.js、App.vue、index.html 文件，最终目录结构如下</h5>
+<pre><code>├─build
+├─config
+├─node_modules
+├─src
+|  ├─api
+|  ├─assets
+|  ├─components
+|  ├─layout
+|  ├─pages
+|  |  ├─system1
+|  |  | ├─views
+|  |  | ├─store
+|  |  | ├─router
+|  |  |  main.js
+|  |  |  index.html
+|  |  ├─system2
+|  |  | ├─views
+|  |  | ├─store
+|  |  | ├─router
+|  |  |  main.js
+|  |  |  index.html
+|    ...
+
+</code></pre>
+<h5 id="3修改-webpack-配置文件">3.修改 webpack 配置文件</h5>
+<p>基础配置 webpack.base.conf.js</p>
+<pre><code class="language-js">const glob = require('glob')
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+function resolve(dir) {
+  return path.join(__dirname, '..', dir)
+}
+
+const entrys = {} //入口文件配置
+const pageDir = resolve('src/pages')
+
+const pages = glob.sync('*/index.html', { cwd: pageDir }).map((p) =&gt; {
+  const name = p.split('/')[0]
+  entrys[name] = `${pageDir}/${name}/main.js`
+  return new HtmlWebpackPlugin({
+    filename: `${name}.html`,
+    template: pageDir + '/' + p,
+    chunks: ['manifest', 'vendor', 'app', name],
+    inject: true,
+    favicon: './static/favicon.ico',
+    minify: {
+      removeComments: true,
+      collapseWhitespace: true,
+      removeAttributeQuotes: true
+    },
+    chunksSortMode: 'dependency'
+  })
+})
+
+module.exports = {
+  context: path.resolve(__dirname, '../'),
+  entry: entrys,
+  output: {
+    path: config.build.assetsRoot,
+    filename: '[name].js',
+    publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath
+  },
+  plugins: [...pages]
+  // 其他。。。。
+}
+</code></pre>
+<p>开发环境配置 webpack.dev.conf.js，HtmlWebpackPlugin 已经在基础配置中修改，dev 环境不需要再修改</p>
+<p>生产环境配置 webpack.prod.conf.js，修改output</p>
+<pre><code class="language-js">modules.exports = {
+  // ....
+  output: {
+    path: config.build.assetsRoot,
+    filename: utils.assetsPath('js/[name].[chunkhash].js'),
+    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'),
+    publicPath: '/'
+  },
+  plugins: [
+    // 公共模块单独打包
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks(module) {
+        return (
+          module.resource &amp;&amp;
+          /\.js$/.test(module.resource) &amp;&amp;
+          module.resource.indexOf(path.join(__dirname, '../node_modules')) === 0
+        )
+      }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+      minChunks: Infinity
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'app',
+      async: 'vendor-async',
+      children: true,
+      minChunks: 3,
+      maxChunks: 10
+    })
+  ]
+}
+</code></pre>
+<h5 id="4运行项目">4.运行项目</h5>
+<pre><code>npm run dev
+</code></pre>
+<p>http://localhost:8080/system1.html#/home  就可以访问啦</p>
+<h5 id="5打包">5.打包</h5>
+<pre><code>npm run build
+</code></pre>
+<p>打包结果</p>
+<pre><code>dist
+├─system1.html
+├─system2.html
+├─static
+| ├─css
+| ├─js
+| ├─fonts
+| ├─img
+| ├─static
+└ ├─js
+</code></pre>
+<h4 id="四-后续优化">四、后续优化</h4>
+<p>1.单独构建、打包某个子系统<br>
+2.子系统特有依赖模块打包策略</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[eslint+prettier 代码规范自动化配置]]></title>
+        <id>https://liujia12138.github.io/post/eslintprettier-dai-ma-gui-fan-zi-dong-hua-pei-zhi/</id>
+        <link href="https://liujia12138.github.io/post/eslintprettier-dai-ma-gui-fan-zi-dong-hua-pei-zhi/">
+        </link>
+        <updated>2022-05-10T07:16:22.000Z</updated>
+        <content type="html"><![CDATA[<p>Eslint:</p>
+<ol>
+<li>安装：eslint^6.7.2 eslint-plugin-vue^6.2.2 babel-eslint^10.1.0</li>
+<li>安装 vue-cli eslint 插件： @vue/cli-plugin-eslint</li>
+<li>scripts 中加入命令： <code>&quot;lint&quot;:&quot;vue-cli-service lint&quot;</code></li>
+<li>.eslintrc.js 文件中加入相关配置</li>
+<li>.eslintignore 文件中配置忽略的目录及文件</li>
+</ol>
+<p>Prettier:</p>
+<ol>
+<li>项目目录下新建.prettierrc.js，并添加相关配置</li>
+<li>项目目录下新建.prettierigonre，配置格式化忽略的文件</li>
+<li>package.json 中添加命令: <code>&quot;format&quot;:&quot;prettier —write 'src/\*_/_.{js,vue,css,scss}'&quot;</code></li>
+<li>运行 <code>npm run format</code> 即可完成项目文件批量格式化</li>
+</ol>
+<p>prettier 配置：</p>
+<pre><code class="language-js">module.exports = {
+  printWidth: 140, // 超过最大值换行
+  tabWidth: 2,
+  useTabs: false,
+  semi: false, // 句尾不添加分号
+  singleQuote: true, // 使用单引号
+  quoteProps: 'as-needed',
+  jsxSingleQuote: true,
+  trailingComma: 'none',
+  bracketSpacing: true, // 在对象，数组括号与文字之间加空格 &quot;{ foo: bar }&quot;
+  jsxBracketSameLine: true, // 在jsx中把'&gt;' 是否单独放一行
+  arrowParens: 'always', // 箭头函数单个参数省略括号
+  insertPragma: false,
+  proseWrap: 'preserve',
+  htmlWhitespaceSensitivity: 'ignore',
+  vueIndentScriptAndStyle: false, // vue script和style标签中是否缩进
+  endOfLine: 'auto',
+  embeddedLanguageFormatting: 'auto'
+}
+</code></pre>
+<p>eslint 配置</p>
+<pre><code class="language-js">module.exports = {
+  root: true,
+  parserOptions: {
+    parser: 'babel-eslint',
+    sourceType: 'module'
+  },
+  env: {
+    browser: true,
+    node: true,
+    es6: true
+  },
+  extends: ['plugin:vue/recommended', 'eslint:recommended'],
+
+  // add your custom rules here
+  // it is base on https://github.com/vuejs/eslint-config-vue
+  rules: {
+    'vue/max-attributes-per-line': [
+      //强制每行的最多属性数
+      2,
+      {
+        singleline: 10, // 单行情况下每行最多十个属性
+        multiline: {
+          max: 1,
+          allowFirstLine: false
+        }
+      }
+    ],
+    'vue/html-self-closing': [
+      //html标签强制执行自闭式
+      'error',
+      {
+        html: {
+          void: 'any',
+          normal: 'any',
+          component: 'any'
+        },
+        svg: 'any',
+        math: 'any'
+      }
+    ],
+    'vue/singleline-html-element-content-newline': 'off', // 在单行元素的内容前后使用换行符
+    'vue/no-parsing-error': [2, { 'invalid-first-character-of-tag-name': false }],
+    'vue/no-use-v-if-with-v-for': 1,
+    'vue/multiline-html-element-content-newline': 'off', // 在多行元素的内容前后使用换行符
+    'vue/name-property-casing': [0, 'PascalCase'],
+    'vue/html-closing-bracket-newline': [
+      0,
+      {
+        singleline: 'never',
+        multiline: 'always'
+      }
+    ],
+    'vue/no-side-effects-in-computed-properties': 0,
+    'accessor-pairs': 2, //在对象中使用getter/setter
+    'arrow-spacing': [
+      2,
+      {
+        before: true,
+        after: true
+      }
+    ], //=&gt;的前/后括号
+    'block-spacing': [2, 'always'], //块是否需要空格
+    // if while function 后面的{必须与if在同一行，java风格。
+    'brace-style': [
+      2,
+      '1tbs',
+      {
+        allowSingleLine: true
+      }
+    ],
+    //强制驼峰法命名
+    camelcase: [
+      0,
+      {
+        properties: 'always'
+      }
+    ],
+    // 数组和对象键值对最后一个逗号， never参数：不能带末尾的逗号, always参数：必须带末尾的逗号，
+    // always-multiline：多行模式必须带逗号，单行模式不能带逗号
+    'comma-dangle': [2, 'never'],
+    // 控制逗号前后的空格
+    'comma-spacing': [
+      2,
+      {
+        before: false,
+        after: true
+      }
+    ],
+    'comma-style': [2, 'last'], // 控制逗号在行尾出现还是在行首出现
+    // 强制在子类构造函数中用super()调用父类构造函数，TypeScrip的编译器也会提示
+    'constructor-super': 2,
+    // 强制object.key 中 . 的位置，参数:
+    // property，'.'号应与属性在同一行
+    // object, '.' 号应与对象名在同一行
+    'dot-location': [2, 'property'],
+    'eol-last': 2, // 文件末尾强制换行
+    eqeqeq: [2, 'allow-null'], // 使用 === 替代 ==
+    'generator-star-spacing': 0, //生成器函数*的前后空格
+    'handle-callback-err': 0, //nodejs 处理错误
+    indent: [
+      2,
+      2,
+      {
+        //缩进风格
+        SwitchCase: 1
+      }
+    ],
+    // JSX 属性中一致使用双引号或单引号
+    'jsx-quotes': [2, 'prefer-single'],
+    //对象字面量中冒号的前后空格
+    'key-spacing': [
+      2,
+      {
+        beforeColon: false,
+        afterColon: true
+      }
+    ],
+    'keyword-spacing': [
+      2,
+      {
+        before: true,
+        after: true
+      }
+    ],
+    //函数名首行大写必须使用new方式调用，首行小写必须用不带new方式调用
+    'new-cap': [
+      2,
+      {
+        newIsCap: true,
+        capIsNew: false
+      }
+    ],
+    'new-parens': 2, //new时必须加小括号
+    'no-array-constructor': 2, //禁止使用数组构造器
+    'no-caller': 2, //禁止使用arguments.caller或arguments.callee
+    'no-console': process.env.NODE_ENV === 'production' ? 2 : 0, //禁止使用console
+    'no-class-assign': 2, //禁止给类赋值
+    'no-cond-assign': 2, //禁止在条件表达式中使用赋值语句
+    'no-const-assign': 2, //禁止修改const声明的变量
+    'no-control-regex': 0, //禁止在正则表达式中使用控制字符
+    'no-delete-var': 2, //不能对var声明的变量使用delete操作符
+    'no-dupe-args': 2, //函数参数不能重复
+    'no-dupe-class-members': 2, //不允许类中出现重复的声明
+    'no-dupe-keys': 2, //在创建对象字面量时不允许键重复 {a:1,a:1}
+    'no-duplicate-case': 2, //switch中的case标签不能重复
+    'no-empty-character-class': 0, //正则表达式中的[]内容不能为空
+    'no-empty-pattern': 0,
+    'no-eval': 0, //禁止使用eval
+    'no-ex-assign': 2, //禁止给catch语句中的异常参数赋值
+    'no-extend-native': 2, //禁止扩展native对象
+    'no-extra-bind': 2, //禁止不必要的函数绑定
+    'no-extra-boolean-cast': 2, //禁止不必要的bool转换
+    'no-extra-parens': [2, 'functions'], //禁止非必要的括号
+    'no-fallthrough': 2, //禁止switch穿透
+    'no-floating-decimal': 2, //禁止省略浮点数中的0 .5 3.
+    'no-func-assign': 2, //禁止重复的函数声明
+    'no-implied-eval': 2, //禁止使用隐式eval
+    'no-inner-declarations': [2, 'functions'], //禁止在块语句中使用声明（变量或函数）
+    'no-invalid-regexp': 2, //禁止无效的正则表达式
+    'no-irregular-whitespace': 2, //不能有不规则的空格
+    'no-iterator': 2, //禁止使用__iterator__ 属性
+    'no-label-var': 2, //label名不能与var声明的变量名相同
+    'no-labels': [
+      2,
+      {
+        //禁止标签声明
+        allowLoop: false,
+        allowSwitch: false
+      }
+    ],
+    'no-lone-blocks': 2, //禁止不必要的嵌套块
+    'no-mixed-spaces-and-tabs': 2, //禁止混用tab和空格
+    'no-multi-spaces': 2, //不能用多余的空格
+    'no-multi-str': 2, //字符串不能用\换行
+    'no-multiple-empty-lines': [
+      0,
+      {
+        max: 1
+      }
+    ], //空行最多不能超过1行
+    'no-native-reassign': 2, //不能重写native对象
+    'no-negated-in-lhs': 2, //in 操作符的左边不能有!
+    'no-new-object': 2, //禁止使用new Object()
+    'no-new-require': 2, //禁止使用new require
+    'no-new-symbol': 2, //禁止使用new symbol
+    'no-new-wrappers': 2, //禁止使用new创建包装实例，new String new Boolean new Number
+    'no-obj-calls': 0, //不能调用内置的全局对象，比如Math() JSON()
+    'no-octal': 2, //禁止使用八进制数字
+    'no-octal-escape': 2, //禁止使用八进制转义序列
+    'no-path-concat': 2, //node中不能使用__dirname或__filename做路径拼接
+    'no-proto': 2, //禁止使用__proto__属性
+    'no-redeclare': 2, //禁止重复声明变量
+    'no-regex-spaces': 2, //禁止在正则表达式字面量中使用多个空格 /foo bar/
+    'no-return-assign': [2, 'except-parens'], //return 语句中不能有赋值表达式
+    'no-self-assign': 2, //自我分配
+    'no-self-compare': 2, //不能比较自身
+    'no-sequences': 2, //禁止使用逗号运算符
+    'no-shadow-restricted-names': 2, //严格模式中规定的限制标识符不能作为声明时的变量名使用
+    'no-spaced-func': 2, //函数调用时 函数名与()之间不能有空格
+    'no-sparse-arrays': 2, //禁止稀疏数组， [1,,2]
+    'no-this-before-super': 2, //在调用super()之前不能使用this或super
+    'no-throw-literal': 2, //禁止抛出字面量错误 throw &quot;error&quot;;
+    'no-trailing-spaces': 0, //一行结束后面不要有空格
+    'no-undef': 2, //不能有未定义的变量
+    'no-undef-init': 2, //变量初始化时不能直接给它赋值为undefined
+    'no-unexpected-multiline': 0, //避免多行表达式
+    'no-unmodified-loop-condition': 0, //检查引用是否在循环中被修改
+    'no-unneeded-ternary': 0, //禁止不必要的嵌套 var isYes = answer === 1 ? true : false;
+    'no-unreachable': 2, //不能有无法执行的代码
+    'no-unsafe-finally': 0,
+    'no-unused-vars': [
+      2,
+      {
+        vars: 'all',
+        args: 'none'
+      }
+    ], //不能有声明后未被使用的变量或参数
+    'no-useless-call': 2, //禁止不必要的call和apply
+    'no-useless-computed-key': 0, //没有必要使用带文字的计算属性
+    'no-useless-constructor': 2, //可以在不改变类的工作方式的情况下安全地移除的类构造函数
+    'no-useless-escape': 0,
+    'no-whitespace-before-property': 0,
+    'no-with': 2, //禁用with
+    'one-var': 0, //连续声明
+    'operator-linebreak': [
+      2,
+      'after',
+      {
+        overrides: {
+          '?': 'before',
+          ':': 'before'
+        }
+      }
+    ], //换行时运算符在行尾还是行首
+    'padded-blocks': 0, //块语句内行首行尾是否要空行
+    quotes: [
+      2,
+      'single',
+      {
+        avoidEscape: true,
+        allowTemplateLiterals: true
+      }
+    ], //引号类型 `` &quot;&quot; ''
+    semi: [2, 'never'], //语句强制分号结尾
+    'semi-spacing': [
+      2,
+      {
+        before: false,
+        after: true
+      }
+    ], //分号前后空格
+    'space-before-blocks': [2, 'always'], //不以新行开始的块{前面要不要有空格
+    'space-before-function-paren': [2, 'never'], //函数定义时括号前面要不要有空格
+    'space-in-parens': [2, 'never'], //小括号里面要不要有空格
+    'space-infix-ops': 2, //中缀操作符周围要不要有空格
+    'space-unary-ops': [
+      2,
+      {
+        words: true,
+        nonwords: false
+      }
+    ], //一元运算符的前/后要不要加空格
+    'spaced-comment': 0, //注释风格不要有空格什么的
+    'template-curly-spacing': [2, 'never'],
+    'use-isnan': 2, //禁止比较时使用NaN，只能用isNaN()
+    'valid-typeof': 2, //必须使用合法的typeof的值
+    'wrap-iife': [2, 'any'], //立即执行函数表达式的小括号风格
+    'yield-star-spacing': 0,
+    yoda: [2, 'never'], //禁止尤达条件
+    'prefer-const': 2, //首选const
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0, //禁止使用debugger
+    'object-curly-spacing': [
+      2,
+      'always',
+      {
+        objectsInObjects: false
+      }
+    ], //大括号内是否允许不必要的空格
+    'array-bracket-spacing': [2, 'never'] //是否允许非空数组里面有多余的空格
+  }
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[用van-calendar实现展示指定月份并自定义日期文案]]></title>
+        <id>https://liujia12138.github.io/post/yong-van-calendar-shi-xian-zhan-shi-zhi-ding-yue-fen-bing-zi-ding-yi-ri-qi-wen-an/</id>
+        <link href="https://liujia12138.github.io/post/yong-van-calendar-shi-xian-zhan-shi-zhi-ding-yue-fen-bing-zi-ding-yi-ri-qi-wen-an/">
+        </link>
+        <updated>2022-04-27T07:19:26.000Z</updated>
+        <content type="html"><![CDATA[<p>效果图:<br>
+<img src="https://liujia12138.github.io/post-images/1663053616494.jpg" alt="" loading="lazy"></p>
+<p>代码：</p>
+<pre><code>&lt;template&gt;
+  &lt;div&gt;
+    &lt;van-button icon=&quot;notes-o&quot; round type=&quot;info&quot; plain size=&quot;mini&quot; @click=&quot;showPicker = true&quot;&gt;
+      选择日期&lt;van-icon name=&quot;arrow-down&quot; /&gt;
+    &lt;/van-button&gt;
+
+    &lt;van-popup v-model=&quot;showPicker&quot; position=&quot;bottom&quot;&gt;
+      &lt;van-datetime-picker
+        title=&quot;选择日期&quot;
+        type=&quot;year-month&quot;
+        v-model=&quot;currentDate&quot;
+        :columns-order=&quot;['year', 'month', 'day']&quot;
+        @confirm=&quot;onConfirm&quot;
+        @cancel=&quot;showPicker = false&quot;
+        :formatter=&quot;formatter&quot;
+        :max-date=&quot;maxDate&quot;
+      /&gt;
+    &lt;/van-popup&gt;
+
+    &lt;van-calendar
+      v-if=&quot;this.dataList.length &gt; 0&quot;
+      :poppable=&quot;false&quot;
+      :formatter=&quot;formatterCalendar&quot;
+      :default-date=&quot;defaultDate&quot;
+      :min-date=&quot;minDate&quot;
+      :max-date=&quot;calendarMaxDate&quot;
+      :show-title=&quot;false&quot;
+      :show-subtitle=&quot;false&quot;
+      :show-confirm=&quot;false&quot;
+      @select=&quot;selectDate&quot;
+    /&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+/**
+ * Parse the time to string
+ * @param {(Object|string|number)} time
+ * @param {string} cFormat
+ * @returns {string}
+ */
+function parseTime(time, cFormat) {
+  if (arguments.length === 0) {
+    return null
+  }
+  const format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}'
+  let date
+  if (typeof time === 'object') {
+    date = time
+  } else {
+    if (typeof time === 'string' &amp;&amp; /^[0-9]+$/.test(time)) {
+      time = parseInt(time)
+    }
+    if (typeof time === 'number' &amp;&amp; time.toString().length === 10) {
+      time = time * 1000
+    }
+    date = new Date(time)
+  }
+  const formatObj = {
+    y: date.getFullYear(),
+    m: date.getMonth() + 1,
+    d: date.getDate(),
+    h: date.getHours(),
+    i: date.getMinutes(),
+    s: date.getSeconds(),
+    a: date.getDay()
+  }
+  const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) =&gt; {
+    let value = formatObj[key]
+    // Note: getDay() returns 0 on Sunday
+    if (key === 'a') {
+      return ['日', '一', '二', '三', '四', '五', '六'][value]
+    }
+    if (result.length &gt; 0 &amp;&amp; value &lt; 10) {
+      value = '0' + value
+    }
+    return value || 0
+  })
+  return time_str
+}
+
+export default {
+  data() {
+    return {
+      showPicker: false,
+      currentDate: new Date(),
+      maxDate: new Date(),
+      minDate: new Date(),
+      calendarMaxDate: new Date(),
+      defaultDate: new Date(),
+      dataList: [],
+      classList: {}
+    }
+  },
+  computed: {
+    formatDate() {
+      return parseTime(this.currentDate, this.pickerType === 'date' ? '{y}年{m}月{d}日' : '{y}年{m}月')
+    }
+  },
+  created() {
+    this.update()
+  },
+  methods: {
+    formatter(type, val) {
+      if (type === 'year') {
+        return val + '年'
+      }
+      if (type === 'month') {
+        return val + '月'
+      }
+      if (type === 'day') {
+        return val + '日'
+      }
+      return val
+    },
+    onConfirm(value) {
+      this.showPicker = false
+      this.update(value)
+    },
+    formatterCalendar(day) {
+      const date = day.date.getDate()
+      const type = this.dataList[date - 1] || ''
+
+      day.bottomInfo = type
+      day.className =
+        type === '优'
+          ? 'level1'
+          : type === '良'
+          ? 'level2'
+          : type === '轻度'
+          ? 'level3'
+          : type === '中度'
+          ? 'level4'
+          : type === '重度'
+          ? 'level5'
+          : 'level6'
+      return day
+    },
+    update(value) {
+      this.dataList = ['优', '良', '中度', '重度', '严重', '优', '优', '良', '中度', '重度', '严重']
+      this.defaultDate = value || new Date()
+      this.setMinMaxDay()
+    },
+    // 设置显示月份可选择的天数区间
+    setMinMaxDay() {
+      const year = new Date(this.defaultDate).getFullYear()
+      const month = new Date(this.defaultDate).getMonth()
+      const lastDay = new Date(year, month + 1, 0)
+      this.minDate = new Date(year, month, 1)
+      this.calendarMaxDate = lastDay
+    },
+    selectDate(date) {
+      console.log(date)
+    }
+  }
+}
+&lt;/script&gt;
+&lt;style&gt;
+.van-calendar__month-title {
+  display: none;
+}
+.van-calendar__day {
+  font-size: 12px;
+  height: 30px;
+  line-height: 30px;
+  margin-top: 5px;
+}
+.van-calendar__selected-day {
+  background: #cdcbc8;
+  color: #515151;
+  height: 30px;
+  line-height: 30px;
+}
+.van-calendar__bottom-info {
+  border-radius: 5px;
+  font-size: 10px;
+  padding: 1px 3px;
+  color: #fff;
+  position: initial;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+.level1 .van-calendar__bottom-info {
+  background: #b0cb8f;
+}
+.level2 .van-calendar__bottom-info {
+  background: #f2d875;
+}
+.level3 .van-calendar__bottom-info {
+  background: #e5a74c;
+}
+.level4 .van-calendar__bottom-info {
+  background: #cc6065;
+}
+.level5 .van-calendar__bottom-info {
+  background: #ac4176;
+}
+.level6 .van-calendar__bottom-info {
+  background: #7d1f2c;
+}
+&lt;/style&gt;
+
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[怎样实现一个控制台都删不掉的 DOM（保护水印）]]></title>
+        <id>https://liujia12138.github.io/post/zen-yang-shi-xian-yi-ge-kong-zhi-tai-du-shan-bu-diao-de-dombao-hu-shui-yin/</id>
+        <link href="https://liujia12138.github.io/post/zen-yang-shi-xian-yi-ge-kong-zhi-tai-du-shan-bu-diao-de-dombao-hu-shui-yin/">
+        </link>
+        <updated>2022-04-19T07:17:25.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="mutationobserver">MutationObserver</h4>
+<p>MutationObserver 提供了监视对 DOM 树所做更改的能力。他被设计为旧的 Mutation Events 功能的替代品，是 DOM3 Event 规范的一部分。<br>
+MutationObserver 构造函数会创建并返回一个新的 MutationObserver，在指定的 DOM 发生变化时被调用</p>
+<h5 id="方法">方法</h5>
+<ol>
+<li>
+<p>disconnect()<br>
+阻止 MutationObserver 实例继续接收的通知，直到再次调用其 observe()方法，该观察者对象包含的回调函数都不会再被调用</p>
+</li>
+<li>
+<p>observe(options)<br>
+配置 MutationObserver 在 DOM 更改匹配给定选项时，通过其回调函数开始接收通知。<br>
+注意：当调用observe方法时，childList、attributes或者characterData三个属性中，至少有一个必须为true，否则会抛出异常。<br>
+options：</p>
+<ol>
+<li>attributeFilter：要监视的特定属性名称的列表。如果未包含此属性，则对所有属性的更改都会触发变动通知。无默认值。</li>
+<li>attributeOldValue：当监视节点的属性改动时，将此属性设置为true，将会记录任何有改动的属性的上一个值。有关观察属性更改和值记录的详细信息。无默认值。</li>
+<li>attributes：设置为true时，可以观察受监视元素的属性值的变更。默认为false。</li>
+<li>characterData：设置为true时，可以监视指定目标节点或子节点树中节点所包含的字符数据的变化。无默认值</li>
+<li>characterDataOldValue：设置为true时，可以在受监视节点上文本数据发生变化时记录节点文本的上一个值。无默认值。</li>
+<li>childList：设为true，可以监视目标节点添加或删除子节点的操作。默认值为false。</li>
+<li>subtree：设为true，可以将监视范围扩展至目标节点整个节点数树中的所有节点（即子孙节点），MutationObserverInit的其他值也会作用于此子树下的所有节点，而不仅仅只作用于目标节点。默认值为false。</li>
+</ol>
+</li>
+<li>
+<p>takeRecords()<br>
+从 MutationObserver 的通知队列中删除所有待处理的通知，并将它们返回到 MutationRecord 对象的新 Array 中。</p>
+</li>
+</ol>
+<pre><code class="language-js">const styleStr = `
+      position: fixed;
+      bottom: 150px;
+      left: 200px;
+      z-index: 9999;
+      transform: rotateZ(-45deg);
+      opacity: 0.6;
+    `
+const nodeId = sjs(10)
+
+createDiv()
+parentObserver()
+
+function createDiv() {
+  const ele = document.createElement('canvas')
+  const ctx = ele.getContext('2d')
+  ctx.fillText('MutationObserver', 15, 50)
+  ele.setAttribute('id', nodeId)
+  ele.setAttribute('style', styleStr)
+  document.body.appendChild(ele)
+  wmObserver(ele)
+}
+
+// wmObserver 监听水印，防止修改水印样式
+// 参考：https://juejin.cn/post/7020602166591111205
+// 因为水印的样式可以通过控制台修改，如果被设置了 display:none 等样式，也会失去保护作用
+// 对于这种情况，我们可以监听水印DOM的style属性，当属性发生变动时，再通过 setAttribute 将正确的样式设置到DOM上
+function wmObserver(ele) {
+  new MutationObserver(function (mutationsList, observe) {
+    const target = mutationsList[0].target
+    target.setAttribute('style', styleStr)
+    observe.takeRecords()
+  }).observe(ele, { attributes: true, childList: true, characterData: true })
+}
+
+// parentObserver 监听父级，防止删除水印dom
+// 因为被监听的目标节点本身被删除的话是不会触发MutationObserver回调的，所以需要监听水印DOM节点的父元素或者body元素
+// 当body作为监听的目标节点时，只有删除掉body时MutationObserver才会失效，此时页面内需要保护的内容也就已经被删掉了，有无水印的意义不大。
+function parentObserver() {
+  new MutationObserver(function () {
+    var e = document.querySelector('#' + nodeId)
+    console.log(e)
+    // 没有找到水印的dom就生成一个新的
+    e ? e.getAttribute('style') !== styleStr &amp;&amp; e.setAttribute('style', styleStr) : createDiv()
+  }).observe(document.querySelector('#' + nodeId).parentNode, { childList: true })
+}
+
+//随机生成指定长度的字符串
+function sjs(leng) {
+  // 大写字母、小写字母、数字能出现的情况
+  var char = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  // 定义一个字符串接收随机生成的字符串
+  var chars = ''
+  // 遍历长度
+  for (var i = 0; i &lt; leng; i++) {
+    // chars 的值为char中下标为随机数的值
+    // 这个随机数取值是Math.random()  0-1不到1
+    // Math.random()*char.length 0-1之间的数*char的长度，生成一个0-char.length之间的数,取整不包含最后一个，但是length长度为最大下标+1，所以不用加一
+    //最后用+来拼接
+    chars += char.charAt(parseInt(Math.random() * char.length))
+  }
+  return chars
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[el-table自定义表头内数据不更新的问题]]></title>
+        <id>https://liujia12138.github.io/post/el-table-zi-ding-yi-biao-tou-nei-shu-ju-bu-geng-xin-de-wen-ti/</id>
+        <link href="https://liujia12138.github.io/post/el-table-zi-ding-yi-biao-tou-nei-shu-ju-bu-geng-xin-de-wen-ti/">
+        </link>
+        <updated>2021-09-29T06:56:13.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="el-table自定义表头使用slotheader数据无法更新">el-table自定义表头，使用slot=&quot;header&quot;数据无法更新</h3>
+<p>解决方法：将slot=“header” 改成#header</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ECharts引入外部字体]]></title>
+        <id>https://liujia12138.github.io/post/echarts-yin-ru-wai-bu-zi-ti/</id>
+        <link href="https://liujia12138.github.io/post/echarts-yin-ru-wai-bu-zi-ti/">
+        </link>
+        <updated>2021-09-15T06:50:51.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="问题描述echarts引入外部字体文件时页面渲染异常出现部分文字没有渲染成指定字体的情况"><strong>问题描述</strong>：echarts引入外部字体文件时，页面渲染异常，出现部分文字没有渲染成指定字体的情况</h3>
+<p>如图:<br>
+<img src="https://liujia12138.github.io/post-images/1663052022764.png" alt="" loading="lazy"></p>
+<h3 id="原因字体文件未加载完成就完成了echarts图表部分的代码">原因：字体文件未加载完成就完成了echarts图表部分的代码</h3>
+<h3 id="解决办法等字体下载完再画图或者压缩字体文件">解决办法：等字体下载完再画图或者压缩字体文件</h3>
+<pre><code class="language-js">document.fonts.ready.then(()=&gt;{
+  //执行echarts图
+})
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[uniapp如何在小程序端模拟数据]]></title>
+        <id>https://liujia12138.github.io/post/uniapp-ru-he-zai-xiao-cheng-xu-duan-mo-ni-shu-ju/</id>
+        <link href="https://liujia12138.github.io/post/uniapp-ru-he-zai-xiao-cheng-xu-duan-mo-ni-shu-ju/">
+        </link>
+        <updated>2021-03-09T06:58:01.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="问题描述使用uniapp开发小程序发现运行到微信开发者工具时用mockjs模拟数据接口无法使用">问题描述：使用uniapp开发小程序，发现运行到微信开发者工具时用mockjs模拟数据接口无法使用</h3>
+<h3 id="解决办法">解决办法</h3>
+<p>使用better-mock</p>
+<h4 id="安装better-mock">安装better-mock</h4>
+<p>[官方文档]&lt;!https://lavyun.github.io/better-mock/document/&gt;</p>
+<pre><code>cnpm install better-mock --save-D
+</code></pre>
+<h4 id="引入better-mock">引入better-mock</h4>
+<p>因为better-mock完全兼容mockjs，只需要将mock目录下index.js中</p>
+<pre><code>const Mock = require('mockjs')
+</code></pre>
+<p>改为</p>
+<pre><code>const Mock = require('better-mock/dist/mock.mp.js')
+</code></pre>
+<p>再次运行就可以在微信开发者工具看到模拟的数据啦</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[vue报错You are using the runtime-only build of Vue where the template compiler is not available]]></title>
+        <id>https://liujia12138.github.io/post/vue-bao-cuo-you-are-using-the-runtime-only-build-of-vue-where-the-template-compiler-is-not-available/</id>
+        <link href="https://liujia12138.github.io/post/vue-bao-cuo-you-are-using-the-runtime-only-build-of-vue-where-the-template-compiler-is-not-available/">
+        </link>
+        <updated>2021-03-02T06:59:17.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="问题描述使用vueant-design-vue时因为menu组件在v20之前不支持单文件递归所以使用了函数式组件但是编译时出现了下面的报错">问题描述：使用vue+ant-design-vue时，因为Menu组件在V2.0之前不支持单文件递归，所以使用了函数式组件，但是编译时出现了下面的报错</h3>
+<pre><code>[Vue warn]: You are using the runtime-only build of Vue where the template compiler is not available. Either pre-compile the templates into render functions, or use the compiler-included build.
+</code></pre>
+<p>翻译：您正在使用仅在运行时构建的Vue，其中模板编译器不可用。要么将模板预编译为呈现函数，要么使用包含编译器的构建。</p>
+<h4 id="原因">原因：</h4>
+<p>vue的构建版本分为：UMD， CommonJS，ES Module<br>
+<a href="https://cn.vuejs.org/v2/guide/installation.html">https://cn.vuejs.org/v2/guide/installation.html</a></p>
+<p><img src="https://liujia12138.github.io/post-images/1663052383565.png" alt="构建版本" loading="lazy"><br>
+<img src="https://liujia12138.github.io/post-images/1663052405859.png" alt="术语" loading="lazy"></p>
+<p>vue默认的是运行时的版本，无法处理模板字符串的编译工作，需要使用包含编译器的构建</p>
+<p>当需要客户端编译模板，如向template中传入一个字符串，或者需要将模板中的非DOM挂载到一个元素上时，就需要带有编译器（compiler）的构建版本。</p>
+<p>而.vue文件中的模板会在构建时预编译（pre-compile）为JavaScript，最终生成的bundle中不再需要编译器，因此通常情况下只需要包含运行时（runtime-only）的构建版本</p>
+<h4 id="解决方法">解决方法</h4>
+<p>在项目目录下新建vue.config.js，添加配置，使用包含运行时编译器的构建版本</p>
+<pre><code class="language-js">module.exports = {
+  //Solution For Issue:You are using the runtime-only build of Vue where the template compiler is not available. Either pre-compile the templates into render functions, or use the compiler-included build.
+  runtimeCompiler: true
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[css实现文字渐变色]]></title>
+        <id>https://liujia12138.github.io/post/css-shi-xian-wen-zi-jian-bian-se/</id>
+        <link href="https://liujia12138.github.io/post/css-shi-xian-wen-zi-jian-bian-se/">
+        </link>
+        <updated>2021-02-25T06:47:57.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="实现文字颜色渐变有两种方法">实现文字颜色渐变有两种方法</h4>
+<ol>
+<li>使用 background-clip 属性</li>
+</ol>
+<pre><code class="language-css">.text {
+  background: linear-gradient(90deg, #326be6 0%, #0fcae2 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+</code></pre>
+<h5 id="扩展">扩展</h5>
+<ul>
+<li>background-clip,背景裁剪,作用就是设置背景的填充规则<br>
+和 box-sizing 的取值非常类似，有三个值</li>
+</ul>
+<pre><code class="language-css"> {
+  background-clip: border-box; /*背景延伸到边框外延，但是再边框之下*/
+  background-clip: content-box; /*背景剪裁到内容区外沿*/
+  background-clip: padding-box; /*背景延伸到内边距外沿*/
+}
+</code></pre>
+<ul>
+<li>background-clip: text; 只有 chrome 支持，需要写成 -webkit-background-clip:text<br>
+以区块内的文字作为裁剪区域向外剪裁。文字的背景即为区块的背景，通常需要配合文字颜色设置为 transparent</li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-css">.text {
+  color: transparent;
+  border: 5px solid transparent;
+  background: linear-gradient(120deg, #333 0%, #265fae 30%, red 60%, pink 100%);
+  background-clip: content-box;
+  -webkit-background-clip: text;
+  font-size: 60px;
+}
+</code></pre>
+<p>效果图:<br>
+<img src="https://liujia12138.github.io/post-images/1663051783274.png" alt="" loading="lazy"></p>
+<ol>
+<li>使用 mask-image 属性</li>
+</ol>
+<p>示例</p>
+<pre><code class="language-css">.text {
+  color: red;
+  font-size: 60px;
+  position: relative;
+}
+.text[data-content]::after {
+  content: attr(data-content);
+  display: block;
+  color: yellow;
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-mask-image: linear-gradient(180deg, yellow 0%, transparent 100%);
+  mask-image: linear-gradient(180deg, yellow 0%, transparent 100%);
+}
+</code></pre>
+<pre><code class="language-html">&lt;div class=&quot;text&quot; data-content=&quot;content&quot;&gt;content&lt;/div&gt;
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://liujia12138.github.io/post-images/1663051769813.png" alt="" loading="lazy"></figure>
+<p>其实就是将一个黄色到透明渐变的文字覆盖到本身红色的字上面，mask-image兼容性要高于第一种方法</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[vue项目如何实现版本控制，用以保证用户的浏览器资源为最新]]></title>
+        <id>https://liujia12138.github.io/post/vue-xiang-mu-ru-he-shi-xian-ban-ben-kong-zhi-yong-yi-bao-zheng-yong-hu-de-liu-lan-qi-zi-yuan-wei-zui-xin/</id>
+        <link href="https://liujia12138.github.io/post/vue-xiang-mu-ru-he-shi-xian-ban-ben-kong-zhi-yong-yi-bao-zheng-yong-hu-de-liu-lan-qi-zi-yuan-wei-zui-xin/">
+        </link>
+        <updated>2021-01-29T07:01:03.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="问题描述项目实际使用过程中由于浏览器缓存问题可能会导致使用的版本不是服务器上部署的最新版本需要在项目中写入版本号">问题描述：项目实际使用过程中，由于浏览器缓存问题，可能会导致使用的版本不是服务器上部署的最新版本，需要在项目中写入版本号</h3>
+<h3 id="如何解决问题">如何解决问题？</h3>
+<h4 id="1-在vueconfigjs中加上写入版本号逻辑">1. 在vue.config.js中，加上写入版本号逻辑</h4>
+<pre><code class="language-js">const fs = require('fs')
+const path = require('path')
+
+const resolve = dir =&gt; {
+  return path.join(__dirname, dir)
+}
+
+const TimeStamp = new Date().getTime()
+
+// 写入版本号
+if(process.env.NODE_ENV === 'production'){
+  process.env.VUE_APP_VERSION = TimeStamp;
+
+  // 写入到.env文件中
+  fs.writeFile(resolve('.env'), `VUE_APP_VERSION=${TimeStamp}`, err=&gt;{
+    if(err){
+      return console.log(err)
+    }
+    console.log(`版本号变量写入成功：${TimeStamp}`)
+  })
+
+  // 写入到public的文件
+  fs.writeFile(resolve('public/v.json'), JSON.stringify({version: TimeStamp}), err =&gt; {
+    if(err){
+      return console.log(err)
+    }
+    console.log(`版本号写入成功：${TimeStamp}`)
+  })
+}
+</code></pre>
+<h4 id="2-在routerindexjs中加入判断版本号逻辑">2. 在router/index.js中加入判断版本号逻辑</h4>
+<pre><code class="language-js">router.beforeEach(async(to, from, next)=&gt;{
+  // 获取版本号
+  let version = await http.get(`${location.origin}/v.json`).then(res =&gt; {
+    return res.data.version
+  })
+
+  if(process.env.NODE_ENV === 'production' &amp;&amp; process.env.VUE_APP_VERSION !== version){
+    // 提示存在新版本
+    MessageBox('系统版本有更新，可按【CTRL + F5】或【清除浏览器缓存】获取最新资源', '提示').then(_ =&gt; {
+      window.location.reload()
+    }).catch(_ =&gt; {})
+    return;
+  }
+  // ......
+})
+</code></pre>
 ]]></content>
     </entry>
 </feed>
