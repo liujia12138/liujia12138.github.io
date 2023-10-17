@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>怎样实现一个控制台都删不掉的 DOM（保护水印） | AzhA</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697537338824">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io" class="menu">
+                Home
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/archives" class="menu">
+                Archives
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/tags" class="menu">
+                Tags
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/post/about" class="menu">
+                About
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>怎样实现一个控制台都删不掉的 DOM（保护水印）</h1>
+            <p class="article-meta">
+              2022-04-19
+              
+                <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge secondary">
+                  html
+                </a>
+              
+                <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge warning">
+                  js
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <h4 id="mutationobserver">MutationObserver</h4>
+<p>MutationObserver 提供了监视对 DOM 树所做更改的能力。他被设计为旧的 Mutation Events 功能的替代品，是 DOM3 Event 规范的一部分。<br>
+MutationObserver 构造函数会创建并返回一个新的 MutationObserver，在指定的 DOM 发生变化时被调用</p>
+<h5 id="方法">方法</h5>
+<ol>
+<li>
+<p>disconnect()<br>
+阻止 MutationObserver 实例继续接收的通知，直到再次调用其 observe()方法，该观察者对象包含的回调函数都不会再被调用</p>
+</li>
+<li>
+<p>observe(options)<br>
+配置 MutationObserver 在 DOM 更改匹配给定选项时，通过其回调函数开始接收通知。<br>
+注意：当调用observe方法时，childList、attributes或者characterData三个属性中，至少有一个必须为true，否则会抛出异常。<br>
+options：</p>
+<ol>
+<li>attributeFilter：要监视的特定属性名称的列表。如果未包含此属性，则对所有属性的更改都会触发变动通知。无默认值。</li>
+<li>attributeOldValue：当监视节点的属性改动时，将此属性设置为true，将会记录任何有改动的属性的上一个值。有关观察属性更改和值记录的详细信息。无默认值。</li>
+<li>attributes：设置为true时，可以观察受监视元素的属性值的变更。默认为false。</li>
+<li>characterData：设置为true时，可以监视指定目标节点或子节点树中节点所包含的字符数据的变化。无默认值</li>
+<li>characterDataOldValue：设置为true时，可以在受监视节点上文本数据发生变化时记录节点文本的上一个值。无默认值。</li>
+<li>childList：设为true，可以监视目标节点添加或删除子节点的操作。默认值为false。</li>
+<li>subtree：设为true，可以将监视范围扩展至目标节点整个节点数树中的所有节点（即子孙节点），MutationObserverInit的其他值也会作用于此子树下的所有节点，而不仅仅只作用于目标节点。默认值为false。</li>
+</ol>
+</li>
+<li>
+<p>takeRecords()<br>
+从 MutationObserver 的通知队列中删除所有待处理的通知，并将它们返回到 MutationRecord 对象的新 Array 中。</p>
+</li>
+</ol>
+<pre><code class="language-js">const styleStr = `
+      position: fixed;
+      bottom: 150px;
+      left: 200px;
+      z-index: 9999;
+      transform: rotateZ(-45deg);
+      opacity: 0.6;
+    `
+const nodeId = sjs(10)
+
+createDiv()
+parentObserver()
+
+function createDiv() {
+  const ele = document.createElement('canvas')
+  const ctx = ele.getContext('2d')
+  ctx.fillText('MutationObserver', 15, 50)
+  ele.setAttribute('id', nodeId)
+  ele.setAttribute('style', styleStr)
+  document.body.appendChild(ele)
+  wmObserver(ele)
+}
+
+// wmObserver 监听水印，防止修改水印样式
+// 参考：https://juejin.cn/post/7020602166591111205
+// 因为水印的样式可以通过控制台修改，如果被设置了 display:none 等样式，也会失去保护作用
+// 对于这种情况，我们可以监听水印DOM的style属性，当属性发生变动时，再通过 setAttribute 将正确的样式设置到DOM上
+function wmObserver(ele) {
+  new MutationObserver(function (mutationsList, observe) {
+    const target = mutationsList[0].target
+    target.setAttribute('style', styleStr)
+    observe.takeRecords()
+  }).observe(ele, { attributes: true, childList: true, characterData: true })
+}
+
+// parentObserver 监听父级，防止删除水印dom
+// 因为被监听的目标节点本身被删除的话是不会触发MutationObserver回调的，所以需要监听水印DOM节点的父元素或者body元素
+// 当body作为监听的目标节点时，只有删除掉body时MutationObserver才会失效，此时页面内需要保护的内容也就已经被删掉了，有无水印的意义不大。
+function parentObserver() {
+  new MutationObserver(function () {
+    var e = document.querySelector('#' + nodeId)
+    console.log(e)
+    // 没有找到水印的dom就生成一个新的
+    e ? e.getAttribute('style') !== styleStr &amp;&amp; e.setAttribute('style', styleStr) : createDiv()
+  }).observe(document.querySelector('#' + nodeId).parentNode, { childList: true })
+}
+
+//随机生成指定长度的字符串
+function sjs(leng) {
+  // 大写字母、小写字母、数字能出现的情况
+  var char = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  // 定义一个字符串接收随机生成的字符串
+  var chars = ''
+  // 遍历长度
+  for (var i = 0; i &lt; leng; i++) {
+    // chars 的值为char中下标为随机数的值
+    // 这个随机数取值是Math.random()  0-1不到1
+    // Math.random()*char.length 0-1之间的数*char的长度，生成一个0-char.length之间的数,取整不包含最后一个，但是length长度为最大下标+1，所以不用加一
+    //最后用+来拼接
+    chars += char.charAt(parseInt(Math.random() * char.length))
+  }
+  return chars
+}
+</code></pre>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/el-table-zi-ding-yi-biao-tou-nei-shu-ju-bu-geng-xin-de-wen-ti/">
+                <h3 class="post-title">
+                  el-table自定义表头内数据不更新的问题
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://liujia12138.github.io/images/avatar.png?v=1697537338824" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">定时任务时间表达式规则</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge secondary">
+          webpack
+        </a>
+      
+        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge secondary">
+          前端性能优化
+        </a>
+      
+        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge warning">
+          vue
+        </a>
+      
+        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge secondary">
+          js
+        </a>
+      
+        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge secondary">
+          html
+        </a>
+      
+        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge warning">
+          echarts
+        </a>
+      
+        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge secondary">
+          uniapp
+        </a>
+      
+        <a href="https://liujia12138.github.io/D88IhnDGV/" class="badge secondary">
+          小程序
+        </a>
+      
+        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge secondary">
+          css
+        </a>
+      
+        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge warning">
+          网络协议
+        </a>
+      
+        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge secondary">
+          服务端
+        </a>
+      
+        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge secondary">
+          node
+        </a>
+      
+        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge secondary">
+          兼容
+        </a>
+      
+        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge success">
+          es6
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>

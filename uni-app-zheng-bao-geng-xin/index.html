@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>uni-app整包更新 | AzhA</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697537338824">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io" class="menu">
+                Home
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/archives" class="menu">
+                Archives
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/tags" class="menu">
+                Tags
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/post/about" class="menu">
+                About
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>uni-app整包更新</h1>
+            <p class="article-meta">
+              2020-08-10
+              
+                <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge ">
+                  uniapp
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <p>APP端的升级，可分为整包更新和资源热更新两种</p>
+<ul>
+<li>整包更新：常规的整个app安装包重新下载安装（比较繁琐，每次更新都要重新打包，更新整包）</li>
+<li>资源热更新：无需跳转到应用市场或者浏览器去重新更包，无感更新</li>
+</ul>
+<h6 id="本文主要来记录一下整包更新的流程">本文主要来记录一下整包更新的流程</h6>
+<p>参考:<a href="https://ask.dcloud.net.cn/article/34972">uni-app 整包升级/更新方案</a></p>
+<p>android：APP启动后检查到有新版本，跳转到应用市场或者浏览器直接下载新的apk，只要保证包名和证书不变，就可以覆盖安装</p>
+<p>ios：app启动后有新版本，只能跳转到apptsore，然后用户在appstore详情页进行更新</p>
+<h4 id="一-使用unicloud实现整包更新">一、使用uniCloud实现整包更新</h4>
+<p>为什么用uniCloud？</p>
+<ul>
+<li>可以把apk存放到uniCloud的cnd上，免费试用</li>
+<li>有现成的插件，不用写升级逻辑，配好地址、版本、更新日志等参数就能直接使用。<a href="https://ext.dcloud.net.cn/plugin?id=2226">云函数实现App的升级检查</a></li>
+</ul>
+<h5 id="如何使用unicloud">如何使用uniCloud</h5>
+<h5 id="unicloud云函数-实现app升级检查"># uniCloud云函数 实现app升级检查</h5>
+<p>（注意：hbuilderX，appid，uniCloud必须同一个账号）</p>
+<ol>
+<li>DCloud插件市场中导入插件<a href="https://ext.dcloud.net.cn/plugin?id=2226">云函数实现App的升级检查</a></li>
+<li>导入插件之后右击cloudfunctions目录，绑定服务空间。（没有的话先上uniCloud创建一下）</li>
+<li>绑定云服务空间后右击cloudfunctions目录，上传所有云函数</li>
+<li>如果cloudfunctions目录下有db_init.json，将appid改成自己项目的appid后点击右键，初始化云数据库。</li>
+<li>在App.vue的onLaunch中调用云函数，进行升级检测。</li>
+<li>每次升级打包之前修改manifest.json中的版本号（注意：版本号要高于上一次的），打包之后将uniCloud的云数据库中同步版本号，更新内容和安装包地址</li>
+</ol>
+<p>完成上述操作后，用户启动app时就可以进行检查更新啦</p>
+<h4 id="二-不使用unicloud">二、不使用uniCloud</h4>
+<p>如果不使用uniCloud，自己写升级逻辑也可以。</p>
+<h5 id="约定接口用来检测是否需要升级">约定接口，用来检测是否需要升级</h5>
+<p>在App.vue的onLaunch中，发起升级检测请求</p>
+<pre><code class="language-js">onLaunch:function(){
+    //#ifdef APP-PLUS
+    //app升级检测代码需要使用条件编译，否则在非app环境会报错
+    uni.request({
+        url: &quot;api&quot;,
+        data:{
+            appid: plus.runtime.appid,
+            version: plus.runtime.version
+        },
+        success: (res)=&gt;{
+            if(res.statusCode === 200 &amp;&amp; res.data.status === 1){
+                uni.showModal({//提示用户可更新
+                    title: &quot;更新提示&quot;,
+                    content: res.data.content,
+                    success:(res)=&gt;{
+                        if(res.confirm){//用户确认更新
+                            plus.runtime.openURL(res.data.url);
+                        }
+                    }
+                })
+            }
+        }
+    })
+    //#endif
+}
+</code></pre>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/bfc-shi-shi-me/">
+                <h3 class="post-title">
+                  BFC是什么？
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://liujia12138.github.io/images/avatar.png?v=1697537338824" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">定时任务时间表达式规则</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge secondary">
+          webpack
+        </a>
+      
+        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge success">
+          前端性能优化
+        </a>
+      
+        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge ">
+          vue
+        </a>
+      
+        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge secondary">
+          js
+        </a>
+      
+        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge secondary">
+          html
+        </a>
+      
+        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge secondary">
+          echarts
+        </a>
+      
+        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge ">
+          uniapp
+        </a>
+      
+        <a href="https://liujia12138.github.io/D88IhnDGV/" class="badge secondary">
+          小程序
+        </a>
+      
+        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge ">
+          css
+        </a>
+      
+        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge warning">
+          网络协议
+        </a>
+      
+        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge success">
+          服务端
+        </a>
+      
+        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge success">
+          node
+        </a>
+      
+        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge ">
+          兼容
+        </a>
+      
+        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge ">
+          es6
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>

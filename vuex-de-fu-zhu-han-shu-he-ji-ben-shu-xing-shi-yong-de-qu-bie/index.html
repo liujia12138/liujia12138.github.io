@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>vuex的辅助函数和基本属性使用的区别? | AzhA</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697537338824">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io" class="menu">
+                Home
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/archives" class="menu">
+                Archives
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/tags" class="menu">
+                Tags
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/post/about" class="menu">
+                About
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>vuex的辅助函数和基本属性使用的区别?</h1>
+            <p class="article-meta">
+              2018-10-17
+              
+                <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge secondary">
+                  vue
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <h5 id="1-state">1. state</h5>
+<p>当我们需要读取state中的一个属性的时候，可以在组件内用computed来读取，这样当state变化的时候，组件就能实时改变<br>
+但是如果组件内需要用到多个state，每个状态都声明为计算属性的话重复代码就太多了，这是就需要用到辅助函数mapState来帮助我们生成计算属性</p>
+<pre><code class="language-js">computed:{
+    count(){
+        //....
+    },
+    ...mapState({//结合展开运算符使用
+        &quot;count&quot;,//等同于  this.count ：store.state.count
+        count: state =&gt; state.count
+    })
+}
+</code></pre>
+<h5 id="2-getter">2. getter</h5>
+<p>当我们需要从store的state中派生出一些状态，比如一个list的长度，过滤掉某个state中的一些数据，可以在getter中定义这个派生状态</p>
+<p>可以理解为getter就是state的计算属性，在组件中使用store.getters.count访问</p>
+<p>getter和计算属性一样，返回值会根据他的依赖被缓存起来，只有当他的依赖值发生变化时才会重新计算<br>
+<strong>（computed和watch的区别？）</strong></p>
+<p>可以通过让getter返回一个函数来实现给getter传参</p>
+<p>mapGetters辅助函数：将store中的getter映射到组件的计算属性中</p>
+<h5 id="3-mutation">3. mutation</h5>
+<p>更改vuex中store中的状态的唯一方法就是提交mutation。</p>
+<p>mutation类似事件，每个mutation都有一个字符串的事件类型type（函数名）和一个回调函数，这个回调函数就是我们实际进行状态更改的地方，他会接受state作为第一个参数。</p>
+<pre><code class="language-js">const mutations = {
+    increment(state){
+        state.count++
+    }
+}
+</code></pre>
+<p>但是我们修改state的时候，不能够直接调用mutation的回调函数increment()，需要使用store.commit(type)来调用相应的方法</p>
+<p>我们也可以向store.commit中传入额外的参数，传递给mutation，即mutation的载荷 <code>store.commit('increment', 10)</code></p>
+<pre><code class="language-js">const mutations = {
+    increment(state, n){
+        state.count += n
+    }
+}
+</code></pre>
+<p>使用常量代替mutation事件类型，在各种Flux中非常常见，可以把这些常量单独放在一个文件中，这样整个app包含的mutation看起来非常清晰</p>
+<pre><code class="language-js">//mutation-types.js
+export const SOME_MUTATION = &quot;SOME_MUTATION&quot;
+</code></pre>
+<pre><code class="language-js">import Vuex from 'vuex'
+import {SOME_MUTATION} from &quot;mutation-types.js&quot;
+
+const store = new Vuex.store({
+    state: {...},
+    mutations: {
+        //可以使用常量来作为函数名
+        [SOME_MUTATION](state){
+            //....
+        }
+    }
+})
+</code></pre>
+<p><strong>mutation必须是同步函数</strong></p>
+<p>在组件中提交mutation，可以使用<code>this.$store.commit('xxx', payload)</code>来提交mutation，或者使用mapMutations辅助函数将组件中的methods映射为store.commit来调用</p>
+<h5 id="4action">4.action</h5>
+<p>action类似于mutation，但是不同的是action修改状态是通过提交mutation，而不是直接修改状态；<strong>action可以进行异步操作</strong></p>
+<pre><code class="language-js">const store = new Vuex.Store({
+  state: {
+    count: 0
+  },
+  mutations: {
+    increment (state) {
+      state.count++
+    }
+  },
+  actions: {
+    increment (context) {
+      context.commit('increment')
+    }
+  }
+})
+</code></pre>
+<p>从上面例子我们可以看出，action函数接收一个和store实例具有相同方法和属性的context对象，因此我们可以调用context.commit()来提交mutation，或者通过context.getters和context.state来获取getters和state。</p>
+<p><strong>注意</strong>：context对象并不是store实例本身。</p>
+<p>分发action，可以通过<code>store.dispatch('increment')</code>来触发<br>
+在组件中分发action，可以使用 <code>this.$store.dispatch('increment')</code>,或者使用mapActions将组件的methods映射为store.dispatch调用（需要在根节点注入store）</p>
+<p>组合action：actions通常是异步的，怎么才能知道action什么时候结束呢？</p>
+<ul>
+<li>可以在action内返回promise，组件内使用<code>this.$store.dispatch('increment').then(()=&gt;{})</code></li>
+<li>利用async/await</li>
+</ul>
+<pre><code class="language-js">actions: {
+    async actionA({commit}){
+        commit('gotData', await getData());//getData返回的是promise
+    }
+}
+</code></pre>
+<h5 id="5module">5.<a href="https://vuex.vuejs.org/zh/guide/modules.html">module</a></h5>
+<p>为了方便模块化开发，vuex允许我们将store分割成module，每个模块拥有自己的state，getter，mutation，action；</p>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/js-yuan-xing-yu-yuan-xing-lian/">
+                <h3 class="post-title">
+                  JS原型与原型链
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://liujia12138.github.io/images/avatar.png?v=1697537338824" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">定时任务时间表达式规则</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge success">
+          webpack
+        </a>
+      
+        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge success">
+          前端性能优化
+        </a>
+      
+        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge warning">
+          vue
+        </a>
+      
+        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge secondary">
+          js
+        </a>
+      
+        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge secondary">
+          html
+        </a>
+      
+        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge secondary">
+          echarts
+        </a>
+      
+        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge ">
+          uniapp
+        </a>
+      
+        <a href="https://liujia12138.github.io/D88IhnDGV/" class="badge secondary">
+          小程序
+        </a>
+      
+        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge ">
+          css
+        </a>
+      
+        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge secondary">
+          网络协议
+        </a>
+      
+        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge ">
+          服务端
+        </a>
+      
+        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge secondary">
+          node
+        </a>
+      
+        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge ">
+          兼容
+        </a>
+      
+        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge ">
+          es6
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>

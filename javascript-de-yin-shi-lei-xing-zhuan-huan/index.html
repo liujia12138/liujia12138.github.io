@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>JavaScript的隐式类型转换 | AzhA</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697537338824">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io" class="menu">
+                Home
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/archives" class="menu">
+                Archives
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/tags" class="menu">
+                Tags
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/post/about" class="menu">
+                About
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>JavaScript的隐式类型转换</h1>
+            <p class="article-meta">
+              2020-05-14
+              
+                <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge ">
+                  js
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <ol>
+<li>隐式转换规则</li>
+</ol>
+<ul>
+<li>转成string类型： + （字符串拼接符）</li>
+<li>转成number类型：++、--、+、-、*、/、%、&lt;、&gt;、&lt;=、&gt;=、!= 、== 、!== 、===</li>
+<li>转成boolean类型：!（逻辑非运算符）</li>
+</ul>
+<ol>
+<li>
+<p>字符串连接符+：只要+两边有一边是字符串，会吧其他数据类型调用String()方法转换成字符串然后拼接</p>
+</li>
+<li>
+<p>算数运算符+：+两边都是数字，会把其他数据类型调用Number()方法转换成数字然后进行假发运算</p>
+</li>
+<li>
+<p>关系运算符：会把其他数据类型转换成number之后再作比较：</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>1.当关系运算符两边有一边是字符串的时候，会把字符串转换成number然后比较，比如<code>'a' &gt; 10</code>返回false，<code>'a'&lt;10</code>也返回false，因为Number('a')=NaN</p>
+</li>
+<li>
+<p>2.a. 当关系运算符两边都是字符串的时候，会根据unicode编码来判断，<code>'2' &gt; '10'</code>返回true，因为'2'.charCodeAt()=50, '10'.chaeCodeAt()=49（默认返回第一个字符的编码，如果想要查询第二个字符可以传参下标）； b. 多个字符从左向右依次比较；</p>
+</li>
+<li>
+<p>3.特殊情况，如果数据类型是undefined或者null，得出固定结果</p>
+</li>
+<li>
+<p>4.特殊情况，NaN和任何数据比较都是false，包括NaN；</p>
+</li>
+<li>
+<p>5.复杂数据类型：在隐式转换时会先转成string，然后再转成Number<br>
+<img src="http://p9.pstatp.com/large/pgc-image/1538025621414c490c46b28" alt="image" loading="lazy"></p>
+</li>
+<li>
+<ul>
+<li>a.先使用valueOf()方法获取原始值，如果原始值不是number类型，则使用toString()方法转成string；</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>b.再将string转成number（unicode码）运算</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-js">console.log([1, 2] == '1,2');//true, 先获取数组的原始值，然后转成string，然后通过左右两边的字符串的unicode编码运算
+console.log([1, 2].valueOf());//[1, 2]
+console.log([1, 2].valueOf().toString());//'1,2'
+
+var a = {};
+console.log(a == &quot;[object Object]&quot;);//true
+console.log(a.valueOf().toString());//&quot;[object Object]&quot;
+
+//声明一个变量a，使下面表达式打印1
+var a = {
+    i: 1,//声明一个属性i
+    valueOf: function(){
+        return a.i++;//每调用一次valueOf，让自增1，并且返回i的值
+    }
+}
+if(a == 1 &amp;&amp; a ==2 &amp;&amp; a == 3){
+    console.log(1)
+}
+
+</code></pre>
+<ul>
+<li>
+<p>6.逻辑非隐式转换与关系运算符隐式转换<br>
+**注意：**空数组的toString()方法会得到一个空字符串，而空对象的toString()方法会得到字符串<code>[object Object]</code></p>
+</li>
+<li>
+<ul>
+<li>a.关系运算符：将其他数据类型转成number</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>b.逻辑非!：将其他数据类型使用Boolean()转成布尔值</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>
+<ul>
+<li>1.null，undefined，空字符串，0，-0，NaN，false，document.all()转布尔值都会得到false，除此之外全都是true</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>
+<ul>
+<li>2.逻辑非运算符优先级高于关系运算符，所以要先得到逻辑非运算结果在进行比较</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-js">console.log([] == 0)//true,
+//原理：[].valueOf().toString() =&gt; &quot;&quot;, Number('') == 0
+
+console.log(![] == 0);//true
+//原理：逻辑非优先级高于关系运算符，空数组不在上面八种情况里，所以空数组转成布尔值应该是true，![] =&gt; false，false == 0成立
+
+console.log({} == !{});//false
+console.log({} == {});//false
+//原理：
+//1：本质上是{} 与 !{}这个逻辑非表达式比较，!{} =&gt; false，{}.valueOf().toString() =&gt; '[object Object]', 所以{} == !{}不成立，返回false
+//2：引用数据类型存储在堆中，栈中存储的是引用地址，所以返回false
+
+console.log([] == ![]);//true
+console.log([] == []);//false
+//原理：
+//1：本质上是比较[]和![]逻辑非运算结果，[].valueOf().toString() =&gt; ''，Number('') =&gt; 0，![] =&gt; false, 0 == false成立，返回true；
+//2：引用数据类型，false
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://liujia12138.github.io/post-images/1589461997727.jpeg" alt="" loading="lazy"></figure>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/yi-dong-duan-ping-mu-kuan-du-zi-gua-ying-yuan-li-ji-shi-xian/">
+                <h3 class="post-title">
+                  移动端屏幕宽度自适应原理及实现
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://liujia12138.github.io/images/avatar.png?v=1697537338824" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">定时任务时间表达式规则</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge success">
+          webpack
+        </a>
+      
+        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge ">
+          前端性能优化
+        </a>
+      
+        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge secondary">
+          vue
+        </a>
+      
+        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge success">
+          js
+        </a>
+      
+        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge secondary">
+          html
+        </a>
+      
+        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge ">
+          echarts
+        </a>
+      
+        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge success">
+          uniapp
+        </a>
+      
+        <a href="https://liujia12138.github.io/D88IhnDGV/" class="badge warning">
+          小程序
+        </a>
+      
+        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge secondary">
+          css
+        </a>
+      
+        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge secondary">
+          网络协议
+        </a>
+      
+        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge success">
+          服务端
+        </a>
+      
+        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge secondary">
+          node
+        </a>
+      
+        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge success">
+          兼容
+        </a>
+      
+        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge ">
+          es6
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>vue报错You are using the runtime-only build of Vue where the template compiler is not available | AzhA</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697537338824">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io" class="menu">
+                Home
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/archives" class="menu">
+                Archives
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/tags" class="menu">
+                Tags
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/post/about" class="menu">
+                About
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>vue报错You are using the runtime-only build of Vue where the template compiler is not available</h1>
+            <p class="article-meta">
+              2021-03-02
+              
+                <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge ">
+                  vue
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <h3 id="问题描述使用vueant-design-vue时因为menu组件在v20之前不支持单文件递归所以使用了函数式组件但是编译时出现了下面的报错">问题描述：使用vue+ant-design-vue时，因为Menu组件在V2.0之前不支持单文件递归，所以使用了函数式组件，但是编译时出现了下面的报错</h3>
+<pre><code>[Vue warn]: You are using the runtime-only build of Vue where the template compiler is not available. Either pre-compile the templates into render functions, or use the compiler-included build.
+</code></pre>
+<p>翻译：您正在使用仅在运行时构建的Vue，其中模板编译器不可用。要么将模板预编译为呈现函数，要么使用包含编译器的构建。</p>
+<h4 id="原因">原因：</h4>
+<p>vue的构建版本分为：UMD， CommonJS，ES Module<br>
+<a href="https://cn.vuejs.org/v2/guide/installation.html">https://cn.vuejs.org/v2/guide/installation.html</a></p>
+<p><img src="https://liujia12138.github.io/post-images/1663052383565.png" alt="构建版本" loading="lazy"><br>
+<img src="https://liujia12138.github.io/post-images/1663052405859.png" alt="术语" loading="lazy"></p>
+<p>vue默认的是运行时的版本，无法处理模板字符串的编译工作，需要使用包含编译器的构建</p>
+<p>当需要客户端编译模板，如向template中传入一个字符串，或者需要将模板中的非DOM挂载到一个元素上时，就需要带有编译器（compiler）的构建版本。</p>
+<p>而.vue文件中的模板会在构建时预编译（pre-compile）为JavaScript，最终生成的bundle中不再需要编译器，因此通常情况下只需要包含运行时（runtime-only）的构建版本</p>
+<h4 id="解决方法">解决方法</h4>
+<p>在项目目录下新建vue.config.js，添加配置，使用包含运行时编译器的构建版本</p>
+<pre><code class="language-js">module.exports = {
+  //Solution For Issue:You are using the runtime-only build of Vue where the template compiler is not available. Either pre-compile the templates into render functions, or use the compiler-included build.
+  runtimeCompiler: true
+}
+</code></pre>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/css-shi-xian-wen-zi-jian-bian-se/">
+                <h3 class="post-title">
+                  css实现文字渐变色
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://liujia12138.github.io/images/avatar.png?v=1697537338824" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">定时任务时间表达式规则</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge ">
+          webpack
+        </a>
+      
+        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge warning">
+          前端性能优化
+        </a>
+      
+        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge secondary">
+          vue
+        </a>
+      
+        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge secondary">
+          js
+        </a>
+      
+        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge ">
+          html
+        </a>
+      
+        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge secondary">
+          echarts
+        </a>
+      
+        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge ">
+          uniapp
+        </a>
+      
+        <a href="https://liujia12138.github.io/D88IhnDGV/" class="badge secondary">
+          小程序
+        </a>
+      
+        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge success">
+          css
+        </a>
+      
+        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge secondary">
+          网络协议
+        </a>
+      
+        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge warning">
+          服务端
+        </a>
+      
+        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge warning">
+          node
+        </a>
+      
+        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge warning">
+          兼容
+        </a>
+      
+        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge success">
+          es6
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>

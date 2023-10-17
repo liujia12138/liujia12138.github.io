@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Egg+Vue+webpack 服务端渲染 | AzhA</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697537338824">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io" class="menu">
+                Home
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/archives" class="menu">
+                Archives
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/tags" class="menu">
+                Tags
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/post/about" class="menu">
+                About
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>Egg+Vue+webpack 服务端渲染</h1>
+            <p class="article-meta">
+              2020-03-17
+              
+                <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge secondary">
+                  node
+                </a>
+              
+                <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge warning">
+                  webpack
+                </a>
+              
+                <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge secondary">
+                  vue
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <h5 id="1安装nodejs">1.安装nodeJS</h5>
+<h5 id="2初始化egg项目">2.初始化egg项目</h5>
+<p><code>npm i egg-init -g</code></p>
+<p><code>egg-init</code></p>
+<ul>
+<li>选择 <code>Simple egg app boilerplate</code> project初始化egg项目</li>
+<li>新建 在app目录下新建view文件夹</li>
+<li>新建 在view文件夹内新建layout.html文件，用于服务端渲染失败后的客户端渲染</li>
+</ul>
+<h5 id="3安装依赖">3.安装依赖</h5>
+<ul>
+<li>服务端渲染需要的依赖：vue-server-renderer、egg-view-vue-ssr</li>
+</ul>
+<p><code>npm install vue vue-server-renderer vuex axios egg-view-vue-ssr --save</code></p>
+<ul>
+<li>构建开发依赖</li>
+</ul>
+<p><code>npm i cross-env easywebpack-cli easywebpack-vue egg-webpack egg-webpack-vue --save-dev</code></p>
+<p><code>npm i vue-template-compiler uglifyjs-webpack-plugin webpack-manifest-resource-plugin --save-dev</code></p>
+<ul>
+<li>安装全部依赖</li>
+</ul>
+<p><code>npm install</code></p>
+<h5 id="4添加配置">4.添加配置</h5>
+<ul>
+<li>添加 ${app_root}/config/plugin.local.js 配置</li>
+</ul>
+<pre><code class="language-js">exports.webpack = {
+  enable: true,
+  package: 'egg-webpack'
+};
+
+exports.webpackvue = {
+  enable: true,
+  package: 'egg-webpack-vue'
+};
+
+</code></pre>
+<ul>
+<li>添加 ${app_root}/config/plugin.js 配置</li>
+</ul>
+<pre><code>exports.vuessr = {
+  enable: true,
+  package: 'egg-view-vue-ssr'
+};
+</code></pre>
+<ul>
+<li>添加 ${app_root}/config/config.default.js 配置<br>
+注意，只添加path和config.static就行</li>
+</ul>
+<pre><code>'use strict';
+const path = require('path');
+module.exports = appInfo =&gt; {
+  const config = exports = {};
+
+  // 保证构建的静态资源文件能够被访问到
+  config.static = {
+    prefix: '/public/',
+    dir: path.join(appInfo.baseDir, 'public')
+  };
+  return config;
+}
+</code></pre>
+<ul>
+<li>添加 ${app_root}/config/config.local.js 配置</li>
+</ul>
+<pre><code>'use strict';
+module.exports = () =&gt; {
+  const config = exports = {};
+  config.vuessr = {
+    // 本地开发 css 采用 inline 方式, 无需注入 css 链接。
+    injectCss: false,
+  };
+  return config;
+};
+</code></pre>
+<ul>
+<li>添加 easywebpack-cli 配置文件 ${app_root}/webpack.config.js</li>
+</ul>
+<pre><code>const path = require('path');
+function resolve(dir) {
+  return path.join(__dirname, '/', dir);
+}
+module.exports = {
+  egg: true,
+  framework: 'vue', // 使用 easywebpack-vue 构建解决方案
+  entry: {
+    include: ['app/web/page'], // 自动遍历 app/web/page 目录下的 js 文件入口
+    exclude: ['app/web/page/[a-z]+/component'],
+  },
+  resolve: {
+    extensions: ['.js', '.vue'],
+    alias: {
+      '#': resolve('app/web/util'),
+      '@': resolve('app/web/page/view')
+    }
+  },
+  alias: {
+    '~': __dirname,
+    asset: 'app/web/asset',
+    component: 'app/web/component',
+    framework: 'app/web/framework',
+    store: 'app/web/store'
+  },
+  dll: ['vue/dist/vue.common.js', 'axios'], // webpack dll 构建
+  install:{
+   npm: 'npm', // 默认是 npm, 可以是 cnpm
+   check: true // 默认为禁用，自动安装缺少的 loader 和 plugin，建议首次 运行成功后，改成 false，加快构建速度
+  },
+  loaders: {
+    eslint: false
+  },
+  plugins: {},
+  done() { // 编译完成回调
+
+  }
+};
+</code></pre>
+<ul>
+<li>添加 ${app_root}/.babelrc 文件</li>
+</ul>
+<pre><code class="language-js">{
+  &quot;presets&quot;: [[&quot;env&quot;,{ &quot;modules&quot;: false }]],
+  &quot;plugins&quot;: [
+    &quot;transform-object-rest-spread&quot;,
+    &quot;syntax-dynamic-import&quot;,
+    &quot;transform-object-assign&quot;
+  ],
+  &quot;comments&quot;: false
+}
+</code></pre>
+<p>安装babel相关依赖</p>
+<p><strong>注意</strong></p>
+<p>需要babel-loader@7.1.5版本，否则会报错</p>
+<p><code>npm i babel-core babel-loader --save-dev</code></p>
+<p><code>npm i babel-preset-env babel-plugin-syntax-dynamic-import babel-plugin-transform-object-assign babel-plugin-transform-object-rest-spread --save-dev</code></p>
+<ul>
+<li>添加 ${app_root}/postcss.config.js 文件</li>
+</ul>
+<pre><code>module.exports = {
+  plugins: [
+    require('autoprefixer')
+  ]
+};
+</code></pre>
+<p>安装autoprefixer依赖</p>
+<p><code>npm install autoprefixer --save-dev</code></p>
+<ul>
+<li>添加 ${app_root}/.gitignore 配置</li>
+</ul>
+<pre><code>.DS_Store
+.happypack/
+node_modules/
+npm-debug.log
+.idea/
+dist
+static
+public
+private
+run
+*.iml
+*tmp
+_site
+logs
+.vscode
+config/manifest.json
+app/view/*
+!app/view/layout.html
+!app/view/.gitkeep
+package-lock.json
+</code></pre>
+<h5 id="5vue前端代码部分">5.vue前端代码部分</h5>
+<ul>
+<li>编写vue服务端公共入口 ${app_root}/app/web/framework/vue/entry/server.js</li>
+</ul>
+<pre><code class="language-js">import Vue from 'vue';
+export default function render(options) {
+  if (options.store &amp;&amp; options.router) {
+    return context =&gt; {
+      options.router.push(context.state.url);
+      const matchedComponents = options.router.getMatchedComponents();
+      if (!matchedComponents) {
+        return Promise.reject({ code: '404' });
+      }
+      return Promise.all(
+        matchedComponents.map(component =&gt; {
+          if (component.preFetch) {
+            return component.preFetch(options.store);
+          }
+          return null;
+        })
+      ).then(() =&gt; {
+        context.state = options.store.state;
+        return new Vue(options);
+      });
+    };
+  }
+  return context =&gt; {
+    const VueApp = Vue.extend(options);
+    const app = new VueApp({ data: context.state });
+    return new Promise(resolve =&gt; {
+      resolve(app);
+    });
+  };
+}
+</code></pre>
+<ul>
+<li>编写vue客户端入口文件${app_root}/app/web/framework/vue/entry/client.js</li>
+</ul>
+<pre><code class="language-js">import Vue from 'vue';
+export default function(options) {
+  Vue.prototype.$http = require('axios');
+  if (options.store) {
+    options.store.replaceState(window.__INITIAL_STATE__ || {});
+  } else if (window.__INITIAL_STATE__) {
+    options.data = Object.assign(window.__INITIAL_STATE__, options.data &amp;&amp; options.data());
+  }
+  const app = new Vue(options);
+  app.$mount('#app');
+}
+</code></pre>
+<ul>
+<li>
+<p>安装vue-router <code>npm install vue-router@3.0.7 --save</code></p>
+</li>
+<li>
+<p>新建 ${app_root}/app/web/page/index/index.vue 文件</p>
+</li>
+</ul>
+<pre><code class="language-html">&lt;template&gt;
+  &lt;div&gt;index
+    &lt;router-view&gt;&lt;/router-view&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+import Vue from &quot;vue&quot;;
+import VueRouter from &quot;vue-router&quot;;
+Vue.use(VueRouter);
+export default {
+  VueRouter,
+  computed: {},
+  methods: {},
+  mounted() {
+  }
+};
+&lt;/script&gt;
+</code></pre>
+<ul>
+<li>新建 ${app_root}/app/web/page/index/index.js 页面文件</li>
+</ul>
+<pre><code>import Index from './index.vue';
+import serverRender from '~/app/web/framework/vue/entry/server.js';
+import clientRender from '~/app/web/framework/vue/entry/client.js';
+export default EASY_ENV_IS_NODE ? serverRender({ ...Index }) : clientRender({ ...Index });
+</code></pre>
+<ul>
+<li>vue部分,新建${app_root}/app/web/page/report/report.vue 文件</li>
+</ul>
+<pre><code class="language-html">&lt;template&gt;
+  &lt;div&gt;report...&lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+export default {
+  computed: {},
+  methods: {},
+  mounted() {
+  }
+};
+&lt;/script&gt;
+</code></pre>
+<ul>
+<li>vue-router部分，修改vue客户端入口文件${app_root}/app/web/framework/vue/entry/client.js</li>
+</ul>
+<p>安装element-ui, <code>npm install element-ui</code></p>
+<p>引入element-ui css文件，asset文件夹放在web目录下。</p>
+<pre><code class="language-js">import Vue from 'vue';
+import VueRouter from 'vue-router';
+import ElementUI from &quot;element-ui&quot;;
+import axios from 'axios'; //先安装axios， npm install axios --save
+
+import &quot;../../../asset/theme/index.css&quot;; //引入element-ui css文件，asset文件夹放在web目录下。
+
+Vue.prototype.$axios = axios;
+Vue.use(ElementUI);
+
+//开始配置vueRouter
+const Report = () =&gt; import(&quot;@/report/report.vue&quot;);//引入report组件，@的配置在webpack.config.js中
+
+const routes = [
+    {
+        path:'/report',
+        name:&quot;report&quot;,
+        component: Report
+    }
+]
+
+const router = new VueRouter({
+    routes
+})
+
+export default function(options) {
+  Vue.prototype.$http = require('axios');
+  if (options.store) {
+    options.store.replaceState(window.__INITIAL_STATE__ || {});
+  } else if (window.__INITIAL_STATE__) {
+    options.data = Object.assign(window.__INITIAL_STATE__, options.data &amp;&amp; options.data());
+  }
+  options.router = router;
+  options.axios = axios;
+  const app = new Vue(options);
+  app.$mount('#app');
+}
+</code></pre>
+<h5 id="6node后端代码">6.node后端代码</h5>
+<ul>
+<li>创建 controller 文件 ${app_root}/app/controller/index.js</li>
+</ul>
+<pre><code>module.exports = app =&gt; {
+  return class IndexController extends app.Controller {
+    async server() {
+      const { ctx } = this;
+      // render 实现是服务端渲染 vue 组件
+      await ctx.render('index/index.js', { message: 'egg vue server side render' });
+    }
+
+    async client() {
+      const { ctx } = this;
+      // renderClient 前端渲染，Node层只做 layout.html和资源依赖组装，渲染交给前端渲染。与服务端渲染的差别你可以通过查看运行后页面源代码即可明白两者之间的差异
+      await ctx.renderClient('index/index.js', { message: 'egg vue client side render' });
+    }
+  };
+};
+</code></pre>
+<ul>
+<li>添加egg路由配置</li>
+</ul>
+<pre><code>app.get('/', app.controller.home.client);
+app.get('/client', app.controller.home.client);
+</code></pre>
+<h5 id="7运行项目-npm-run-dev-打开http1270017001report即可看到report页面">7.运行项目 <code>npm run dev</code> ，打开http://127.0.0.1:7001/#/report即可看到report页面</h5>
+<h4 id="注意">注意</h4>
+<ol>
+<li>
+<p>运行报错<code>nodejs.SyntaxError: Unexpected token ~</code>,需要给webpack.config.js中的~加引号</p>
+</li>
+<li>
+<p>报错<code>nodejs.unhandledExceptionError: Cannot find module '@babel/core'</code></p>
+</li>
+</ol>
+<p>查看package.json发现装了babel-core和babel-loader，但是babel-loader版本是8.0.0，之前用的是7.1.5版本</p>
+<p>解决办法：装回@7.1.5版本<br>
+<code>npm uninstall babel-loader</code></p>
+<p><code>npm install babel-loader@7.1.5</code></p>
+<p>运行正常~</p>
+<h5 id="8nodejs-service接口配置">8.nodeJS service接口配置</h5>
+<ul>
+<li>app/service目录下新建service_caller.js</li>
+</ul>
+<p>(先安装md5)</p>
+<pre><code class="language-js">const request = require('request');
+const md5 = require('md5');
+const BASE_URL = 'http://server-test.elecredit.com';
+
+function ServiceResponse() {
+
+}
+
+const cRequest = request.defaults({
+  json: true
+});
+
+function generateHeader(body) {
+  let sortObjStr = function (obj) {
+    var newkey = Object.keys(obj).sort();
+    var newObj = {};
+    var str = &quot;&quot;;
+    for (var i = 0, len = newkey.length; i &lt; len; i++) {
+      var k = newkey[i],
+        val = obj[newkey[i]];
+      newObj[k] = val;
+      if (i === len - 1) {
+        str += k + &quot;:&quot; + val;
+      } else {
+        str += k + &quot;:&quot; + val + &quot;,&quot;;
+      }
+    }
+    return str; //返回排好序的新对象
+  };
+  const userid = &quot;CcIPQ59H&quot;;
+  const userkey = &quot;o2zQLNa&quot;;
+  const stringdata = sortObjStr(body);
+  const mddata = userid + stringdata + userkey;
+  let sign = md5(mddata);
+  return {
+    &quot;userid&quot;: userid,
+    'sign': sign
+  };
+}
+
+async function get(url, params) {
+  return new Promise((resolve, reject) =&gt; {
+    const body = trim(params) || {};
+    cRequest({
+      url: BASE_URL + url,
+      method: 'GET',
+      body: body,
+      json: true,
+      header: generateHeader(body)
+    }, (err, res, body) =&gt; {
+      if (err) {
+        reject(err);
+      }
+      const response = new ServiceResponse();
+      if (body) {
+        response.data = body.data;
+        response.code = body.code;
+        response.msg = body.msg;
+      }
+      resolve(response);
+    });
+  });
+}
+
+async function post(url, params) {
+  return new Promise((resolve, reject) =&gt; {
+    const body = trim(params) || {};
+    console.log(BASE_URL + url, &quot;BASE_URL + url&quot;)
+    cRequest({
+      url: BASE_URL + url,
+      method: 'POST',
+      body: body,
+      json: true,
+      header: generateHeader(body)
+    }, (err, res, body) =&gt; {
+      if (err) {
+        reject(err);
+      }
+      const response = new ServiceResponse();
+      if (body) {
+        response.body = body;
+        // response.data = body.data;
+        // response.code = body.code;
+        // response.msg = body.msg;
+      }
+      resolve(response);
+    });
+  });
+}
+
+async function httpGet(url, params) {
+  return new Promise((resolve, reject) =&gt; {
+    cRequest({
+      url: url,
+      method: 'GET',
+      body: trim(params) || {}
+    }, (err, res, body) =&gt; {
+      if (err) {
+        reject(err);
+      }
+      resolve(body);
+    });
+  });
+}
+
+async function httpPost(url, params) {
+  return new Promise((resolve, reject) =&gt; {
+    cRequest({
+      url: url,
+      method: 'POST',
+      body: trim(params) || {}
+    }, (err, res, body) =&gt; {
+      if (err) {
+        reject(err);
+      }
+      resolve(body);
+    });
+  });
+}
+
+function trim(obj) {
+  for (const key in obj) {
+    if (typeof obj[key] === 'string') {
+      obj[key] = obj[key].trim();
+    }
+  }
+  return obj;
+}
+
+module.exports = {
+  get: get,
+  post: post,
+  httpGet: httpGet,
+  httpPost: httpPost
+};
+
+</code></pre>
+<ul>
+<li>app/service目录下新建report.js，用来写node服务层代码</li>
+</ul>
+<pre><code class="language-js">const Service = require('egg').Service;
+const ServiceCaller = require(&quot;./service_caller&quot;);
+
+class ReportService extends Service {
+  async reportApi(params) {
+    return await ServiceCaller.post(&quot;/report_api/&quot;, params);
+  }
+}
+
+module.exports = ReportService;
+</code></pre>
+<ul>
+<li>app/controller目录下新建report.js，controller负责解析用户的输入，处理后返回相应的结果</li>
+</ul>
+<pre><code class="language-js">'use strict';
+
+const Controller = require('egg').Controller;
+
+class ReportController extends Controller {
+  async index() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    console.log(params,&quot;params&quot;)
+    // const params = {
+    //   nodetype: &quot;B1006&quot;,
+    //   entid: &quot;VST3wFB3Ye&quot;,
+    //   page: 1
+    // };
+    const result = await ctx.service.report.reportApi(params);
+    ctx.body = result;
+  }
+}
+
+module.exports = ReportController;
+</code></pre>
+<ul>
+<li>在router.js文件中加入reportApi接口</li>
+</ul>
+<pre><code>router.post('/reportApi', controller.report.index);
+</code></pre>
+<ul>
+<li>调用<code>/reportApi</code>,在report.vue文件中加入</li>
+</ul>
+<pre><code class="language-js">    this.$axios.post(&quot;/reportApi&quot;, 
+    {
+        nodetype: &quot;B1006&quot;,
+        entid: &quot;VST3wFB3Ye&quot;,
+        page: 1
+    }).then(res =&gt; {
+    
+    })
+</code></pre>
+<h3 id="egg-post-失败-message-invalid-csrf-token-解决方案">Egg post 失败 { message: 'invalid csrf token' } 解决方案</h3>
+<p>在config.default.js中加入</p>
+<pre><code>config.security= {
+   csrf: {
+     enable: false,
+   }
+}
+</code></pre>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/websocket/">
+                <h3 class="post-title">
+                  WebSocket
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://liujia12138.github.io/images/avatar.png?v=1697537338824" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">定时任务时间表达式规则</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge warning">
+          webpack
+        </a>
+      
+        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge warning">
+          前端性能优化
+        </a>
+      
+        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge ">
+          vue
+        </a>
+      
+        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge secondary">
+          js
+        </a>
+      
+        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge success">
+          html
+        </a>
+      
+        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge secondary">
+          echarts
+        </a>
+      
+        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge ">
+          uniapp
+        </a>
+      
+        <a href="https://liujia12138.github.io/D88IhnDGV/" class="badge secondary">
+          小程序
+        </a>
+      
+        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge secondary">
+          css
+        </a>
+      
+        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge secondary">
+          网络协议
+        </a>
+      
+        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge ">
+          服务端
+        </a>
+      
+        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge secondary">
+          node
+        </a>
+      
+        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge success">
+          兼容
+        </a>
+      
+        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge secondary">
+          es6
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>

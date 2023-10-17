@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>如何优化webpack配置 | AzhA</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697537338824">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io" class="menu">
+                Home
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/archives" class="menu">
+                Archives
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/tags" class="menu">
+                Tags
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/post/about" class="menu">
+                About
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>如何优化webpack配置</h1>
+            <p class="article-meta">
+              2022-10-18
+              
+            </p>
+            
+            <div class="post-content">
+              <p>优化webpack配置可以从两个角度着手，构建速度和构建物体积</p>
+<h2 id="一-优化构建速度">一、优化构建速度</h2>
+<h3 id="1-安装speed-measure-webpack-plugin插件">1. 安装speed-measure-webpack-plugin插件</h3>
+<p>通过speed-measure-webpack-plugin插件来分析每个loader、plugin消耗的打包时间</p>
+<pre><code class="language-js">const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+const smp = new SpeedMeasurePlugin()
+</code></pre>
+<p>然后用<code>smp.wrap()</code>包裹webpack配置<br>
+注意，如果是用vue-cli构建的项目，要在vue.config.js文件中的configureWebpack用<code>smp.wrap()</code>包裹住webpack配置<br>
+<img src="https://liujia12138.github.io/post-images/1666320566092.jpg" alt="" loading="lazy"></p>
+<h3 id="2-配置happypack">2. 配置happyPack</h3>
+<p>在webpack构建过程中，实际上耗费的时间大多是在loader的解析转换及代码的压缩中。日常开发中我们需要用loader对css、图片、文字等文件做转换和解析的操作，并且转换的文件数据量也非常大。但是由于js天生是单线程的，不能够并发处理这些文件。<br>
+<em>happyPack</em> 的作用就是将这些任务分解到多个子进程中去并行处理，子进程处理完后把结果发送到主进程，从而减少总的构建时间</p>
+<ol>
+<li>安装happypack <code>npm i happypack -D</code></li>
+<li>配置</li>
+</ol>
+<pre><code class="language-js">const HappyPack = require('happypack')
+module.exports = {
+    // ....
+    chainWebpack:(config)=&gt;{
+        // 配置loader
+        const hRule = config.module.rule('js')
+        hRule
+        .test(/\.js$/)
+        .include.add(resolve('src'))
+        .end()
+        .uses.clear().end()
+        .use('happypack/loader?id=js')
+        .loader('happypack/loader?id=js')
+        .end()
+    },
+    configureWebpack:()=&gt;{
+        return {
+            plugins:[
+                // 添加plugin，并开启缓存
+                new HappyPack({
+                    id: 'js',
+                    loaders: ['babel-loader?cacheDirectory=true']
+                }),
+            ]
+        }
+    }
+}
+</code></pre>
+<p>通过使用happypack，构建时间由原来的23s降到了11s<br>
+<img src="https://liujia12138.github.io/post-images/1666333560180.jpg" alt="" loading="lazy"></p>
+<h3 id="3-通过设置路径别名来缩小文件的搜索范围">3. 通过设置路径别名来缩小文件的搜索范围</h3>
+<h3 id="4-设置loaders的include和exclude-缩小loader编译的范围">4. 设置loaders的include和exclude 缩小loader编译的范围</h3>
+<h3 id="5-extenals结合cdn">5. extenals结合cdn</h3>
+<p>用cdn的方式来引入一些依赖，并且设置externals来让webpack在打包的时候忽略掉这些依赖。</p>
+<h2 id="二-优化构建物体积">二、优化构建物体积</h2>
+<h3 id="1-通过配置webpack-bundle-analyzer-来分析打包后的文件">1. 通过配置webpack-bundle-analyzer 来分析打包后的文件</h3>
+<p>webpack-bundle-analyzer会将打包后的内容树展示为树状图，让我们能够方便直观的看到打包后的文件内容和体积大小</p>
+<pre><code class="language-js">const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+
+module.exports = {
+    plugins: [
+        new BundleAnalyzerPlugin({
+            analyzerHost: '127.0.0.1',
+            analyzerPort: 8899
+        })
+    ]
+}
+</code></pre>
+<p>package.json中加入scripts<code>&quot;analyzer&quot;: &quot;NODE_ENV=production npm_config_report=true npm run build&quot;</code></p>
+<h3 id="2-tree-shaking-去掉项目中的无用代码">2. tree-shaking 去掉项目中的无用代码</h3>
+<p>目前webpack4.x开始，就已经在mode为production时默认开启了tree-shaking，但是如果想要生效，生成的代码必须是es6模块，不能使用其他类型的模块，如commonjs<br>
+修正方法，在.babelrc文件或者webpack.config.js设置module:false<br>
+vue-cli构建的项目默认开启了tree-shaking，无需单独配置</p>
+<h3 id="3">3.</h3>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">
+                <h3 class="post-title">
+                  vue中keep-alive的原理
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://liujia12138.github.io/images/avatar.png?v=1697537338824" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">定时任务时间表达式规则</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge secondary">
+          webpack
+        </a>
+      
+        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge secondary">
+          前端性能优化
+        </a>
+      
+        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge warning">
+          vue
+        </a>
+      
+        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge secondary">
+          js
+        </a>
+      
+        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge warning">
+          html
+        </a>
+      
+        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge warning">
+          echarts
+        </a>
+      
+        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge ">
+          uniapp
+        </a>
+      
+        <a href="https://liujia12138.github.io/D88IhnDGV/" class="badge ">
+          小程序
+        </a>
+      
+        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge secondary">
+          css
+        </a>
+      
+        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge secondary">
+          网络协议
+        </a>
+      
+        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge secondary">
+          服务端
+        </a>
+      
+        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge success">
+          node
+        </a>
+      
+        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge success">
+          兼容
+        </a>
+      
+        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge secondary">
+          es6
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>

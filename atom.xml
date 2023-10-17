@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2023-10-17T06:18:50.077Z</updated>
+    <updated>2023-10-17T10:09:02.069Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -12,8 +12,8 @@
     <rights>All rights reserved 2023, AzhA</rights>
     <entry>
         <title type="html"><![CDATA[如何在vue项目中用Express做中间层]]></title>
-        <id>https://liujia12138.github.io/post/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/</id>
-        <link href="https://liujia12138.github.io/post/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">
+        <id>https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/</id>
+        <link href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">
         </link>
         <updated>2022-10-24T09:50:20.000Z</updated>
         <content type="html"><![CDATA[<p>背景：在已有的vue2项目中，需要进行BFF开发，进行数据聚合和接口转发。为便于代码管理，将Express项目和前端放在一个代码仓库内，不进行拆分。</p>
@@ -228,8 +228,8 @@ export default commonRes
     </entry>
     <entry>
         <title type="html"><![CDATA[如何优化webpack配置]]></title>
-        <id>https://liujia12138.github.io/post/ru-he-you-hua-webpack-pei-zhi/</id>
-        <link href="https://liujia12138.github.io/post/ru-he-you-hua-webpack-pei-zhi/">
+        <id>https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/</id>
+        <link href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">
         </link>
         <updated>2022-10-18T13:04:57.000Z</updated>
         <content type="html"><![CDATA[<p>优化webpack配置可以从两个角度着手，构建速度和构建物体积</p>
@@ -307,8 +307,8 @@ vue-cli构建的项目默认开启了tree-shaking，无需单独配置</p>
     </entry>
     <entry>
         <title type="html"><![CDATA[vue中keep-alive的原理]]></title>
-        <id>https://liujia12138.github.io/post/vue-zhong-keep-alive-de-yuan-li/</id>
-        <link href="https://liujia12138.github.io/post/vue-zhong-keep-alive-de-yuan-li/">
+        <id>https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/</id>
+        <link href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">
         </link>
         <updated>2022-09-26T08:43:42.000Z</updated>
         <content type="html"><![CDATA[<h3 id="1-keep-alive是什么">1. keep-alive是什么？</h3>
@@ -401,8 +401,8 @@ max：最多缓存多少个</p>
     </entry>
     <entry>
         <title type="html"><![CDATA[如何做到执行JS 而不影响页面的css加载？]]></title>
-        <id>https://liujia12138.github.io/post/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/</id>
-        <link href="https://liujia12138.github.io/post/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">
+        <id>https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/</id>
+        <link href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">
         </link>
         <updated>2022-09-26T07:34:38.000Z</updated>
         <content type="html"><![CDATA[<h4 id="加载js为什么会影响css的加载">加载JS为什么会影响CSS的加载？</h4>
@@ -461,8 +461,8 @@ worker线程： <code>self.close()</code></li>
     </entry>
     <entry>
         <title type="html"><![CDATA[vue打包性能优化]]></title>
-        <id>https://liujia12138.github.io/post/vue2vue-cli4da-bao-xing-neng-you-hua/</id>
-        <link href="https://liujia12138.github.io/post/vue2vue-cli4da-bao-xing-neng-you-hua/">
+        <id>https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/</id>
+        <link href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">
         </link>
         <updated>2022-09-26T06:09:17.000Z</updated>
         <content type="html"><![CDATA[<h3 id="1-路由懒加载和分模块打包">1. 路由懒加载和分模块打包</h3>
@@ -599,8 +599,8 @@ module.exports = {
     </entry>
     <entry>
         <title type="html"><![CDATA[JS的作用域、预解析和声明提升]]></title>
-        <id>https://liujia12138.github.io/post/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/</id>
-        <link href="https://liujia12138.github.io/post/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">
+        <id>https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/</id>
+        <link href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">
         </link>
         <updated>2022-09-18T07:28:18.000Z</updated>
         <content type="html"><![CDATA[<h3 id="作用域">作用域</h3>
@@ -645,8 +645,8 @@ var fn = function(){
     </entry>
     <entry>
         <title type="html"><![CDATA[js中如何判断两个对象是否相等]]></title>
-        <id>https://liujia12138.github.io/post/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/</id>
-        <link href="https://liujia12138.github.io/post/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">
+        <id>https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/</id>
+        <link href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">
         </link>
         <updated>2022-09-18T03:30:26.000Z</updated>
         <content type="html"><![CDATA[<h4 id="1-判断两个对象的引用地址">1、判断两个对象的引用地址</h4>
@@ -685,8 +685,8 @@ var fn = function(){
     </entry>
     <entry>
         <title type="html"><![CDATA[JavaScript的内置对象、原生对象、宿主对象分别指的是什么？]]></title>
-        <id>https://liujia12138.github.io/post/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/</id>
-        <link href="https://liujia12138.github.io/post/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">
+        <id>https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/</id>
+        <link href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">
         </link>
         <updated>2022-09-18T02:48:46.000Z</updated>
         <content type="html"><![CDATA[<h3 id="1-内置对象">1、内置对象</h3>
@@ -706,8 +706,8 @@ ECMA-262只定义了两个内置对象，即Global和Math。他们也是本地�
     </entry>
     <entry>
         <title type="html"><![CDATA[react 和 vue 中的 key 有什么作用？]]></title>
-        <id>https://liujia12138.github.io/post/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/</id>
-        <link href="https://liujia12138.github.io/post/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">
+        <id>https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/</id>
+        <link href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">
         </link>
         <updated>2022-09-13T03:30:44.000Z</updated>
         <content type="html"><![CDATA[<h5 id="一-虚拟-dom-中-key-的作用">一. 虚拟 DOM 中 key 的作用：</h5>
@@ -790,8 +790,8 @@ ECMA-262只定义了两个内置对象，即Global和Math。他们也是本地�
     </entry>
     <entry>
         <title type="html"><![CDATA[定时任务时间表达式规则]]></title>
-        <id>https://liujia12138.github.io/post/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/</id>
-        <link href="https://liujia12138.github.io/post/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">
+        <id>https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/</id>
+        <link href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">
         </link>
         <updated>2022-08-10T07:05:16.000Z</updated>
         <content type="html"><![CDATA[<h3 id="为什么需要时间表达式">为什么需要时间表达式</h3>
@@ -859,8 +859,8 @@ W: 仅用在日的域中，表示距离当月给定日期最近的工作日（�
     </entry>
     <entry>
         <title type="html"><![CDATA[vue+webpack 实现多入口架构]]></title>
-        <id>https://liujia12138.github.io/post/vuewebpack-shi-xian-duo-ru-kou-jia-gou/</id>
-        <link href="https://liujia12138.github.io/post/vuewebpack-shi-xian-duo-ru-kou-jia-gou/">
+        <id>https://liujia12138.github.io/vuewebpack-shi-xian-duo-ru-kou-jia-gou/</id>
+        <link href="https://liujia12138.github.io/vuewebpack-shi-xian-duo-ru-kou-jia-gou/">
         </link>
         <updated>2022-05-18T07:12:30.000Z</updated>
         <content type="html"><![CDATA[<h4 id="一-为什么需要多入口多页面项目">一、为什么需要多入口多页面项目？</h4>
@@ -1005,8 +1005,8 @@ module.exports = {
     </entry>
     <entry>
         <title type="html"><![CDATA[eslint+prettier 代码规范自动化配置]]></title>
-        <id>https://liujia12138.github.io/post/eslintprettier-dai-ma-gui-fan-zi-dong-hua-pei-zhi/</id>
-        <link href="https://liujia12138.github.io/post/eslintprettier-dai-ma-gui-fan-zi-dong-hua-pei-zhi/">
+        <id>https://liujia12138.github.io/eslintprettier-dai-ma-gui-fan-zi-dong-hua-pei-zhi/</id>
+        <link href="https://liujia12138.github.io/eslintprettier-dai-ma-gui-fan-zi-dong-hua-pei-zhi/">
         </link>
         <updated>2022-05-10T07:16:22.000Z</updated>
         <content type="html"><![CDATA[<p>Eslint:</p>
@@ -1332,8 +1332,8 @@ module.exports = {
     </entry>
     <entry>
         <title type="html"><![CDATA[用van-calendar实现展示指定月份并自定义日期文案]]></title>
-        <id>https://liujia12138.github.io/post/yong-van-calendar-shi-xian-zhan-shi-zhi-ding-yue-fen-bing-zi-ding-yi-ri-qi-wen-an/</id>
-        <link href="https://liujia12138.github.io/post/yong-van-calendar-shi-xian-zhan-shi-zhi-ding-yue-fen-bing-zi-ding-yi-ri-qi-wen-an/">
+        <id>https://liujia12138.github.io/yong-van-calendar-shi-xian-zhan-shi-zhi-ding-yue-fen-bing-zi-ding-yi-ri-qi-wen-an/</id>
+        <link href="https://liujia12138.github.io/yong-van-calendar-shi-xian-zhan-shi-zhi-ding-yue-fen-bing-zi-ding-yi-ri-qi-wen-an/">
         </link>
         <updated>2022-04-27T07:19:26.000Z</updated>
         <content type="html"><![CDATA[<p>效果图:<br>
@@ -1546,8 +1546,8 @@ export default {
     </entry>
     <entry>
         <title type="html"><![CDATA[怎样实现一个控制台都删不掉的 DOM（保护水印）]]></title>
-        <id>https://liujia12138.github.io/post/zen-yang-shi-xian-yi-ge-kong-zhi-tai-du-shan-bu-diao-de-dombao-hu-shui-yin/</id>
-        <link href="https://liujia12138.github.io/post/zen-yang-shi-xian-yi-ge-kong-zhi-tai-du-shan-bu-diao-de-dombao-hu-shui-yin/">
+        <id>https://liujia12138.github.io/zen-yang-shi-xian-yi-ge-kong-zhi-tai-du-shan-bu-diao-de-dombao-hu-shui-yin/</id>
+        <link href="https://liujia12138.github.io/zen-yang-shi-xian-yi-ge-kong-zhi-tai-du-shan-bu-diao-de-dombao-hu-shui-yin/">
         </link>
         <updated>2022-04-19T07:17:25.000Z</updated>
         <content type="html"><![CDATA[<h4 id="mutationobserver">MutationObserver</h4>
@@ -1647,8 +1647,8 @@ function sjs(leng) {
     </entry>
     <entry>
         <title type="html"><![CDATA[el-table自定义表头内数据不更新的问题]]></title>
-        <id>https://liujia12138.github.io/post/el-table-zi-ding-yi-biao-tou-nei-shu-ju-bu-geng-xin-de-wen-ti/</id>
-        <link href="https://liujia12138.github.io/post/el-table-zi-ding-yi-biao-tou-nei-shu-ju-bu-geng-xin-de-wen-ti/">
+        <id>https://liujia12138.github.io/el-table-zi-ding-yi-biao-tou-nei-shu-ju-bu-geng-xin-de-wen-ti/</id>
+        <link href="https://liujia12138.github.io/el-table-zi-ding-yi-biao-tou-nei-shu-ju-bu-geng-xin-de-wen-ti/">
         </link>
         <updated>2021-09-29T06:56:13.000Z</updated>
         <content type="html"><![CDATA[<h3 id="el-table自定义表头使用slotheader数据无法更新">el-table自定义表头，使用slot=&quot;header&quot;数据无法更新</h3>
@@ -1657,8 +1657,8 @@ function sjs(leng) {
     </entry>
     <entry>
         <title type="html"><![CDATA[ECharts引入外部字体]]></title>
-        <id>https://liujia12138.github.io/post/echarts-yin-ru-wai-bu-zi-ti/</id>
-        <link href="https://liujia12138.github.io/post/echarts-yin-ru-wai-bu-zi-ti/">
+        <id>https://liujia12138.github.io/echarts-yin-ru-wai-bu-zi-ti/</id>
+        <link href="https://liujia12138.github.io/echarts-yin-ru-wai-bu-zi-ti/">
         </link>
         <updated>2021-09-15T06:50:51.000Z</updated>
         <content type="html"><![CDATA[<h3 id="问题描述echarts引入外部字体文件时页面渲染异常出现部分文字没有渲染成指定字体的情况"><strong>问题描述</strong>：echarts引入外部字体文件时，页面渲染异常，出现部分文字没有渲染成指定字体的情况</h3>
@@ -1674,8 +1674,8 @@ function sjs(leng) {
     </entry>
     <entry>
         <title type="html"><![CDATA[uniapp如何在小程序端模拟数据]]></title>
-        <id>https://liujia12138.github.io/post/uniapp-ru-he-zai-xiao-cheng-xu-duan-mo-ni-shu-ju/</id>
-        <link href="https://liujia12138.github.io/post/uniapp-ru-he-zai-xiao-cheng-xu-duan-mo-ni-shu-ju/">
+        <id>https://liujia12138.github.io/uniapp-ru-he-zai-xiao-cheng-xu-duan-mo-ni-shu-ju/</id>
+        <link href="https://liujia12138.github.io/uniapp-ru-he-zai-xiao-cheng-xu-duan-mo-ni-shu-ju/">
         </link>
         <updated>2021-03-09T06:58:01.000Z</updated>
         <content type="html"><![CDATA[<h3 id="问题描述使用uniapp开发小程序发现运行到微信开发者工具时用mockjs模拟数据接口无法使用">问题描述：使用uniapp开发小程序，发现运行到微信开发者工具时用mockjs模拟数据接口无法使用</h3>
@@ -1697,8 +1697,8 @@ function sjs(leng) {
     </entry>
     <entry>
         <title type="html"><![CDATA[vue报错You are using the runtime-only build of Vue where the template compiler is not available]]></title>
-        <id>https://liujia12138.github.io/post/vue-bao-cuo-you-are-using-the-runtime-only-build-of-vue-where-the-template-compiler-is-not-available/</id>
-        <link href="https://liujia12138.github.io/post/vue-bao-cuo-you-are-using-the-runtime-only-build-of-vue-where-the-template-compiler-is-not-available/">
+        <id>https://liujia12138.github.io/vue-bao-cuo-you-are-using-the-runtime-only-build-of-vue-where-the-template-compiler-is-not-available/</id>
+        <link href="https://liujia12138.github.io/vue-bao-cuo-you-are-using-the-runtime-only-build-of-vue-where-the-template-compiler-is-not-available/">
         </link>
         <updated>2021-03-02T06:59:17.000Z</updated>
         <content type="html"><![CDATA[<h3 id="问题描述使用vueant-design-vue时因为menu组件在v20之前不支持单文件递归所以使用了函数式组件但是编译时出现了下面的报错">问题描述：使用vue+ant-design-vue时，因为Menu组件在V2.0之前不支持单文件递归，所以使用了函数式组件，但是编译时出现了下面的报错</h3>
@@ -1724,8 +1724,8 @@ function sjs(leng) {
     </entry>
     <entry>
         <title type="html"><![CDATA[css实现文字渐变色]]></title>
-        <id>https://liujia12138.github.io/post/css-shi-xian-wen-zi-jian-bian-se/</id>
-        <link href="https://liujia12138.github.io/post/css-shi-xian-wen-zi-jian-bian-se/">
+        <id>https://liujia12138.github.io/css-shi-xian-wen-zi-jian-bian-se/</id>
+        <link href="https://liujia12138.github.io/css-shi-xian-wen-zi-jian-bian-se/">
         </link>
         <updated>2021-02-25T06:47:57.000Z</updated>
         <content type="html"><![CDATA[<h4 id="实现文字颜色渐变有两种方法">实现文字颜色渐变有两种方法</h4>
@@ -1794,8 +1794,8 @@ function sjs(leng) {
     </entry>
     <entry>
         <title type="html"><![CDATA[vue项目如何实现版本控制，用以保证用户的浏览器资源为最新]]></title>
-        <id>https://liujia12138.github.io/post/vue-xiang-mu-ru-he-shi-xian-ban-ben-kong-zhi-yong-yi-bao-zheng-yong-hu-de-liu-lan-qi-zi-yuan-wei-zui-xin/</id>
-        <link href="https://liujia12138.github.io/post/vue-xiang-mu-ru-he-shi-xian-ban-ben-kong-zhi-yong-yi-bao-zheng-yong-hu-de-liu-lan-qi-zi-yuan-wei-zui-xin/">
+        <id>https://liujia12138.github.io/vue-xiang-mu-ru-he-shi-xian-ban-ben-kong-zhi-yong-yi-bao-zheng-yong-hu-de-liu-lan-qi-zi-yuan-wei-zui-xin/</id>
+        <link href="https://liujia12138.github.io/vue-xiang-mu-ru-he-shi-xian-ban-ben-kong-zhi-yong-yi-bao-zheng-yong-hu-de-liu-lan-qi-zi-yuan-wei-zui-xin/">
         </link>
         <updated>2021-01-29T07:01:03.000Z</updated>
         <content type="html"><![CDATA[<h3 id="问题描述项目实际使用过程中由于浏览器缓存问题可能会导致使用的版本不是服务器上部署的最新版本需要在项目中写入版本号">问题描述：项目实际使用过程中，由于浏览器缓存问题，可能会导致使用的版本不是服务器上部署的最新版本，需要在项目中写入版本号</h3>

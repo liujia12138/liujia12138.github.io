@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>JS宏任务微任务和事件循环（js的执行机制） | AzhA</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697537338824">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io" class="menu">
+                Home
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/archives" class="menu">
+                Archives
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/tags" class="menu">
+                Tags
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/post/about" class="menu">
+                About
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>JS宏任务微任务和事件循环（js的执行机制）</h1>
+            <p class="article-meta">
+              2020-01-07
+              
+                <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge secondary">
+                  js
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <p>先猜一下下面代码是输出顺序是什么？</p>
+<pre><code class="language-js">console.log('---------- start --------------');
+setTimeout(() =&gt; {
+    console.log('setTimeout');
+}, 0)
+
+new Promise((resolve, reject) =&gt; {
+    for(var i = 0; i &lt; 5; i++) {
+        console.log(i);
+    }
+    resolve(); 
+    console.log('333')
+}).then(() =&gt; {
+    console.log('promise实例成功回调执行！');
+}).then(()=&gt;{
+    console.log('promise2')
+})
+console.log('------------- end ----------------');
+
+
+
+//输出结果
+/*
+---------- start --------------
+0
+1
+2
+3
+4
+------------- end ----------------
+promise实例成功回调执行
+promise2
+setTimeout
+*/
+</code></pre>
+<p>js是一门单线程语言，所有任务都需要排队执行，如果上一个任务要消耗很长的时间，下一个任务都不得不等待很长时间，这时设计者就把任务分为了同步任务和异步任务。同步任务在主线程上一个个执行，异步任务则会加入到任务队列，只有所有同步任务执行完，才会执行异步任务。</p>
+<p>异步任务有：setTimeout，setInterval，dom事件，promise， ajax</p>
+<p>按照这样的话，上面例子的setTimeout和promise.then是异步任务，加入到任务队列然后依次执行，但并不是这样，异步任务又分为宏任务和微任务</p>
+<p>宏任务和微任务：宏任务优先于微任务执行， 宏任务包括整体代码script，setTimeout，setInterval，dom事件； 微任务包括promise，process.nextTick，MutationObserver（监听dom变化，具体用法可见《如何实现一个控制台删不掉的水印》）</p>
+<p>所以上面的例子中script整体为宏任务，依次执行同步任务，先打印start---&gt;然后遇到setTimeout，setTimeout属于异步任务也属于宏任务，放到task（宏任务队列）里面---&gt;然后是promise，创建promise实例的代码属于同步任务，直接执行（执行后会resolve会生成promise.then ，微任务，放到microtask（微任务队列）里面）---&gt;然后执行到最后打印end；此时主线程js stack被清空。</p>
+<p>主线程执行完毕之后就会去清空微任务，所以接下来promise.then会被加入到主线程中去执行，执行完毕后（又有一个新的promise.then），主线程又被清空了</p>
+<p>此时微任务队列里还有刚刚产生的promise.then，又被加入到主线程，打印出promise2</p>
+<p>此时微任务和主线程都被清空，接着从宏任务队列中取出一个宏任务加入到主线程中执行，打印出setTimeout</p>
+<p>此时主线程，微任务队列，宏任务队列都被清空了。</p>
+<p>如果宏任务队列和微任务队列还没清空，就会：主栈全部执行完毕后--&gt;清空微任务--&gt;会取出一个宏任务 --&gt; 执行完毕后--&gt;清空微任务 -&gt; 无线循环，这就是我们所说的事件环（Event Loop），也就是javascript的执行机制。</p>
+<p>看下面的例子</p>
+<pre><code>&lt;div class=&quot;outer&quot;&gt;
+  &lt;div class=&quot;inner&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+// 获取dom节点
+var outer = document.querySelector('.outer');
+var inner = document.querySelector('.inner');
+
+//监听element属性变化
+new MutationObserver(function() {
+  console.log('mutate');
+}).observe(outer, {
+  attributes: true
+});
+
+// Here's a click listener…
+function onClick() {
+  console.log('click');
+
+  setTimeout(function() {
+    console.log('timeout');
+  }, 0);
+
+  Promise.resolve().then(function() {
+    console.log('promise');
+  });
+
+  outer.setAttribute('data-random', Math.random());
+}
+
+// …which we'll attach to both elements
+inner.addEventListener('click', onClick);
+outer.addEventListener('click', onClick);
+&lt;/script&gt;
+</code></pre>
+<p>点击inner会打印什么？</p>
+<ol>
+<li>执行script标签</li>
+<li>dom事件是宏任务，加入到macrotask，此时macrotask内有两个onclick函数</li>
+<li>点击inner，执行第一个onclick，</li>
+<li>先打印click-&gt;setTimeout为宏任务，加到macrotask-&gt;promise.then和mutationObserver属于微任务，加入microtask，此时onclick函数体执行完成</li>
+<li>执行微任务，依次打印promise和mutate，微任务队列清空</li>
+<li>从macrotask中取出宏任务第二个onlick并执行</li>
+<li>重复步骤4，打印click</li>
+<li>重复步骤5，打印promise和mutate，微任务队列清空</li>
+<li>此时宏任务队列还有两个setTimeout</li>
+<li>依次执行Timeout</li>
+</ol>
+<p>所以打印顺序为<code>click-promise-mutate-click-promise-mutate-timeout-timeout</code></p>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/http-he-https-de-qu-bie/">
+                <h3 class="post-title">
+                  http和https的区别？
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://liujia12138.github.io/images/avatar.png?v=1697537338824" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">定时任务时间表达式规则</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge ">
+          webpack
+        </a>
+      
+        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge secondary">
+          前端性能优化
+        </a>
+      
+        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge secondary">
+          vue
+        </a>
+      
+        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge success">
+          js
+        </a>
+      
+        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge secondary">
+          html
+        </a>
+      
+        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge warning">
+          echarts
+        </a>
+      
+        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge secondary">
+          uniapp
+        </a>
+      
+        <a href="https://liujia12138.github.io/D88IhnDGV/" class="badge ">
+          小程序
+        </a>
+      
+        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge secondary">
+          css
+        </a>
+      
+        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge success">
+          网络协议
+        </a>
+      
+        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge warning">
+          服务端
+        </a>
+      
+        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge secondary">
+          node
+        </a>
+      
+        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge warning">
+          兼容
+        </a>
+      
+        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge success">
+          es6
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>

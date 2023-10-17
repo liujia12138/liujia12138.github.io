@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>浏览器兼容问题 | AzhA</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697537338824">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io" class="menu">
+                Home
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/archives" class="menu">
+                Archives
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/tags" class="menu">
+                Tags
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/post/about" class="menu">
+                About
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>浏览器兼容问题</h1>
+            <p class="article-meta">
+              2018-04-11
+              
+                <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge secondary">
+                  兼容
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <p>1.ie8不支持background-size设置背景图大小<br>
+用filter：</p>
+<pre><code>filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled='true', src='背景图url', sizingMethod='scale');
+</code></pre>
+<p>参数:<br>
+1.enabled：设置或检索滤镜是否激活，true/false，默认为true<br>
+2.src：图片地址<br>
+3.sizingMethod：设置或检索滤镜作用的对象的图片在容器边界内的显示方式，crop剪切/image默认值/scale缩放图片</p>
+<p>2.ie8支持的伪类选择器只有:hover,:focus,:first-child<br>
+想实现li:nth-of-type(2)只能用li:first-child+li</p>
+<ol start="4">
+<li>ie8不支持css border-radius, css3的属性基本上都是要求IE9以上的，border-radius，box-shadow都是css3的属性<br>
+解决方法：使用<a href="http://css3pie.com/download/">css3pie</a>，将解压后的PIE.htc文件放在目标html同一路径下，</li>
+</ol>
+<pre><code class="language-css">img{
+    position:relative;
+    z-index:2
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius: 5px;
+    behavior: url(PIC.htc);
+}
+</code></pre>
+<p>注意：</p>
+<ul>
+<li>必须设置position:relative 和 z-index:2</li>
+<li>behavior引入PIE.htc文件，路径为相对与html的路径，不是相对于当前css的路径</li>
+</ul>
+<p>3.sfaire浏览器中input如果设置了高度，输入的时候光标就会跑到上面去了，所以要用padding撑开<br>
+4.ie8不支持placeholder属性，用js实现<br>
+1.先判断浏览器是否支持placeholder属性，如果不支持就模拟placeholder<br>
+2.创建一个label标签：<label>密码：<label/>标签里的内容为placeholder属性值，再讲标签覆盖到对应的input上</p>
+<pre><code>; (function (win) {
+
+    win.isPlaceholer = function () {
+        var input = document.createElement(&quot;input&quot;);
+        return &quot;placeholder&quot; in input;
+    };
+  
+    win.placeholder = function () {
+
+        if (!isPlaceholer()) {
+            var Placeholder =function (obj) {
+                this.input = obj;
+                var te = obj.getAttribute('placeholder');
+                this.label = document.createElement('label');
+                this.label.innerHTML = te;
+                this.label.id = obj.id + 'Label';
+                this.label.style.cssText = 'position:absolute; text-indent:4px;color:#999999; font-size:14px;';
+                if (obj.value !== '') {
+                    this.label.style.display = 'none';
+                }
+                this.init();
+            };
+            Placeholder.prototype = {
+
+                getxy: function (obj) {
+                    var left, top;
+                    if (document.documentElement.getBoundingClientRect) {
+                        var html = document.documentElement,
+                        body = document.body,
+                        pos = obj.getBoundingClientRect(),
+                        st = html.scrollTop || body.scrollTop,
+                        sl = html.scrollLeft || body.scrollLeft,
+                        ct = html.clientTop || body.clientTop,
+                        cl = html.clientLeft || body.clientLeft;
+                        left = pos.left + sl - cl;
+                        top = pos.top + st - ct;
+                    } else {
+                        while (obj) {
+                            left += obj.offsetLeft;
+                            top += obj.offsetTop;
+                            obj = obj.offsetParent;
+                        }
+                    }
+                    return {
+                        left: left,
+                        top: top
+                    };
+                },
+
+                getwh: function (obj) {
+                    return {
+                        w: obj.offsetWidth,
+                        h: obj.offsetHeight
+                    };
+                },
+
+                setStyles: function (obj, styles) {
+                    for (var p in styles) {
+                        obj.style[p] = styles[p] + 'px';
+                    }
+                },
+                init: function () {
+                    var label = this.label,
+                    input = this.input,
+                    getXY = this.getxy,
+                    xy = this.getxy(input),
+                    wh = this.getwh(input);
+                    this.setStyles(label, { 'width': wh.w, 'height': wh.h, 'lineHeight': 40, 'left': xy.left + 8, 'top': xy.top });
+                    document.body.appendChild(label);
+                    label.onclick = function () {
+                        this.style.display = &quot;none&quot;;
+                        input.focus();
+                    };
+                    input.onfocus = function () {
+                        label.style.display = &quot;none&quot;;
+                    };
+                    input.onblur = function () {
+                        if (this.value === &quot;&quot;) {
+                            label.style.display = &quot;block&quot;;
+                        }
+                    };
+                    if (window.attachEvent) {
+                        window.attachEvent(&quot;onresize&quot;, function () {
+                            var xy = getXY(input);
+                            Placeholder.prototype.setStyles(label, { 'left': xy.left + 8, 'top': xy.top });
+                        });
+                    } else {
+                        window.addEventListener(&quot;resize&quot;, function () {
+                            var xy = getXY(input);
+                            Placeholder.prototype.setStyles(label, { 'left': xy.left + 8, 'top': xy.top });
+                        }, false);
+                    }
+                }
+            };
+
+            var inpColl = $(&quot;#Box input:visible&quot;);//这里是页面上要添加placeholder支持的input
+            //var inpColl = document.getElementsByTagName('input'),          
+            var textColl = document.getElementsByTagName('textarea');//这里是页面上要添加placeholder支持的textarea
+            //var lableArr = $(&quot;#Box lable&quot;);
+            var toArray = function (coll) {
+                for (var i = 0, a = [], len = coll.length; i &lt; len; i++) {
+                    a[i] = coll[i];
+                }
+                return a;
+            };
+            var inpArr = toArray(inpColl),
+            textArr = toArray(textColl),
+
+            placeholderArr = inpArr.concat(textArr);
+            for (var i = 0; i &lt; placeholderArr.length; i++) {
+                if (placeholderArr[i].getAttribute('placeholder') !== null) {
+
+                    new Placeholder(placeholderArr[i]);
+                }
+            }
+        }
+
+    };
+}(window));
+</code></pre>
+<p>5.ie8不支持css3动画<br>
+6.element-ui在火狐浏览器下的滚动问题<br>
+用<code>&lt;el-scrollbar&gt;&lt;/el-scrollbar&gt;</code>组件</p>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/vue-lu-you-shou-wei/">
+                <h3 class="post-title">
+                  vue路由守卫
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://liujia12138.github.io/images/avatar.png?v=1697537338824" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">定时任务时间表达式规则</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge success">
+          webpack
+        </a>
+      
+        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge success">
+          前端性能优化
+        </a>
+      
+        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge secondary">
+          vue
+        </a>
+      
+        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge ">
+          js
+        </a>
+      
+        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge secondary">
+          html
+        </a>
+      
+        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge success">
+          echarts
+        </a>
+      
+        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge secondary">
+          uniapp
+        </a>
+      
+        <a href="https://liujia12138.github.io/D88IhnDGV/" class="badge secondary">
+          小程序
+        </a>
+      
+        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge ">
+          css
+        </a>
+      
+        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge warning">
+          网络协议
+        </a>
+      
+        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge ">
+          服务端
+        </a>
+      
+        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge secondary">
+          node
+        </a>
+      
+        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge secondary">
+          兼容
+        </a>
+      
+        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge success">
+          es6
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>

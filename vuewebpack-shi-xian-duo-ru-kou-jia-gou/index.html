@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>vue+webpack 实现多入口架构 | AzhA</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697537338824">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io" class="menu">
+                Home
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/archives" class="menu">
+                Archives
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/tags" class="menu">
+                Tags
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/post/about" class="menu">
+                About
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>vue+webpack 实现多入口架构</h1>
+            <p class="article-meta">
+              2022-05-18
+              
+                <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge warning">
+                  webpack
+                </a>
+              
+                <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge secondary">
+                  vue
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <h4 id="一-为什么需要多入口多页面项目">一、为什么需要多入口多页面项目？</h4>
+<p>vue 项目大多是单页面项目，即一个 main.js 入口文件，一般情况下使用 webpack 默认配置就可以。但是如果项目很大，有很多个小的分项目，比如一个数据处理平台需要包含数据接入、数据处理、数据输出等分项目，这时把这几个分项目合并到一个项目中管理会方便很多。</p>
+<h4 id="二-多页面可以解决哪些问题">二、多页面可以解决哪些问题？</h4>
+<ul>
+<li>独立维护子系统的权限和缓存数据</li>
+<li>开发一个子系统时，不需要启动另外一个系统</li>
+<li>热更新一个子系统时，不需要编译所有系统</li>
+</ul>
+<h4 id="三-怎样配置一个-vue-多页面应用">三、怎样配置一个 vue 多页面应用</h4>
+<h5 id="1先创建一个-vue-项目">1.先创建一个 vue 项目</h5>
+<pre><code>vue init webpack project-name
+</code></pre>
+<h5 id="2给每个子系统创建-mainjs-appvue-indexhtml-文件最终目录结构如下">2.给每个子系统创建 main.js、App.vue、index.html 文件，最终目录结构如下</h5>
+<pre><code>├─build
+├─config
+├─node_modules
+├─src
+|  ├─api
+|  ├─assets
+|  ├─components
+|  ├─layout
+|  ├─pages
+|  |  ├─system1
+|  |  | ├─views
+|  |  | ├─store
+|  |  | ├─router
+|  |  |  main.js
+|  |  |  index.html
+|  |  ├─system2
+|  |  | ├─views
+|  |  | ├─store
+|  |  | ├─router
+|  |  |  main.js
+|  |  |  index.html
+|    ...
+
+</code></pre>
+<h5 id="3修改-webpack-配置文件">3.修改 webpack 配置文件</h5>
+<p>基础配置 webpack.base.conf.js</p>
+<pre><code class="language-js">const glob = require('glob')
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+function resolve(dir) {
+  return path.join(__dirname, '..', dir)
+}
+
+const entrys = {} //入口文件配置
+const pageDir = resolve('src/pages')
+
+const pages = glob.sync('*/index.html', { cwd: pageDir }).map((p) =&gt; {
+  const name = p.split('/')[0]
+  entrys[name] = `${pageDir}/${name}/main.js`
+  return new HtmlWebpackPlugin({
+    filename: `${name}.html`,
+    template: pageDir + '/' + p,
+    chunks: ['manifest', 'vendor', 'app', name],
+    inject: true,
+    favicon: './static/favicon.ico',
+    minify: {
+      removeComments: true,
+      collapseWhitespace: true,
+      removeAttributeQuotes: true
+    },
+    chunksSortMode: 'dependency'
+  })
+})
+
+module.exports = {
+  context: path.resolve(__dirname, '../'),
+  entry: entrys,
+  output: {
+    path: config.build.assetsRoot,
+    filename: '[name].js',
+    publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath
+  },
+  plugins: [...pages]
+  // 其他。。。。
+}
+</code></pre>
+<p>开发环境配置 webpack.dev.conf.js，HtmlWebpackPlugin 已经在基础配置中修改，dev 环境不需要再修改</p>
+<p>生产环境配置 webpack.prod.conf.js，修改output</p>
+<pre><code class="language-js">modules.exports = {
+  // ....
+  output: {
+    path: config.build.assetsRoot,
+    filename: utils.assetsPath('js/[name].[chunkhash].js'),
+    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'),
+    publicPath: '/'
+  },
+  plugins: [
+    // 公共模块单独打包
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks(module) {
+        return (
+          module.resource &amp;&amp;
+          /\.js$/.test(module.resource) &amp;&amp;
+          module.resource.indexOf(path.join(__dirname, '../node_modules')) === 0
+        )
+      }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+      minChunks: Infinity
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'app',
+      async: 'vendor-async',
+      children: true,
+      minChunks: 3,
+      maxChunks: 10
+    })
+  ]
+}
+</code></pre>
+<h5 id="4运行项目">4.运行项目</h5>
+<pre><code>npm run dev
+</code></pre>
+<p>http://localhost:8080/system1.html#/home  就可以访问啦</p>
+<h5 id="5打包">5.打包</h5>
+<pre><code>npm run build
+</code></pre>
+<p>打包结果</p>
+<pre><code>dist
+├─system1.html
+├─system2.html
+├─static
+| ├─css
+| ├─js
+| ├─fonts
+| ├─img
+| ├─static
+└ ├─js
+</code></pre>
+<h4 id="四-后续优化">四、后续优化</h4>
+<p>1.单独构建、打包某个子系统<br>
+2.子系统特有依赖模块打包策略</p>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/eslintprettier-dai-ma-gui-fan-zi-dong-hua-pei-zhi/">
+                <h3 class="post-title">
+                  eslint+prettier 代码规范自动化配置
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://liujia12138.github.io/images/avatar.png?v=1697537338824" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">定时任务时间表达式规则</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge warning">
+          webpack
+        </a>
+      
+        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge warning">
+          前端性能优化
+        </a>
+      
+        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge warning">
+          vue
+        </a>
+      
+        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge secondary">
+          js
+        </a>
+      
+        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge warning">
+          html
+        </a>
+      
+        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge ">
+          echarts
+        </a>
+      
+        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge success">
+          uniapp
+        </a>
+      
+        <a href="https://liujia12138.github.io/D88IhnDGV/" class="badge ">
+          小程序
+        </a>
+      
+        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge warning">
+          css
+        </a>
+      
+        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge success">
+          网络协议
+        </a>
+      
+        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge ">
+          服务端
+        </a>
+      
+        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge ">
+          node
+        </a>
+      
+        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge ">
+          兼容
+        </a>
+      
+        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge warning">
+          es6
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>

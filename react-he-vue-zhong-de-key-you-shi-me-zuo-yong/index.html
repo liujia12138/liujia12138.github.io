@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>react 和 vue 中的 key 有什么作用？ | AzhA</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697537338824">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io" class="menu">
+                Home
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/archives" class="menu">
+                Archives
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/tags" class="menu">
+                Tags
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/post/about" class="menu">
+                About
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>react 和 vue 中的 key 有什么作用？</h1>
+            <p class="article-meta">
+              2022-09-13
+              
+            </p>
+            
+            <div class="post-content">
+              <h5 id="一-虚拟-dom-中-key-的作用">一. 虚拟 DOM 中 key 的作用：</h5>
+<p>key 是虚拟 DOM 中对象的标识，当数据发生变化时，vue 会根据 新数据 生成 新的虚拟 DOM，随后 Vue 内部会进行 新虚拟 DOM 和 旧的虚拟 DOM 的差异对比（diff 算法）：</p>
+<h6 id="对比规则">对比规则：</h6>
+<ol>
+<li>旧的虚拟 DOM 中找到与新的虚拟 DOM 中具有相同 key 值的 VNode</li>
+</ol>
+<ul>
+<li>若虚拟 DOM 中内容没有发生变化，直接使用 之前的真实DOM，不会改变DOM</li>
+<li>若虚拟 DOM 中内容发生了变化，则生成新的真实 DOM，随后替换掉页面中之前的真实 DOM</li>
+</ul>
+<ol start="2">
+<li>旧的虚拟 DOM 中没有找到与新的虚拟 DOM 具有相同 key 值的 VNode<br>
+创建新的真实 DOM，然后渲染到页面上</li>
+</ol>
+<h5 id="二-用-index-作为-key-值可能会引发的问题">二. 用 index 作为 key 值可能会引发的问题？</h5>
+<ol>
+<li>若对数据进行：逆序添加、逆序删除等破坏原有顺序的操作，会产生没有必要的真实 DOM 更新，页面效果没有问题，但是效率低（因为对数据的顺序进行了改变，导致没有发生变化的数据在渲染时也无法使用之前的真实DOM）</li>
+<li>如果结构中还包含了输入类的 DOM，如 input，会产生错误的 DOM 更新，导致页面有问题，如：</li>
+</ol>
+<pre><code class="language-html">&lt;template&gt;
+  &lt;div&gt;
+    &lt;button @click=&quot;addPerson&quot;&gt;向列表前添加一个人&lt;/button&gt;
+    &lt;ul&gt;
+      &lt;li v-for=&quot;(item,index) in persons&quot; :key=&quot;index&quot;&gt;
+        {{item.name}}---{{index}}
+        &lt;!-- 每人一个输入框 --&gt;
+        &lt;input type=&quot;text&quot; /&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+  export default{
+    data(){
+      return {
+        person: [
+          {
+            name: '张三',
+            id: '001'
+          },{
+            name: '李四',
+            id: '002'
+          },{
+            name: '王五',
+            id: '003'
+          }
+        ]
+      }
+    },
+    methods:{
+      addPerson(){
+        let p = {
+          name: '老刘',
+          id: '004
+        }
+        this.person.upshift(p)
+      }
+    }
+  }
+&lt;/script&gt;
+</code></pre>
+<p>页面渲染出persons列表后在每行的input中输入姓名<br>
+效果图:<br>
+<img src="https://liujia12138.github.io/post-images/1663040035727.jpg" alt="" loading="lazy"></p>
+<p>点击按钮，添加老刘后<br>
+<img src="https://liujia12138.github.io/post-images/1663040050410.jpg" alt="" loading="lazy"></p>
+<p>此时页面上老刘数据添加到persons的第一位，姓名和index都正常渲染，但是input出现了错位的情况。<br>
+这是因为旧的虚拟DOM中张三和新的虚拟DOM中老刘具有相同的key：0，diff算法在进行差异对比时，发现name不同，然后页面渲染时就会渲染上新的name，但是对于input，由于上一步在input中输入姓名的操作是发生在真实DOM中的，没有影响到虚拟DOM，所以，在进行对比时会认为这一部分没有发生变化，这时页面就会继续使用上一次渲染的input，这也就导致了‘老刘’这条数据在页面上的input是张三的。</p>
+<p>对比过程图<br>
+<img src="https://liujia12138.github.io/post-images/1663040060872.jpg" alt="" loading="lazy"></p>
+<h5 id="三开发中如何选择key">三.开发中如何选择key？</h5>
+<ol>
+<li>最好使用每条数据的唯一标识作为key，比如id，手机号，身份证号等唯一值</li>
+<li>如果不存在对数据逆序添加、逆序删除等破坏顺序的操作，仅用于渲染列表展示，使用index作为key是不会有问题的</li>
+</ol>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">
+                <h3 class="post-title">
+                  定时任务时间表达式规则
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://liujia12138.github.io/images/avatar.png?v=1697537338824" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">定时任务时间表达式规则</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge ">
+          webpack
+        </a>
+      
+        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge secondary">
+          前端性能优化
+        </a>
+      
+        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge secondary">
+          vue
+        </a>
+      
+        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge secondary">
+          js
+        </a>
+      
+        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge secondary">
+          html
+        </a>
+      
+        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge ">
+          echarts
+        </a>
+      
+        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge warning">
+          uniapp
+        </a>
+      
+        <a href="https://liujia12138.github.io/D88IhnDGV/" class="badge success">
+          小程序
+        </a>
+      
+        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge success">
+          css
+        </a>
+      
+        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge secondary">
+          网络协议
+        </a>
+      
+        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge secondary">
+          服务端
+        </a>
+      
+        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge secondary">
+          node
+        </a>
+      
+        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge secondary">
+          兼容
+        </a>
+      
+        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge success">
+          es6
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>WebSocket | AzhA</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697537338824">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io" class="menu">
+                Home
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/archives" class="menu">
+                Archives
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/tags" class="menu">
+                Tags
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/post/about" class="menu">
+                About
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>WebSocket</h1>
+            <p class="article-meta">
+              2020-01-08
+              
+                <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge ">
+                  网络协议
+                </a>
+              
+                <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge secondary">
+                  html
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <h4 id="websocket是什么">websocket是什么？</h4>
+<p>是HTML5新增的属性，一种单个TCP连接上进行全双工通讯的网络通讯协议；</p>
+<h4 id="websocket有什么用">websocket有什么用？</h4>
+<p>为什么有了http协议，还需要websocket？因为http协议是单向通信协议，只能由客户端发起请求，无法做到服务端主动向客户端推送消息</p>
+<p>当服务器有持续的变化时，客户端想要获取只能通过轮询的方法，每隔一段时间就发起一次请求，最典型的场景就是聊天发消息。</p>
+<p>传统的http协议不能做到websocket实现的功能，因为http协议是一个请求-响应协议，只能由浏览器发起请求，服务器才能响应这个请求把数据发送给浏览器，服务器不能主动发起请求。</p>
+<p>ajax轮询：每隔一段时间发起一个http请求，询问服务器有没有新消息，没有的话就一直发</p>
+<p>长轮询：采用阻塞的方式，浏览器发起请求后，如果服务器没有新消息，就先拖一段时间一直不返回，直到有消息才返回，返回完之后，浏览器再次建立连接</p>
+<p>ajax轮询和长轮询需要服务器有非常快的处理速度和很高的并发。</p>
+<p>websocket最大的特点就是服务器可以主动向客户端发送消息。</p>
+<p>其他特点：</p>
+<ul>
+<li>建立在tcp协议之上（tcp本身是双向通信，http协议对他做了限制，所以http协议只能是单向的）</li>
+<li>与http协议有着良好的兼容性。默认端口也是80和443，而且握手阶段采用http协议</li>
+<li>数据格式比较轻量，性能开销小</li>
+<li>可以发送文本，也可以发送二进制文件</li>
+<li>没有同源限制</li>
+<li>协议标识符是ws（如果加密，就是wss）</li>
+</ul>
+<h4 id="使用websocket">使用websocket</h4>
+<pre><code class="language-js">//在线运行https://jsbin.com/nobemozido/edit?js,console
+if(!WebSocket){
+    alert('您的浏览器不支持WebSocket')
+}else{
+    var ws = new WebSocket(&quot;url&quot;);
+    ws.onopen = (evt) =&gt; {
+        console.log(&quot;connection open...&quot;);
+        ws.send(&quot;hello&quot;)
+    }
+    ws.onmessage = (evt) =&gt; {
+        console.log(&quot;received message:&quot;+ evt.data);
+        ws.close()
+    }
+    ws.onclose = (evt) =&gt;{
+        console.log(&quot;connection closed&quot;);
+    }
+    ws.onerror = (evt) =&gt;{
+        console.log(&quot;connection error&quot;);
+    }
+}
+</code></pre>
+<h4 id="api">API</h4>
+<h5 id="1websocket构造函数">1.WebSocket构造函数</h5>
+<h5 id="2websocketreadystate">2.WebSocket.readyState</h5>
+<p>WebSocket实例对象的状态，一共有四种</p>
+<ul>
+<li>0：connecting，正在连接</li>
+<li>1：open，连接成功，可以通信了</li>
+<li>2：closeing，正在关闭</li>
+<li>3：closed，已经关闭，或者打开失败</li>
+</ul>
+<h5 id="3websocketonopen">3.WebSocket.onopen</h5>
+<p>用于指定连接成功之后的回调函数</p>
+<p>如果想指定多个回调函数，可以使用addEventListener监听WebSocket实例</p>
+<pre><code class="language-js">ws.addEventListener(&quot;open&quot;, (evt)=&gt;{
+    ws.send(&quot;send message&quot;)
+})
+</code></pre>
+<h5 id="4websocketonclose">4.WebSocket.onclose</h5>
+<p>用于指定连接关闭后的回调函数</p>
+<h5 id="5websocketonmessage">5.WebSocket.onmessage</h5>
+<p>用于接收到服务器数据后的回调函数</p>
+<h5 id="6websocketsend">6.WebSocket.send</h5>
+<p>用于向服务器发送数据</p>
+<pre><code class="language-js">ws.send(&quot;hello&quot;)
+</code></pre>
+<h5 id="7websocketclose">7.WebSocket.close</h5>
+<p>用于关闭连接</p>
+<pre><code class="language-js">ws.close()
+</code></pre>
+<h5 id="8websocketonerror">8.WebSocket.onerror</h5>
+<p>用于指定连接错误时的回调函数</p>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/js-hong-ren-wu-wei-ren-wu-he-shi-jian-xun-huan/">
+                <h3 class="post-title">
+                  JS宏任务微任务和事件循环（js的执行机制）
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://liujia12138.github.io/images/avatar.png?v=1697537338824" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">定时任务时间表达式规则</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge ">
+          webpack
+        </a>
+      
+        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge warning">
+          前端性能优化
+        </a>
+      
+        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge warning">
+          vue
+        </a>
+      
+        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge secondary">
+          js
+        </a>
+      
+        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge secondary">
+          html
+        </a>
+      
+        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge secondary">
+          echarts
+        </a>
+      
+        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge secondary">
+          uniapp
+        </a>
+      
+        <a href="https://liujia12138.github.io/D88IhnDGV/" class="badge ">
+          小程序
+        </a>
+      
+        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge secondary">
+          css
+        </a>
+      
+        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge secondary">
+          网络协议
+        </a>
+      
+        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge success">
+          服务端
+        </a>
+      
+        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge secondary">
+          node
+        </a>
+      
+        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge ">
+          兼容
+        </a>
+      
+        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge ">
+          es6
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>

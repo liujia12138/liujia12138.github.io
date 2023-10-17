@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>vue.$nextTick | AzhA</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697537338824">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io" class="menu">
+                Home
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/archives" class="menu">
+                Archives
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/tags" class="menu">
+                Tags
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://liujia12138.github.io/post/about" class="menu">
+                About
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>vue.$nextTick</h1>
+            <p class="article-meta">
+              2020-09-01
+              
+                <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge ">
+                  vue
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <p>定义：在下次dom更新循环结束之后执行延迟回调。<br>
+理解：可以在这个方法中获取更新后的dom。</p>
+<pre><code class="language-html">&lt;template&gt;
+    &lt;button ref=&quot;btn&quot; @click=&quot;add&quot;&gt;count: {{count}}&lt;/button&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+    data(){
+        return {
+            count: 0,
+        }
+    },
+    methods:{
+        add(){
+            this.count ++;
+            console.log(this.count, this.$refs.btn.innerText);// 1 &quot;count: 0&quot;
+            
+            this.$nextTick(()=&gt;{
+                console.log(this.$refs.btn.innerText)// count: 1
+            })
+        }
+    }
+}
+&lt;/script&gt;
+</code></pre>
+<p>上面例子中可以看到，更新count之后立即打印dom中的内容，是更新之前的，而nextTick中可以获取到更新后的dom。</p>
+<p>原理：<br>
+vue是异步执行dom更新的，一旦检测到数据变化，vue就会开启一个队列，然后把在同一事件循环中观察到数据变化的watcher推送进这个队列。如果这个watcher被触发多次，只会被推送到队列一次。这种缓冲行为可以有效去掉重复数据造成的不必要的计算和dom操作，比如</p>
+<pre><code class="language-html">&lt;template&gt;
+    &lt;div&gt;{{count}}&lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+export default{
+    data(){
+        return {
+            count: 0
+        }
+    },
+    created(){
+        for(let i = 0; i &lt; 10000; i++){
+            this.count ++
+        }
+    }
+}
+&lt;/script&gt;
+</code></pre>
+<p>上面例子中，created时count会执行10000次++操作，每次++都会依次触发 setter-dep-watcher-update-patch，如果没有异步更新视图，那么每一次++操作都会更新dom，非常消耗性能。<br>
+所以vue实现了一个queue队列，在下一个事件循环时，会清空队列，并且更新dom。同时，有用相同id的watcher不会被重复添加到队列中，所以不会执行10000次watcher的count</p>
+<p>使用场景：<br>
+需要操作因数据而改变的dom。</p>
+<p>实现下图的对话窗口页时，因为无法提前知道接口返回html片段内容的高度，所以需要在消息列表更新dom之后，根据高度判断是否需要折叠和显示折叠按钮，这时就可以用到vue.nextTick<br>
+<img src="https://i.bmp.ovh/imgs/2020/08/26cdf0671fa966c6.png" alt="image" loading="lazy"></p>
+<pre><code class="language-js">this.$nextTick(()=&gt;{
+    let lastIndex = this.QAlist.length / 2 - 1;
+    let par_msg = document.getElementsByClassName(&quot;service-chat-content&quot;)[
+        this.QAlist.length
+    ];
+    let height = par_msg.getElementsByClassName(&quot;msg-content&quot;)[0]
+        .offsetHeight;
+    if (height &gt; 400) {
+        par_msg.classList.add(&quot;collapse&quot;);
+        let open = document.createElement(&quot;DIV&quot;);
+        open.innerText = &quot;展开&quot;;
+        open.classList.add(&quot;open&quot;);
+        open.addEventListener(&quot;click&quot;, e =&gt; {
+          if (open.innerText === &quot;展开&quot;) {
+            open.innerText = &quot;收起&quot;;
+            par_msg.style.height = &quot;auto&quot;;
+          } else {
+            open.innerText = &quot;展开&quot;;
+            par_msg.style.height = &quot;400px&quot;;
+          }
+        });
+        par_msg.appendChild(open);
+      }
+    }
+});
+</code></pre>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/contenteditable-shi-xian-wen-ben-kuang/">
+                <h3 class="post-title">
+                  contenteditable实现文本框
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://liujia12138.github.io/images/avatar.png?v=1697537338824" class="no-responsive avatar">
+    <div class="text-muted">温故而知新</div>
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://liujia12138.github.io/ding-shi-ren-wu-shi-jian-biao-da-shi-gui-ze/">定时任务时间表达式规则</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge success">
+          webpack
+        </a>
+      
+        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge secondary">
+          前端性能优化
+        </a>
+      
+        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge warning">
+          vue
+        </a>
+      
+        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge warning">
+          js
+        </a>
+      
+        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge ">
+          html
+        </a>
+      
+        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge secondary">
+          echarts
+        </a>
+      
+        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge ">
+          uniapp
+        </a>
+      
+        <a href="https://liujia12138.github.io/D88IhnDGV/" class="badge success">
+          小程序
+        </a>
+      
+        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge secondary">
+          css
+        </a>
+      
+        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge ">
+          网络协议
+        </a>
+      
+        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge warning">
+          服务端
+        </a>
+      
+        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge success">
+          node
+        </a>
+      
+        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge secondary">
+          兼容
+        </a>
+      
+        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge secondary">
+          es6
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>
