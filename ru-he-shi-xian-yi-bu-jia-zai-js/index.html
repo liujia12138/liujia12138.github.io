@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>盒模型宽高值的计算方式，边界塌陷，负值作用，box-sizing概念 | AzhA</title>
+<title>如何实现异步加载js | AzhA</title>
 <meta name="description" content="温故而知新">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -81,36 +81,59 @@
       <div class="sm-12 md-8 col">
         <div class="paper">
           <article class="article">
-            <h1>盒模型宽高值的计算方式，边界塌陷，负值作用，box-sizing概念</h1>
+            <h1>如何实现异步加载js</h1>
             <p class="article-meta">
-              2017-01-06
-              
-                <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge secondary">
-                  html
-                </a>
-              
-                <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge secondary">
-                  css
-                </a>
+              2023-10-18
               
             </p>
             
             <div class="post-content">
-              <p>box-sizing用来告诉浏览器如何计算一个元素的宽度和高度；<br>
-盒子的四个组成区域：内容content、内边距padding、边框border、外边距margin</p>
-<p>box-sizing有三个属性值：content-box、border-box、inherit</p>
-<p>标准盒模型：box-sizing:content-box;<br>
-元素的总宽度和总高度就是内容的宽度和高度；</p>
-<p>IE盒模型：box-sizing:border-box；<br>
-元素的总宽度包括内容，内边距和边框</p>
-<p>总结：</p>
-<p>对于给定width和height的元素，设置box-sizing会影响盒子的content width和content height。<br>
-浏览器默认使用content-box，我们设置的宽高就是内容的宽高。</p>
+              <ol>
+<li>将script标签放到body底部<br>
+保证优先加载DOM。严格来说，这种方式不算异步加载，但是这个是最常见的通过改变js加载方式来提升页面性能的方式。</li>
+<li>defer属性<br>
+通过给script标签设置defer属性，将脚本文件的加载设置为延迟加载，当浏览器遇到带有defer属性的script标签时，会再开启一个线程去下载js文件，同时继续解析HTML文档。</li>
+</ol>
+<p>等到HTML解析完毕，DOM加载完成后再去执行加载好的js</p>
+<p>这种方法只适合用于引入外部js的script标签，可以保证多个js的加载和执行顺序就是页面中写的顺序。</p>
+<p>需要注意，用了defer属性的js中不应该使用document.write方法</p>
+<ol start="3">
+<li>async属性<br>
+async属性和defer属性类似，都是会单独开启一个线程去下载js文件。</li>
+</ol>
+<p>和defer不同的是，async会下载之后立即执行，而不是等到DOM加载完成之后再去执行，所以还有<strong>可能会造成阻塞</strong>。</p>
+<p>对于所有带有async属性的script标签，不能像defer一样保证执行顺序，他是哪个文件先加载完就先执行。</p>
+<p>async也是执只用于引入外部js文件的script标签，同样也不能使用document.write方法。</p>
+<p>当脚本之间有依赖关系时，使用defer，这样可以保证执行的顺序；没有依赖的话使用async</p>
+<ol start="4">
+<li>动态创建script标签</li>
+</ol>
+<pre><code class="language-js">(function(){
+  var scriptEle = document.createElement(&quot;script&quot;);
+  scriptEle.type = &quot;text/javascript&quot;;
+  scriptEle.async = true;
+  scriptEle.arc = &quot;http://xxxx.xxx.xxx/xx.js&quot;
+
+  var x = document.getElementsByTagName('head')[0]
+  x.insertBefore(scriptEle, x.firstChild)
+})()
+</code></pre>
 
             </div>
           </article>
         </div>
         <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">
+                <h3 class="post-title">
+                  如何在vue项目中用Express做中间层
+                </h3>
+              </a>
+            </div>
           
         </div>
         
@@ -332,31 +355,31 @@
     </div>
     <div class="row">
       
-        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge success">
+        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge secondary">
           webpack
         </a>
       
-        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge secondary">
+        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge success">
           前端性能优化
         </a>
       
-        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge secondary">
+        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge success">
           vue
         </a>
       
-        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge secondary">
+        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge warning">
           js
         </a>
       
-        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge ">
+        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge secondary">
           html
         </a>
       
-        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge warning">
+        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge success">
           echarts
         </a>
       
-        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge success">
+        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge secondary">
           uniapp
         </a>
       
@@ -364,27 +387,27 @@
           小程序
         </a>
       
-        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge warning">
+        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge success">
           css
         </a>
       
-        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge success">
+        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge ">
           网络协议
         </a>
       
-        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge secondary">
+        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge warning">
           服务端
         </a>
       
-        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge ">
+        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge secondary">
           node
         </a>
       
-        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge ">
+        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge warning">
           兼容
         </a>
       
-        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge warning">
+        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge success">
           es6
         </a>
       

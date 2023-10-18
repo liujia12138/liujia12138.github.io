@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>AzhA</title>
-    <updated>2023-10-17T10:09:02.069Z</updated>
+    <updated>2023-10-18T07:26:56.487Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -10,6 +10,44 @@
     <logo>https://liujia12138.github.io/images/avatar.png</logo>
     <icon>https://liujia12138.github.io/favicon.ico</icon>
     <rights>All rights reserved 2023, AzhA</rights>
+    <entry>
+        <title type="html"><![CDATA[如何实现异步加载js]]></title>
+        <id>https://liujia12138.github.io/ru-he-shi-xian-yi-bu-jia-zai-js/</id>
+        <link href="https://liujia12138.github.io/ru-he-shi-xian-yi-bu-jia-zai-js/">
+        </link>
+        <updated>2023-10-18T07:23:14.000Z</updated>
+        <content type="html"><![CDATA[<ol>
+<li>将script标签放到body底部<br>
+保证优先加载DOM。严格来说，这种方式不算异步加载，但是这个是最常见的通过改变js加载方式来提升页面性能的方式。</li>
+<li>defer属性<br>
+通过给script标签设置defer属性，将脚本文件的加载设置为延迟加载，当浏览器遇到带有defer属性的script标签时，会再开启一个线程去下载js文件，同时继续解析HTML文档。</li>
+</ol>
+<p>等到HTML解析完毕，DOM加载完成后再去执行加载好的js</p>
+<p>这种方法只适合用于引入外部js的script标签，可以保证多个js的加载和执行顺序就是页面中写的顺序。</p>
+<p>需要注意，用了defer属性的js中不应该使用document.write方法</p>
+<ol start="3">
+<li>async属性<br>
+async属性和defer属性类似，都是会单独开启一个线程去下载js文件。</li>
+</ol>
+<p>和defer不同的是，async会下载之后立即执行，而不是等到DOM加载完成之后再去执行，所以还有<strong>可能会造成阻塞</strong>。</p>
+<p>对于所有带有async属性的script标签，不能像defer一样保证执行顺序，他是哪个文件先加载完就先执行。</p>
+<p>async也是执只用于引入外部js文件的script标签，同样也不能使用document.write方法。</p>
+<p>当脚本之间有依赖关系时，使用defer，这样可以保证执行的顺序；没有依赖的话使用async</p>
+<ol start="4">
+<li>动态创建script标签</li>
+</ol>
+<pre><code class="language-js">(function(){
+  var scriptEle = document.createElement(&quot;script&quot;);
+  scriptEle.type = &quot;text/javascript&quot;;
+  scriptEle.async = true;
+  scriptEle.arc = &quot;http://xxxx.xxx.xxx/xx.js&quot;
+
+  var x = document.getElementsByTagName('head')[0]
+  x.insertBefore(scriptEle, x.firstChild)
+})()
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[如何在vue项目中用Express做中间层]]></title>
         <id>https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/</id>
@@ -1790,64 +1828,6 @@ function sjs(leng) {
 </code></pre>
 <figure data-type="image" tabindex="1"><img src="https://liujia12138.github.io/post-images/1663051769813.png" alt="" loading="lazy"></figure>
 <p>其实就是将一个黄色到透明渐变的文字覆盖到本身红色的字上面，mask-image兼容性要高于第一种方法</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[vue项目如何实现版本控制，用以保证用户的浏览器资源为最新]]></title>
-        <id>https://liujia12138.github.io/vue-xiang-mu-ru-he-shi-xian-ban-ben-kong-zhi-yong-yi-bao-zheng-yong-hu-de-liu-lan-qi-zi-yuan-wei-zui-xin/</id>
-        <link href="https://liujia12138.github.io/vue-xiang-mu-ru-he-shi-xian-ban-ben-kong-zhi-yong-yi-bao-zheng-yong-hu-de-liu-lan-qi-zi-yuan-wei-zui-xin/">
-        </link>
-        <updated>2021-01-29T07:01:03.000Z</updated>
-        <content type="html"><![CDATA[<h3 id="问题描述项目实际使用过程中由于浏览器缓存问题可能会导致使用的版本不是服务器上部署的最新版本需要在项目中写入版本号">问题描述：项目实际使用过程中，由于浏览器缓存问题，可能会导致使用的版本不是服务器上部署的最新版本，需要在项目中写入版本号</h3>
-<h3 id="如何解决问题">如何解决问题？</h3>
-<h4 id="1-在vueconfigjs中加上写入版本号逻辑">1. 在vue.config.js中，加上写入版本号逻辑</h4>
-<pre><code class="language-js">const fs = require('fs')
-const path = require('path')
-
-const resolve = dir =&gt; {
-  return path.join(__dirname, dir)
-}
-
-const TimeStamp = new Date().getTime()
-
-// 写入版本号
-if(process.env.NODE_ENV === 'production'){
-  process.env.VUE_APP_VERSION = TimeStamp;
-
-  // 写入到.env文件中
-  fs.writeFile(resolve('.env'), `VUE_APP_VERSION=${TimeStamp}`, err=&gt;{
-    if(err){
-      return console.log(err)
-    }
-    console.log(`版本号变量写入成功：${TimeStamp}`)
-  })
-
-  // 写入到public的文件
-  fs.writeFile(resolve('public/v.json'), JSON.stringify({version: TimeStamp}), err =&gt; {
-    if(err){
-      return console.log(err)
-    }
-    console.log(`版本号写入成功：${TimeStamp}`)
-  })
-}
-</code></pre>
-<h4 id="2-在routerindexjs中加入判断版本号逻辑">2. 在router/index.js中加入判断版本号逻辑</h4>
-<pre><code class="language-js">router.beforeEach(async(to, from, next)=&gt;{
-  // 获取版本号
-  let version = await http.get(`${location.origin}/v.json`).then(res =&gt; {
-    return res.data.version
-  })
-
-  if(process.env.NODE_ENV === 'production' &amp;&amp; process.env.VUE_APP_VERSION !== version){
-    // 提示存在新版本
-    MessageBox('系统版本有更新，可按【CTRL + F5】或【清除浏览器缓存】获取最新资源', '提示').then(_ =&gt; {
-      window.location.reload()
-    }).catch(_ =&gt; {})
-    return;
-  }
-  // ......
-})
-</code></pre>
 ]]></content>
     </entry>
 </feed>
