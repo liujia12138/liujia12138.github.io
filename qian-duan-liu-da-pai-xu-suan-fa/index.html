@@ -1,98 +1,100 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" >
-
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>前端六大排序算法 | AzhA</title>
-<meta name="description" content="温故而知新">
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697614014406">
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="shortcut icon" href="https://liujia12138.github.io/favicon.ico?v=1697971967958">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://liujia12138.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="前端六大排序算法 | AzhA - Atom Feed" href="https://liujia12138.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
-<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
 
-
-<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-
-
+    <meta name="description" content="1.冒泡排序
+原理：比较相邻两个数的大小，将较大（或小）的数换到右边（或左边），这样就能将最大（或最小）的数一个一个的比较出来，放到一端。循环这个过程，将所有的数字的顺序排列出来。
+数组长度为n，总共要进行n-1趟，每第i趟的排序次数为n-..." />
+    <meta name="keywords" content="js" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-  
-    <nav class="navbar border fixed split-nav">
-  <div class="nav-brand">
-    <h3><a href="https://liujia12138.github.io">AzhA</a></h3>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://liujia12138.github.io">
+  <img class="avatar" src="https://liujia12138.github.io/images/avatar.png?v=1697971967958" alt="">
+  </a>
+  <h1 class="site-title">
+    AzhA
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://liujia12138.github.io" class="menu">
+          Home
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/archives" class="menu">
+          Archives
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/tags" class="menu">
+          Tags
+        </a>
+      
+    
+      
+        <a href="https://liujia12138.github.io/post/about" class="menu">
+          About
+        </a>
+      
+    
   </div>
-  <div class="collapsible">
-    <input id="collapsible1" type="checkbox" name="collapsible1">
-    <button>
-      <label for="collapsible1">
-        <div class="bar1"></div>
-        <div class="bar2"></div>
-        <div class="bar3"></div>
-      </label>
-    </button>
-    <div class="collapsible-body">
-      <ul class="inline">
-        
-          <li>
-            
-              <a href="https://liujia12138.github.io" class="menu">
-                Home
-              </a>
-            
-          </li>
-        
-          <li>
-            
-              <a href="https://liujia12138.github.io/archives" class="menu">
-                Archives
-              </a>
-            
-          </li>
-        
-          <li>
-            
-              <a href="https://liujia12138.github.io/tags" class="menu">
-                Tags
-              </a>
-            
-          </li>
-        
-          <li>
-            
-              <a href="https://liujia12138.github.io/post/about" class="menu">
-                About
-              </a>
-            
-          </li>
-        
-      </ul>
-    </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
   </div>
-</nav>
+</div>
 
-    <div id="top" class="row site">
-      <div class="sm-12 md-8 col">
-        <div class="paper">
-          <article class="article">
-            <h1>前端六大排序算法</h1>
-            <p class="article-meta">
-              2017-04-09
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              前端六大排序算法
+            </h2>
+            <div class="post-info">
+              <span>
+                2017-04-09
+              </span>
+              <span>
+                3 min read
+              </span>
               
-                <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge warning">
-                  js
+                <a href="https://liujia12138.github.io/CvMd75xEg/" class="post-tag">
+                  # js
                 </a>
               
-            </p>
+            </div>
             
-            <div class="post-content">
-              <h4 id="1冒泡排序">1.冒泡排序</h4>
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h4 id="1冒泡排序">1.冒泡排序</h4>
 <p>原理：比较相邻两个数的大小，将较大（或小）的数换到右边（或左边），这样就能将最大（或最小）的数一个一个的比较出来，放到一端。循环这个过程，将所有的数字的顺序排列出来。<br>
 数组长度为n，总共要进行n-1趟，每第i趟的排序次数为n-i-1次<br>
 时间复杂度：O(n^2)；空间复杂度O(1)</p>
@@ -168,320 +170,96 @@
 }
 </code></pre>
 
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F">1.冒泡排序</a></li>
+<li><a href="#2%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F">2.选择排序</a></li>
+<li><a href="#3%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F">3.插入排序</a></li>
+<li><a href="#4%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F">4.希尔排序</a></li>
+<li><a href="#5%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F">5.归并排序</a></li>
+<li><a href="#6%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F">6.快速排序</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
             </div>
           </article>
         </div>
-        <div class="paper" data-aos="fade-in">
-          
-            <div class="next-post">
-              <div class="next">
-                下一篇
-              </div>
-              <a href="https://liujia12138.github.io/he-mo-xing-kuan-gao-zhi-de-ji-suan-fang-shi-bian-jie-ta-xian-fu-zhi-zuo-yong-box-sizing-gai-nian/">
-                <h3 class="post-title">
-                  盒模型宽高值的计算方式，边界塌陷，负值作用，box-sizing概念
-                </h3>
-              </a>
-            </div>
-          
-        </div>
-        
-      </div>
 
-      <div class="sm-12 md-4 col sidebar">
-  <div class="paper info-container">
-    <img src="https://liujia12138.github.io/images/avatar.png?v=1697614014406" class="no-responsive avatar">
-    <div class="text-muted">温故而知新</div>
-    <div class="social-container">
-      
         
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    </div>
-  </div>
-  <div class="paper">
-    <div class="sidebar-title">
-      最新文章
-    </div>
-    <div class="row">
-      <ul>
-        
-          
-            <li>
-              <a href="https://liujia12138.github.io/ru-he-shi-xian-yi-bu-jia-zai-js/">如何实现异步加载js</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://liujia12138.github.io/ru-he-zai-vue-xiang-mu-zhong-yong-express-zuo-zhong-jian-ceng/">如何在vue项目中用Express做中间层</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://liujia12138.github.io/ru-he-you-hua-webpack-pei-zhi/">如何优化webpack配置</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://liujia12138.github.io/vue-zhong-keep-alive-de-yuan-li/">vue中keep-alive的原理</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://liujia12138.github.io/ru-he-zuo-dao-zhi-xing-js-er-bu-ying-xiang-ye-mian-de-css-jia-zai/">如何做到执行JS 而不影响页面的css加载？</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://liujia12138.github.io/vue2vue-cli4da-bao-xing-neng-you-hua/">vue打包性能优化</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://liujia12138.github.io/js-de-zuo-yong-yu-yu-jie-xi-he-sheng-ming-ti-sheng/">JS的作用域、预解析和声明提升</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://liujia12138.github.io/js-zhong-ru-he-pan-duan-liang-ge-dui-xiang-shi-fou-xiang-deng/">js中如何判断两个对象是否相等</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://liujia12138.github.io/javascript-de-nei-zhi-dui-xiang-yuan-sheng-dui-xiang-su-zhu-dui-xiang-fen-bie-zhi-de-shi-shi-me/">JavaScript的内置对象、原生对象、宿主对象分别指的是什么？</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://liujia12138.github.io/react-he-vue-zhong-de-key-you-shi-me-zuo-yong/">react 和 vue 中的 key 有什么作用？</a>
-            </li>
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-      </ul>
-    </div>
-  </div>
-  <div class="paper">
-    <div class="sidebar-title">
-      标签列表
-    </div>
-    <div class="row">
-      
-        <a href="https://liujia12138.github.io/Xb1bL-hET/" class="badge warning">
-          webpack
-        </a>
-      
-        <a href="https://liujia12138.github.io/Kr-xdE8Yn/" class="badge secondary">
-          前端性能优化
-        </a>
-      
-        <a href="https://liujia12138.github.io/d8mNIHknn/" class="badge warning">
-          vue
-        </a>
-      
-        <a href="https://liujia12138.github.io/CvMd75xEg/" class="badge secondary">
-          js
-        </a>
-      
-        <a href="https://liujia12138.github.io/BL8c3orKf/" class="badge success">
-          html
-        </a>
-      
-        <a href="https://liujia12138.github.io/Vt5WBKoYy/" class="badge warning">
-          echarts
-        </a>
-      
-        <a href="https://liujia12138.github.io/V_zOguk5s/" class="badge ">
-          uniapp
-        </a>
-      
-        <a href="https://liujia12138.github.io/D88IhnDGV/" class="badge secondary">
-          小程序
-        </a>
-      
-        <a href="https://liujia12138.github.io/yf3fMR6HV/" class="badge ">
-          css
-        </a>
-      
-        <a href="https://liujia12138.github.io/uJlN5zVW5/" class="badge ">
-          网络协议
-        </a>
-      
-        <a href="https://liujia12138.github.io/AqJbgMDWp/" class="badge warning">
-          服务端
-        </a>
-      
-        <a href="https://liujia12138.github.io/_CM5EBSSy/" class="badge success">
-          node
-        </a>
-      
-        <a href="https://liujia12138.github.io/7pa3gWqBF/" class="badge warning">
-          兼容
-        </a>
-      
-        <a href="https://liujia12138.github.io/NaR04YJjP/" class="badge secondary">
-          es6
-        </a>
-      
-    </div>
-  </div>
-  <div class="paper">
-    AzhA | <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">RSS</a>
-  </div>
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://liujia12138.github.io/he-mo-xing-kuan-gao-zhi-de-ji-suan-fang-shi-bian-jie-ta-xian-fu-zhi-zuo-yong-box-sizing-gai-nian/">
+              <h3 class="post-title">
+                盒模型宽高值的计算方式，边界塌陷，负值作用，box-sizing概念
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  AzhA
+  <a class="rss" href="https://liujia12138.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
 </div>
 
-
+      </div>
     </div>
 
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad()
 
-<script type="application/javascript">
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-AOS.init();
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
 
-hljs.initHighlightingOnLoad()
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
 
-</script>
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
 
-
-
-
+    </script>
   </body>
 </html>
