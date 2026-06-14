@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://liujia12138.github.io</id>
     <title>JIA&apos;s blog</title>
-    <updated>2026-06-14T13:45:03.993Z</updated>
+    <updated>2026-06-14T14:18:39.165Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://liujia12138.github.io"/>
     <link rel="self" href="https://liujia12138.github.io/atom.xml"/>
@@ -10,6 +10,50 @@
     <logo>https://liujia12138.github.io/images/avatar.png</logo>
     <icon>https://liujia12138.github.io/favicon.ico</icon>
     <rights>All rights reserved 2026, JIA&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[彻底理解BFC]]></title>
+        <id>https://liujia12138.github.io/che-di-li-jie-bfc/</id>
+        <link href="https://liujia12138.github.io/che-di-li-jie-bfc/">
+        </link>
+        <updated>2026-06-14T13:52:55.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="bfc-究竟是什么">BFC 究竟是什么？</h3>
+<p>BFC（Block Formatting Context ），块级格式化上下文，他是一个独立的、隔离的渲染区域，内部元素不会影响到外部。</p>
+<h3 id="bfc的三个特性">BFC的三个特性：</h3>
+<ol>
+<li>内部外边距不会对外部产生影响</li>
+<li>内部可以包含浮动元素</li>
+<li>BFC不与外部元素重叠</li>
+</ol>
+<h3 id="哪些情况会触发bfc">哪些情况会触发BFC？</h3>
+<ol>
+<li>根元素：html就是最大的BFC</li>
+<li>浮动：float不为none</li>
+<li>绝对定位：position为absolute或fixed</li>
+<li>行内块元素：display: inline-block</li>
+<li>表格单元格和表格标题：display:table-cell/table-caption</li>
+<li>溢出非可见：overflow不为visible，最常用的overflow: hidden</li>
+<li>弹性/网格元素：display: flex、display: inline-flex、display: grid、display: inline-grid 的直接子元素</li>
+</ol>
+<p>最常见的方式：</p>
+<ol>
+<li>overflow：hidden，副作用最小</li>
+<li>display：flex</li>
+<li>display：inline-block</li>
+</ol>
+<h3 id="bfc可以解决什么问题">BFC可以解决什么问题？</h3>
+<ol>
+<li>浮动元素的父元素高度塌陷问题<br>
+问题：子元素浮动后，父元素高度为0，背景色或边框无法包裹。<br>
+解决：设置父元素overflow：hidden</li>
+<li>兄弟元素外边距重叠问题<br>
+问题：两个兄弟元素，上面的 margin-bottom: 50px，下面的 margin-top: 20px，最终间距只有 50px（取大值），而不是 70px。<br>
+解决：给一个兄弟元素外面加一个BFC包裹起来</li>
+<li>实现自适应两栏布局（圣杯布局、双飞翼布局）<br>
+问题：左侧固定宽度浮动，右侧自适应宽度，且不重叠。<br>
+解决：不浮动的元素overflow：hidden，使其成为一个BFC，这样就不会影响外部浮动元素了</li>
+</ol>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[如何实现异步加载js]]></title>
         <id>https://liujia12138.github.io/ru-he-shi-xian-yi-bu-jia-zai-js/</id>
@@ -1758,76 +1802,6 @@ function sjs(leng) {
   runtimeCompiler: true
 }
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[css实现文字渐变色]]></title>
-        <id>https://liujia12138.github.io/css-shi-xian-wen-zi-jian-bian-se/</id>
-        <link href="https://liujia12138.github.io/css-shi-xian-wen-zi-jian-bian-se/">
-        </link>
-        <updated>2021-02-25T06:47:57.000Z</updated>
-        <content type="html"><![CDATA[<h4 id="实现文字颜色渐变有两种方法">实现文字颜色渐变有两种方法</h4>
-<ol>
-<li>使用 background-clip 属性</li>
-</ol>
-<pre><code class="language-css">.text {
-  background: linear-gradient(90deg, #326be6 0%, #0fcae2 100%);
-  -webkit-background-clip: text;
-  color: transparent;
-}
-</code></pre>
-<h5 id="扩展">扩展</h5>
-<ul>
-<li>background-clip,背景裁剪,作用就是设置背景的填充规则<br>
-和 box-sizing 的取值非常类似，有三个值</li>
-</ul>
-<pre><code class="language-css"> {
-  background-clip: border-box; /*背景延伸到边框外延，但是再边框之下*/
-  background-clip: content-box; /*背景剪裁到内容区外沿*/
-  background-clip: padding-box; /*背景延伸到内边距外沿*/
-}
-</code></pre>
-<ul>
-<li>background-clip: text; 只有 chrome 支持，需要写成 -webkit-background-clip:text<br>
-以区块内的文字作为裁剪区域向外剪裁。文字的背景即为区块的背景，通常需要配合文字颜色设置为 transparent</li>
-</ul>
-<p>示例：</p>
-<pre><code class="language-css">.text {
-  color: transparent;
-  border: 5px solid transparent;
-  background: linear-gradient(120deg, #333 0%, #265fae 30%, red 60%, pink 100%);
-  background-clip: content-box;
-  -webkit-background-clip: text;
-  font-size: 60px;
-}
-</code></pre>
-<p>效果图:<br>
-<img src="https://liujia12138.github.io/post-images/1663051783274.png" alt="" loading="lazy"></p>
-<ol>
-<li>使用 mask-image 属性</li>
-</ol>
-<p>示例</p>
-<pre><code class="language-css">.text {
-  color: red;
-  font-size: 60px;
-  position: relative;
-}
-.text[data-content]::after {
-  content: attr(data-content);
-  display: block;
-  color: yellow;
-  z-index: 2;
-  position: absolute;
-  top: 0;
-  left: 0;
-  -webkit-mask-image: linear-gradient(180deg, yellow 0%, transparent 100%);
-  mask-image: linear-gradient(180deg, yellow 0%, transparent 100%);
-}
-</code></pre>
-<pre><code class="language-html">&lt;div class=&quot;text&quot; data-content=&quot;content&quot;&gt;content&lt;/div&gt;
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://liujia12138.github.io/post-images/1663051769813.png" alt="" loading="lazy"></figure>
-<p>其实就是将一个黄色到透明渐变的文字覆盖到本身红色的字上面，mask-image兼容性要高于第一种方法</p>
 ]]></content>
     </entry>
 </feed>
